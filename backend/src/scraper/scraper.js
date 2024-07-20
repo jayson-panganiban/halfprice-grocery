@@ -4,113 +4,133 @@ const config = require("../config/playwright.config");
 const logger = require("../logger");
 const productService = require("../services/productService");
 
-function getRandomUserAgent() {
-  const userAgents = config.projects.map((project) => project.use.userAgent);
-  return userAgents[Math.floor(Math.random() * userAgents.length)];
-}
-
-async function scrapeWoolies(page) {
-  const productsLocator = page.locator(".product-tile-image a");
-  await productsLocator.first().waitFor({ state: "visible" });
-
-  const productsHandle = await productsLocator.elementHandles();
-
-  const products = await Promise.all(
-    productsHandle.map(async (element) => {
-      const ariaLabel = await element.getAttribute("aria-label");
-      const link = await element.getAttribute("href");
-      const image = await element.$eval("img", (img) =>
-        img.getAttribute("src")
-      );
-      return createProductDetails(ariaLabel, link, image);
-    })
-  );
-
-  return products;
-}
-
-async function getLastPageNumber(page) {
-  const count = await page.locator(".paging-pageNumber").count();
-  const lastPageElem = await page.locator(".paging-pageNumber").nth(count - 1);
-  const lastPage = (await lastPageElem.textContent())
-    .replace("Page", "")
-    .trim();
-  return lastPage;
-}
-
-function createProductDetails(ariaLabel, link, image) {
-  const parts = (ariaLabel ?? "").split(". ");
-  const { name, price, pricePerUnit } = extractProductInfo(parts);
-  const amountSaved = extractAmountSaved(parts);
-
-  // TODO: Add class="rating"
-  return {
-    productName: name,
-    salePrice: price,
-    amountSaved: amountSaved,
-    pricePerUnit: pricePerUnit || null,
-    productLink: link || null,
-    productImage: image || null,
-  };
-}
-
-function extractProductInfo(parts) {
-  const [namePart, pricePart, pricePerUnitPart] = (parts[3] ?? "").split(",");
-  const pricePerUnit = (pricePerUnitPart ?? "").slice(0, -1);
-  return {
-    name: namePart ? namePart.trim() : null,
-    price: pricePart ? pricePart.trim() : null,
-    pricePerUnit: pricePerUnit ? pricePerUnit.trim() : null,
-  };
-}
-
-function extractAmountSaved(parts) {
-  const amountSavedPart = parts.find((part) => part.startsWith("Save"));
-
-  return amountSavedPart
-    ? amountSavedPart.match(/\$\d?\d+.+/)?.[0] || null
-    : null;
-}
-
-async function scrape() {
-  const randomUserAgent = getRandomUserAgent();
-  const browser = await chromium.launch({ headless: false });
-  logger.info("Browser launched");
-
-  const context = await browser.newContext({
-    ignoreHTTPSErrors: true,
-    http2: false,
-    userAgent: randomUserAgent,
-    extraHTTPHeaders: {
-      "Accept-Language": "en-US,en;q=0.9",
-    },
-  });
-
-  const page = await context.newPage();
-
-  const url = `${config.use.baseURL}?pageNumber=1`;
-
-  await page.goto(url);
-
-  const lastPage = await getLastPageNumber(page);
-
-  // Scrape products per page
-  for (let currentPage = 1; currentPage <= lastPage; currentPage++) {
-    const url = `${config.use.baseURL}?pageNumber=${currentPage}`;
-    await page.goto(url);
-    try {
-      logger.info(`Scraping ${url}`);
-      const products = await scrapeWoolies(page);
-      await productService.saveProducts(products);
-    } catch (error) {
-      logger.error("Error during navigation or scraping:", error);
-    }
+class Scraper {
+  constructor(brand) {
+    this.brand = brand;
+    this.config = config[brand];
   }
 
-  await browser.close();
+  async initialize() {
+    this.browser = await chromium.launch({ headless: false });
+    logger.info(`Browser launched for ${this.brand}`);
+
+    this.context = await this.browser.newContext({
+      ignoreHTTPSErrors: true,
+      http2: false,
+      userAgent: this.getRandomUserAgent(),
+      extraHTTPHeaders: {
+        "Accept-Language": "en-US,en;q=0.9",
+      },
+    });
+
+    this.page = await this.context.newPage();
+  }
+
+  getRandomUserAgent() {
+    return this.config.userAgents[
+      Math.floor(Math.random() * this.config.userAgents.length)
+    ];
+  }
+
+  async getLastPageNumber() {
+    const paginationElements = await this.page
+      .locator(this.config.selectors.pagination)
+      .all();
+    const lastPageElem = paginationElements[paginationElements.length - 1];
+    const lastPageText = await lastPageElem.textContent();
+    return parseInt(lastPageText.replace("Page", "").trim(), 10);
+  }
+
+  async scrapeProducts() {
+    const productsLocator = this.page.locator(
+      this.config.selectors.productTile
+    );
+    await productsLocator.first().waitFor({ state: "visible" });
+    const productsHandle = await productsLocator.elementHandles();
+
+    return Promise.all(
+      productsHandle.map(async (element) => {
+        const ariaLabel = await element.getAttribute("aria-label");
+        const link = await element.getAttribute("href");
+        const image = await element.$eval("img", (img) =>
+          img.getAttribute("src")
+        );
+        return this.createProductDetails(ariaLabel, link, image);
+      })
+    );
+  }
+
+  createProductDetails(ariaLabel, link, image) {
+    const parts = (ariaLabel ?? "").split(". ");
+    const { name, price, pricePerUnit } = this.extractProductInfo(parts);
+    const amountSaved = this.extractAmountSaved(parts);
+
+    return {
+      productName: name,
+      salePrice: parseFloat(price),
+      amountSaved: amountSaved
+        ? parseFloat(amountSaved.replace("$", ""))
+        : null,
+      pricePerUnit: pricePerUnit || null,
+      productLink: new URL(link, this.config.baseURL).href,
+      productImage: image || null,
+    };
+  }
+
+  extractProductInfo(parts) {
+    const [namePart, pricePart, pricePerUnitPart] = (parts[3] ?? "").split(",");
+    return {
+      name: namePart ? namePart.trim() : null,
+      price: pricePart ? pricePart.trim() : null,
+      pricePerUnit: pricePerUnitPart
+        ? pricePerUnitPart.slice(0, -1).trim()
+        : null,
+    };
+  }
+
+  extractAmountSaved(parts) {
+    const amountSavedPart = parts.find((part) => part.startsWith("Save"));
+    return amountSavedPart
+      ? amountSavedPart.match(/\$\d?\d+.+/)?.[0] || null
+      : null;
+  }
+
+  async scrape() {
+    await this.initialize();
+
+    try {
+      await this.page.goto(`${this.config.baseURL}?pageNumber=1`);
+      const lastPage = await this.getLastPageNumber();
+
+      for (let currentPage = 1; currentPage <= lastPage; currentPage++) {
+        const url = `${this.config.baseURL}?pageNumber=${currentPage}`;
+        await this.page.goto(url);
+
+        logger.info(`Scraping ${url}`);
+        const products = await this.scrapeProducts();
+        await productService.saveProducts(products);
+      }
+    } catch (error) {
+      logger.error(`Error during scraping ${this.brand}:`, error);
+    } finally {
+      await this.browser.close();
+    }
+  }
+}
+
+const scrapers = {
+  woolworths: new Scraper("woolworths"),
+  // Add more scrapers here as needed
+};
+
+async function scrapeAll() {
+  for (const [brand, scraper] of Object.entries(scrapers)) {
+    logger.info(`Starting scrape for ${brand}`);
+    await scraper.scrape();
+  }
 }
 
 module.exports = {
-  scrape,
-  createProductDetails,
+  scrapeAll,
+  Scraper,
 };
