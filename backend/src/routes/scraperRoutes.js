@@ -3,7 +3,7 @@ const router = express.Router();
 const scraperService = require("../services/scraperService");
 const logger = require("../logger");
 
-router.post("/run", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     await scraperService.runScraper();
     res.json({ message: "Scraper run successfully" });

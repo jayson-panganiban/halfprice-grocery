@@ -1,5 +1,5 @@
-const retry = require("async-retry");
 const { chromium } = require("playwright");
+const { expect } = require("@playwright/test")
 const config = require("../config/playwright.config");
 const logger = require("../logger");
 const productService = require("../services/productService");
@@ -27,18 +27,21 @@ class Scraper {
   }
 
   getRandomUserAgent() {
-    return this.config.userAgents[
-      Math.floor(Math.random() * this.config.userAgents.length)
+    return config.use.userAgents[
+      Math.floor(Math.random() * config.use.userAgents.length)
     ];
   }
 
   async getLastPageNumber() {
-    const paginationElements = await this.page
-      .locator(this.config.selectors.pagination)
-      .all();
-    const lastPageElem = paginationElements[paginationElements.length - 1];
-    const lastPageText = await lastPageElem.textContent();
-    return parseInt(lastPageText.replace("Page", "").trim(), 10);
+    const paginationElement = this.page
+    .locator(this.config.selectors.pagination);
+    await expect(paginationElement.first()).toBeVisible();
+    const count = await paginationElement.count();
+    const lastPageElement = paginationElement.nth(count - 1);
+    const lastPageNumber = (await lastPageElement.textContent())
+      .replace("Page", "")
+      .trim();
+    return lastPageNumber;
   }
 
   async scrapeProducts() {
@@ -67,12 +70,10 @@ class Scraper {
 
     return {
       productName: name,
-      salePrice: parseFloat(price),
-      amountSaved: amountSaved
-        ? parseFloat(amountSaved.replace("$", ""))
-        : null,
+      salePrice: price,
+      amountSaved: amountSaved,
       pricePerUnit: pricePerUnit || null,
-      productLink: new URL(link, this.config.baseURL).href,
+      productLink: link || null,
       productImage: image || null,
     };
   }

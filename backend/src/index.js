@@ -1,14 +1,9 @@
 const express = require("express");
 const app = express();
 const productRoutes = require("./routes/productRoutes");
-const scraperService = require("./services/scraperService");
+const scraperRoutes = require("./routes/scraperRoutes");
 
 app.use("/products", productRoutes);
-
-// Route to trigger scraper
-app.post("/scraper", async (req, res) => {
-  await scraperService.runScraper();
-  res.json({ message: "Scraper run successfully" });
-});
+app.use("/scraper", scraperRoutes);
 
 module.exports = app;
