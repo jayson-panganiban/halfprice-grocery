@@ -19,86 +19,129 @@ describe("Product Service", () => {
   test("should save products to the database", async () => {
     const testProducts = [
       {
-        productName: "Test Product 1",
-        salePrice: "$10",
-        amountSaved: "$5",
+        name: "Test Product 1",
+        price: "$10",
         pricePerUnit: "$2/kg",
-        productLink: "/test-product-1",
-        productImage: "test1.jpg",
+        link: "/test-product-1",
+        image: "test1.jpg",
       },
       {
-        productName: "Test Product 2",
-        salePrice: "$20",
-        amountSaved: "$10",
+        name: "Test Product 2",
+        price: "$20",
         pricePerUnit: "$4/kg",
-        productLink: "/test-product-2",
-        productImage: "test2.jpg",
+        link: "/test-product-2",
+        image: "test2.jpg",
       },
     ];
 
-    const savedProducts = await productService.saveProducts(testProducts);
+    const brand = "Test Brand";
+
+    const savedProducts = await productService.saveProducts(
+      testProducts,
+      brand
+    );
     expect(savedProducts).toHaveLength(2);
-    expect(savedProducts[0].productName).toBe("Test Product 1");
-    expect(savedProducts[1].productName).toBe("Test Product 2");
+    expect(savedProducts[0].name).toBe("Test Product 1");
+    expect(savedProducts[0].brand).toBe("Test Brand");
+    expect(savedProducts[1].name).toBe("Test Product 2");
+    expect(savedProducts[1].brand).toBe("Test Brand");
+  });
+
+  test("should not create duplicate products", async () => {
+    const testProduct = {
+      name: "Duplicate Test Product",
+      price: "$25",
+      pricePerUnit: "$5/kg",
+      link: "/duplicate-test-product",
+      image: "duplicate.jpg",
+      brand: "Test Brand",
+    };
+
+    const initialProduct = await productService.createProduct(testProduct);
+
+    const duplicateProduct = await productService.createProduct(testProduct);
+
+    const allProducts = await productService.getProducts();
+    expect(allProducts).toHaveLength(1);
+    expect(allProducts[0].name).toBe("Duplicate Test Product");
+
+    expect(duplicateProduct._id.toString()).toBe(initialProduct._id.toString());
+  });
+
+  test("should not create product with empty name", async () => {
+    const testProduct = {
+      name: "",
+      price: "$15",
+      pricePerUnit: "$3/kg",
+      link: "/test-product",
+      image: "test.jpg",
+      brand: "Test Brand",
+    };
+
+    const result = await productService.createProduct(testProduct);
+    expect(result).toBeNull();
+
+    const allProducts = await productService.getProducts();
+    expect(allProducts).toHaveLength(0);
   });
 
   test("should retrieve products from the database", async () => {
     const testProduct = {
-      productName: "Test Product",
-      salePrice: "$15",
-      amountSaved: "$7",
+      name: "Test Product",
+      price: "$15",
       pricePerUnit: "$3/kg",
-      productLink: "/test-product",
-      productImage: "test.jpg",
+      link: "/test-product",
+      image: "test.jpg",
+      brand: "Test Brand",
     };
 
     await productService.createProduct(testProduct);
 
     const retrievedProducts = await productService.getProducts();
     expect(retrievedProducts).toHaveLength(1);
-    expect(retrievedProducts[0].productName).toBe("Test Product");
+    expect(retrievedProducts[0].name).toBe("Test Product");
   });
 
   test("should modify an existing product", async () => {
     const initialProduct = {
-      productName: "Initial Product",
-      salePrice: "$10",
-      amountSaved: "$2",
+      name: "Initial Product",
+      price: "$10",
       pricePerUnit: "$5/kg",
-      productLink: "/initial-product",
-      productImage: "initial.jpg",
+      link: "/initial-product",
+      image: "initial.jpg",
+      brand: "Test Brand",
     };
     const savedProduct = await productService.createProduct(initialProduct);
     const productId = savedProduct._id;
 
     const updatedData = {
-      productName: "Updated Product",
-      salePrice: "$12",
+      name: "Updated Product",
+      price: "$12",
     };
     const updatedProduct = await productService.updateProduct(
       productId,
       updatedData
     );
 
-    expect(updatedProduct.productName).toBe("Updated Product");
-    expect(updatedProduct.salePrice).toBe("$12");
-    expect(updatedProduct.amountSaved).toBe("$2");
+    expect(updatedProduct.name).toBe("Updated Product");
+    expect(updatedProduct.price).toBe("$12");
     expect(updatedProduct.pricePerUnit).toBe("$5/kg");
   });
 
   test("should delete an existing product", async () => {
     const productToDelete = {
-      productName: "Product to Delete",
-      salePrice: "$15",
-      amountSaved: "$3",
+      name: "Product to Delete",
+      price: "$15",
       pricePerUnit: "$7.5/kg",
-      productLink: "/delete-product",
-      productImage: "delete.jpg",
+      link: "/delete-product",
+      image: "delete.jpg",
+      brand: "Test Brand",
     };
     const savedProduct = await productService.createProduct(productToDelete);
     const productId = savedProduct._id;
 
-    await productService.deleteProduct(productId);
+    const result = await productService.deleteProduct(productId);
+    expect(result).toEqual({ message: "Product successfully deleted" });
 
     const deletedProduct = await Product.findById(productId);
     expect(deletedProduct).toBeNull();

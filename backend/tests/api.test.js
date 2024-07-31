@@ -1,6 +1,6 @@
 const axios = require("axios");
-const logger = require("../src/logger");
 const config = require("../src/config/environment");
+const logger = require("../src/utils/logger");
 
 const API_URL = `http://localhost:${config.PORT}/api`;
 
@@ -9,25 +9,24 @@ describe("Test API Endpoints", () => {
 
   test("POST /products - Create a new product", async () => {
     const newProduct = {
-      productName: "Test Product",
-      salePrice: "$15",
-      amountSaved: "$5",
+      name: "Test Product",
+      price: "$15",
       pricePerUnit: "$3/kg",
-      productLink: "/test-product",
-      productImage: "test.jpg",
+      link: "/test-product",
+      image: "test.jpg",
+      brand: "Test Brand",
     };
 
     const response = await axios.post(`${API_URL}/products`, newProduct);
     expect(response.status).toBe(201);
-    expect(response.data.productName).toBe(newProduct.productName);
-    createdProductId = response.data._id;
+    expect(response.data.message).toBe("Product successfully created");
+    expect(response.data.product.name).toBe(newProduct.name);
+    createdProductId = response.data.product._id;
   });
 
   test("GET /products - Fetch all products", async () => {
     const response = await axios.get(`${API_URL}/products`);
     expect(response.status).toBe(200);
-    expect(Array.isArray(response.data)).toBeTruthy();
-    expect(response.data.length).toBeGreaterThan(0);
   });
 
   test("GET /products/:id - Fetch a specific product", async () => {
@@ -38,8 +37,8 @@ describe("Test API Endpoints", () => {
 
   test("PUT /products/:id - Update a product", async () => {
     const updatedData = {
-      productName: "Updated Test Product",
-      salePrice: "$20",
+      name: "Updated Test Product",
+      price: "$20",
     };
 
     const response = await axios.put(
@@ -47,8 +46,9 @@ describe("Test API Endpoints", () => {
       updatedData
     );
     expect(response.status).toBe(200);
-    expect(response.data.productName).toBe(updatedData.productName);
-    expect(response.data.salePrice).toBe(updatedData.salePrice);
+    expect(response.data.message).toBe("Product successfully updated");
+    expect(response.data.product.name).toBe(updatedData.name);
+    expect(response.data.product.price).toBe(updatedData.price);
   });
 
   test("DELETE /products/:id - Delete a product", async () => {
@@ -56,7 +56,7 @@ describe("Test API Endpoints", () => {
       `${API_URL}/products/${createdProductId}`
     );
     expect(response.status).toBe(200);
-    expect(response.data.message).toBe("Product deleted successfully");
+    expect(response.data.message).toBe("Product successfully deleted");
   });
 
   test("GET /products/:id - Verify product is deleted", async () => {

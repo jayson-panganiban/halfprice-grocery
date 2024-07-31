@@ -1,116 +1,60 @@
-const retry = require("async-retry");
 const { chromium } = require("playwright");
 const config = require("../config/playwright.config");
-const logger = require("../logger");
-const productService = require("../services/productService");
+const logger = require("../utils/logger");
+const scraperUtils = require("../utils/scraperUtils");
+const strategies = require("../strategies");
 
-function getRandomUserAgent() {
-  const userAgents = config.projects.map((project) => project.use.userAgent);
-  return userAgents[Math.floor(Math.random() * userAgents.length)];
-}
+class Scraper {
+  constructor(strategy) {
+    this.strategy = strategy;
+  }
 
-async function scrapeWoolies(page) {
-  const productsLocator = page.locator(".product-tile-image a");
-  await productsLocator.first().waitFor({ state: "visible" });
+  async initialize() {
+    const contextOptions = scraperUtils.getContextOptions();
+    this.browser = await chromium.launch({
+      headless: config.headless || false,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
+    this.context = await this.browser.newContext(contextOptions);
+    this.page = await this.context.newPage();
 
-  const productsHandle = await productsLocator.elementHandles();
+    await this.page.setExtraHTTPHeaders(contextOptions.extraHTTPHeaders);
+    await this.page.setViewportSize(contextOptions.viewport);
+    await this.context.setGeolocation(contextOptions.geolocation);
+    await this.context.grantPermissions(contextOptions.permissions);
+  }
 
-  const products = await Promise.all(
-    productsHandle.map(async (element) => {
-      const ariaLabel = await element.getAttribute("aria-label");
-      const link = await element.getAttribute("href");
-      const image = await element.$eval("img", (img) =>
-        img.getAttribute("src")
-      );
-      return createProductDetails(ariaLabel, link, image);
-    })
-  );
-
-  return products;
-}
-
-async function getLastPageNumber(page) {
-  const count = await page.locator(".paging-pageNumber").count();
-  const lastPageElem = await page.locator(".paging-pageNumber").nth(count - 1);
-  const lastPage = (await lastPageElem.textContent())
-    .replace("Page", "")
-    .trim();
-  return lastPage;
-}
-
-function createProductDetails(ariaLabel, link, image) {
-  const parts = (ariaLabel ?? "").split(". ");
-  const { name, price, pricePerUnit } = extractProductInfo(parts);
-  const amountSaved = extractAmountSaved(parts);
-
-  // TODO: Add class="rating"
-  return {
-    productName: name,
-    salePrice: price,
-    amountSaved: amountSaved,
-    pricePerUnit: pricePerUnit || null,
-    productLink: link || null,
-    productImage: image || null,
-  };
-}
-
-function extractProductInfo(parts) {
-  const [namePart, pricePart, pricePerUnitPart] = (parts[3] ?? "").split(",");
-  const pricePerUnit = (pricePerUnitPart ?? "").slice(0, -1);
-  return {
-    name: namePart ? namePart.trim() : null,
-    price: pricePart ? pricePart.trim() : null,
-    pricePerUnit: pricePerUnit ? pricePerUnit.trim() : null,
-  };
-}
-
-function extractAmountSaved(parts) {
-  const amountSavedPart = parts.find((part) => part.startsWith("Save"));
-
-  return amountSavedPart
-    ? amountSavedPart.match(/\$\d?\d+.+/)?.[0] || null
-    : null;
-}
-
-async function scrape() {
-  const randomUserAgent = getRandomUserAgent();
-  const browser = await chromium.launch({ headless: false });
-  logger.info("Browser launched");
-
-  const context = await browser.newContext({
-    ignoreHTTPSErrors: true,
-    http2: false,
-    userAgent: randomUserAgent,
-    extraHTTPHeaders: {
-      "Accept-Language": "en-US,en;q=0.9",
-    },
-  });
-
-  const page = await context.newPage();
-
-  const url = `${config.use.baseURL}?pageNumber=1`;
-
-  await page.goto(url);
-
-  const lastPage = await getLastPageNumber(page);
-
-  // Scrape products per page
-  for (let currentPage = 1; currentPage <= lastPage; currentPage++) {
-    const url = `${config.use.baseURL}?pageNumber=${currentPage}`;
-    await page.goto(url);
+  async scrape() {
     try {
-      logger.info(`Scraping ${url}`);
-      const products = await scrapeWoolies(page);
-      await productService.saveProducts(products);
+      await this.initialize();
+      await scraperUtils.sleep(Math.random() * 3000 + 2000);
+      await this.strategy.execute(this.page);
     } catch (error) {
-      logger.error("Error during navigation or scraping:", error);
+      logger.error("Error during scraping:", error);
+    } finally {
+      await this.cleanup();
     }
   }
 
-  await browser.close();
+  async cleanup() {
+    if (this.browser) {
+      await this.browser.close();
+    }
+  }
 }
 
-module.exports = {
-  scrape,
-  createProductDetails,
+const getStrategy = (brand) => {
+  const strategy = strategies[brand.toLowerCase()];
+  if (!strategy) {
+    throw new Error(`Unsupported brand: ${brand}`);
+  }
+  return strategy;
 };
+
+const scrape = async (brand) => {
+  const strategy = getStrategy(brand);
+  const scraper = new Scraper(strategy);
+  await scraper.scrape();
+};
+
+module.exports = { scrape, Scraper };
