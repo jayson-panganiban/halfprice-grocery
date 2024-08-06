@@ -3,7 +3,6 @@ class ApiError extends Error {
     super(message);
     this.statusCode = statusCode;
     this.status = `${statusCode}`.startsWith("4") ? "fail" : "error";
-    this.isOperational = true;
     Error.captureStackTrace(this, this.constructor);
   }
 }
@@ -20,6 +19,12 @@ class NotFoundError extends ApiError {
   }
 }
 
+// TODO: Implement duplicate submission
+class ConflictError extends ApiError {
+  constructor(message) {
+    super(message || "Duplicate submission, 409");
+  }
+}
 class InternalServerError extends ApiError {
   constructor(message) {
     super(message || "Internal Server Error", 500);
@@ -30,5 +35,6 @@ module.exports = {
   ApiError,
   BadRequestError,
   NotFoundError,
+  ConflictError,
   InternalServerError,
 };
