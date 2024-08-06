@@ -2,6 +2,10 @@ const productService = require("../services/productService");
 const { BadRequestError } = require("../utils/errors");
 
 const validateProductPayload = (payload) => {
+  if (!payload || Object.keys(payload).length === 0) {
+    throw new BadRequestError("Empty payload: product data is required");
+  }
+
   const allowedFields = [
     "name",
     "price",
@@ -18,6 +22,8 @@ const validateProductPayload = (payload) => {
   if (invalidFields.length > 0) {
     throw new BadRequestError(`Invalid field(s): ${invalidFields.join(", ")}`);
   }
+
+  return payload;
 };
 
 const productController = {
@@ -43,16 +49,29 @@ const productController = {
     res.json(product);
   },
 
+  async getPriceHistory(req, res) {
+    const priceHistory = await productService.getPriceHistory(req.params.id);
+    res.json(priceHistory);
+  },
+
   async createProduct(req, res) {
-    validateProductPayload(req.body);
-    const product = await productService.createProduct(req.body);
+    const validatedPayload = validateProductPayload(req.body);
+    const product = await productService.createProduct(validatedPayload);
     res.status(201).json({ message: "Product successfully created", product });
   },
 
   async updateProduct(req, res) {
-    validateProductPayload(req.body);
-    const product = await productService.updateProduct(req.params.id, req.body);
+    const validatedPayload = validateProductPayload(req.body);
+    const product = await productService.updateProduct(
+      req.params.id,
+      validatedPayload
+    );
     res.json({ message: "Product successfully updated", product });
+  },
+
+  async deleteProduct(req, res) {
+    const result = await productService.deleteProduct(req.params.id);
+    res.json(result);
   },
 
   async deleteProduct(req, res) {

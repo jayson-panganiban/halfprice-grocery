@@ -43,6 +43,17 @@ const ProductSchema = new mongoose.Schema(
       trim: true,
       index: true,
     },
+    version: {
+      type: Number,
+      default: 1,
+    },
+    priceHistory: [
+      {
+        price: String,
+        pricePerUnit: String,
+        timestamp: Date,
+      },
+    ],
   },
   { timestamps: true }
 );

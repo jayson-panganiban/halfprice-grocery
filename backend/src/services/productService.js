@@ -1,6 +1,10 @@
 const { Product } = require("../models");
 const logger = require("../utils/logger");
-const { NotFoundError, BadRequestError } = require("../utils/errors");
+const {
+  NotFoundError,
+  BadRequestError,
+  InternalServerError,
+} = require("../utils/errors");
 
 const productService = {
   async getProducts(brand) {
@@ -8,7 +12,7 @@ const productService = {
       const query = brand ? { brand: new RegExp(brand, "i") } : {};
       return await Product.find(query).lean().exec();
     } catch (error) {
-      logger.error("Error fetching products:", error);
+      logger.error(`Error in getProducts: ${error.message}`, { error, brand });
       throw new BadRequestError("Error fetching products");
     }
   },
@@ -21,11 +25,26 @@ const productService = {
       }
       return product;
     } catch (error) {
+      logger.error(`Error in getProductById: ${error.message}`, { error, id });
       if (error instanceof NotFoundError) {
         throw error;
       }
-      logger.error(`Error fetching product with id ${id}:`, error);
-      throw new BadRequestError("Invalid product ID");
+      throw new BadRequestError(`Invalid product ID: ${id}`);
+    }
+  },
+
+  async getPriceHistory(id) {
+    try {
+      const product = await Product.findById(id).lean().exec();
+      if (!product) {
+        throw new NotFoundError(`Product with id ${id} not found`);
+      }
+      return product.priceHistory;
+    } catch (error) {
+      logger.error(`Error in getPriceHistory: ${error.message}`, { error, id });
+      throw new NotFoundError(
+        `Error fetching price history for product with id ${id}`
+      );
     }
   },
 
@@ -36,49 +55,65 @@ const productService = {
       );
       return savedProducts.filter(Boolean);
     } catch (error) {
-      logger.error("Error saving products to database:", error);
-      throw error;
+      logger.error(`Error in saveProducts: ${error.message}`, { error, brand });
+      throw new InternalServerError("Failed to save products to database");
     }
   },
 
   async createProduct(productData) {
-    if (!productData.name?.trim()) {
-      logger.info("Skipping product creation due to empty or null name");
-      return null;
-    }
-
     try {
-      const existingProduct = await Product.findOne({
-        name: productData.name,
-        brand: productData.brand,
-      })
-        .lean()
-        .exec();
-
-      if (existingProduct) {
-        return existingProduct;
-      }
-
       const newProduct = new Product(productData);
+      newProduct.priceHistory.push({
+        price: productData.price,
+        pricePerUnit: productData.pricePerUnit,
+        timestamp: new Date(),
+      });
       const savedProduct = await newProduct.save();
       return savedProduct;
     } catch (error) {
-      logger.error("Error creating product:", error);
-      throw error;
+      logger.error(`Error in createProduct: ${error.message}`, {
+        error,
+        productData,
+      });
+      throw new BadRequestError("Error creating product: " + error.message);
     }
   },
 
   async updateProduct(id, updateData) {
     try {
-      return await Product.findByIdAndUpdate(id, updateData, {
-        new: true,
-        runValidators: true,
-      })
-        .lean()
-        .exec();
+      const product = await Product.findById(id);
+      if (!product) {
+        throw new NotFoundError(`Product with id ${id} not found`);
+      }
+
+      if (
+        updateData.price !== product.price ||
+        updateData.pricePerUnit !== product.pricePerUnit
+      ) {
+        product.priceHistory.push({
+          price: updateData.price,
+          pricePerUnit: updateData.pricePerUnit,
+          timestamp: new Date(),
+        });
+        product.price = updateData.price;
+        product.pricePerUnit = updateData.pricePerUnit;
+
+        Object.assign(product, updateData);
+        product.version += 1;
+      }
+
+      const updatedProduct = await product.save();
+      return updatedProduct;
     } catch (error) {
-      logger.error(`Error updating product with id ${id}:`, error);
-      throw error;
+      logger.error(`Error in updateProduct: ${error.message}`, {
+        error,
+        id,
+        updateData,
+      });
+      if (error instanceof NotFoundError) {
+        throw error;
+      }
+      throw new InternalServerError(`Failed to update product with id ${id}`);
     }
   },
 
@@ -90,8 +125,11 @@ const productService = {
       }
       return { message: "Product successfully deleted" };
     } catch (error) {
-      logger.error(`Error deleting product with id ${id}:`, error);
-      throw error;
+      logger.error(`Error in deleteProduct: ${error.message}`, { error, id });
+      if (error instanceof NotFoundError) {
+        throw error;
+      }
+      throw new InternalServerError(`Failed to delete product with id ${id}`);
     }
   },
 };
