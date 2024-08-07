@@ -1,11 +1,38 @@
 const axios = require("axios");
 const config = require("../src/config/environment");
-const logger = require("../src/utils/logger");
 
 const API_URL = `http://localhost:${config.PORT}/api`;
 
 describe("Test API Endpoints", () => {
-  let createdProductId;
+  test("POST /products/bulk - Save multiple products", async () => {
+    const productsData = {
+      products: [
+        {
+          name: "Product 1",
+          price: "$69.69",
+          pricePerUnit: "$2/kg",
+          link: "/test-product",
+          image: "test.jpg",
+          brand: "Bulk Brand",
+        },
+        {
+          name: "Product 2",
+          price: "$88.99",
+          pricePerUnit: "$2/kg",
+          link: "/test-product",
+          image: "test.jpg",
+          brand: "Bulk Brand",
+        },
+      ],
+    };
+
+    const response = await axios.post(`${API_URL}/products/bulk`, productsData);
+    expect(response.status).toBe(201);
+    expect(response.data.message).toBe("Products successfully saved");
+    expect(response.data.savedProducts).toHaveLength(2);
+    expect(response.data.savedProducts[0].brand).toBe("Bulk Brand");
+    expect(response.data.savedProducts[1].brand).toBe("Bulk Brand");
+  });
 
   test("POST /products - Create a new product", async () => {
     const newProduct = {

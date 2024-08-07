@@ -17,13 +17,17 @@ app.use(helmet());
 app.use(cors());
 app.use(compression());
 app.use(express.json());
-app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
+
+if (config.NODE_ENV === "production") {
+  app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
+}
 
 if (config.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
 
 app.use("/api", routes);
+
 app.use(errorHandler);
 
 const server = createServer(app);
@@ -32,7 +36,9 @@ async function startServer() {
   try {
     await connectDB();
     server.listen(config.PORT, () => {
-      logger.info(`Server running on port ${config.PORT}`);
+      logger.info(
+        `Server running in ${config.NODE_ENV} mode on port ${config.PORT}`
+      );
     });
   } catch (error) {
     logger.error("Failed to start server:", error);

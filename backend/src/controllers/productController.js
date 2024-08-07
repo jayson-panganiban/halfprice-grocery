@@ -54,6 +54,18 @@ const productController = {
     res.json(priceHistory);
   },
 
+  async saveProducts(req, res) {
+    const { products } = req.body;
+    if (!products || !Array.isArray(products) || products.length === 0) {
+      throw new BadRequestError("Invalid products data");
+    }
+
+    const savedProducts = await productService.saveProducts(products);
+    res
+      .status(201)
+      .json({ message: "Products successfully saved", savedProducts });
+  },
+
   async createProduct(req, res) {
     const validatedPayload = validateProductPayload(req.body);
     const product = await productService.createProduct(validatedPayload);

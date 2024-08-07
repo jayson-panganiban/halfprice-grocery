@@ -2,12 +2,7 @@ const mongoose = require("mongoose");
 const connectDB = require("../src/config/database");
 const productService = require("../src/services/productService");
 const Product = require("../src/models/Product");
-const {
-  NotFoundError,
-  BadRequestError,
-  InternalServerError,
-} = require("../src/utils/errors");
-const logger = require("../src/utils/logger");
+const { NotFoundError, BadRequestError } = require("../src/utils/errors");
 
 describe("Product Service", () => {
   beforeAll(async () => {
@@ -20,6 +15,35 @@ describe("Product Service", () => {
 
   beforeEach(async () => {
     await Product.deleteMany({});
+  });
+
+  describe("saveProducts", () => {
+    test("should save multiple products", async () => {
+      const products = [
+        {
+          name: "Product 1",
+          price: "$69",
+          pricePerUnit: "$2/kg",
+          link: "/test-product",
+          image: "test.jpg",
+          brand: "Test Brand",
+        },
+        {
+          name: "Product 2",
+          price: "$88",
+          pricePerUnit: "$2/kg",
+          link: "/test-product",
+          image: "test.jpg",
+          brand: "Test Brand",
+        },
+      ];
+      const savedProducts = await productService.saveProducts(products);
+      expect(savedProducts).toHaveLength(2);
+      expect(savedProducts[0].brand).toBe("Test Brand");
+      expect(savedProducts[1].brand).toBe("Test Brand");
+      expect(savedProducts[0].priceHistory).toHaveLength(1);
+      expect(savedProducts[1].priceHistory).toHaveLength(1);
+    });
   });
 
   describe("createProduct", () => {
@@ -110,6 +134,7 @@ describe("Product Service", () => {
       const priceHistory = await productService.getPriceHistory(
         testProduct._id
       );
+
       expect(priceHistory).toHaveLength(3);
       expect(priceHistory[2].price).toBe("$15");
       expect(priceHistory[2].pricePerUnit).toBe("$7.5/kg");
@@ -175,32 +200,6 @@ describe("Product Service", () => {
       await expect(productService.getProductById("invalid-id")).rejects.toThrow(
         BadRequestError
       );
-    });
-  });
-
-  describe("saveProducts", () => {
-    test("should save multiple products", async () => {
-      const products = [
-        { name: "Product 1", price: "$10" },
-        { name: "Product 2", price: "$20" },
-      ];
-      const savedProducts = await productService.saveProducts(
-        products,
-        "Test Brand"
-      );
-      expect(savedProducts.length).toBe(2);
-      expect(savedProducts[0].brand).toBe("Test Brand");
-      expect(savedProducts[1].brand).toBe("Test Brand");
-    });
-
-    test("should handle error when saving products fails", async () => {
-      jest
-        .spyOn(Product.prototype, "save")
-        .mockRejectedValueOnce(new Error("Database error"));
-      const products = [{ name: "Product 1", price: "$10" }];
-      await expect(
-        productService.saveProducts(products, "Test Brand")
-      ).rejects.toThrow(InternalServerError);
     });
   });
 

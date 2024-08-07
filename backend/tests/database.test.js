@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const connectDB = require("../src/config/database");
 
 describe("Database Connection", () => {
-  jest.setTimeout(30000);
   beforeAll(async () => {
     try {
       await connectDB();

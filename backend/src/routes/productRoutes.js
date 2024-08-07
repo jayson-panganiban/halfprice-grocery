@@ -8,6 +8,7 @@ router.get("/", asyncHandler(productController.getProducts));
 router.get("/:id", asyncHandler(productController.getProductById));
 router.get("/:id/price-history", productController.getPriceHistory);
 router.post("/", asyncHandler(productController.createProduct));
+router.post("/bulk", asyncHandler(productController.saveProducts));
 router.put("/:id", asyncHandler(productController.updateProduct));
 router.delete("/:id", asyncHandler(productController.deleteProduct));
 
