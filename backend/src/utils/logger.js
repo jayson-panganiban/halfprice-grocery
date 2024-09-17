@@ -1,31 +1,52 @@
-const winston = require("winston");
+const { createLogger, format, transports } = require("winston");
+const { consoleFormat } = require("winston-console-format");
+require("winston-daily-rotate-file");
 
-const errorStackFormat = winston.format((info) => {
-  if (info instanceof Error) {
-    return Object.assign({}, info, {
-      stack: info.stack,
-      message: info.message,
-    });
-  }
-  return info;
-});
-
-const logger = winston.createLogger({
-  level: "info",
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.errors({ stack: true }),
-    errorStackFormat(),
-    winston.format.json()
+const logger = createLogger({
+  level: process.env.LOG_LEVEL || "info",
+  format: format.combine(
+    format.timestamp(),
+    format.errors({ stack: true }),
+    format.splat(),
+    format.json()
   ),
   transports: [
-    new winston.transports.Console(),
-    new winston.transports.File({
-      filename: "error.log",
-      level: "error",
+    new transports.Console({
+      format: format.combine(
+        format.colorize({ all: true }),
+        format.padLevels(),
+        consoleFormat({
+          showMeta: true,
+          metaStrip: ["timestamp", "service"],
+          inspectOptions: {
+            depth: Infinity,
+            colors: true,
+            maxArrayLength: Infinity,
+            breakLength: 120,
+            compact: Infinity,
+          },
+        })
+      ),
     }),
-    new winston.transports.File({ filename: "combined.log" }),
+    new transports.DailyRotateFile({
+      filename: "logs/error-%DATE%.log",
+      datePattern: "YYYY-MM-DD",
+      level: "error",
+      maxSize: "20m",
+      maxFiles: "14d",
+    }),
+    new transports.DailyRotateFile({
+      filename: "logs/combined-%DATE%.log",
+      datePattern: "YYYY-MM-DD",
+      maxSize: "20m",
+      maxFiles: "14d",
+    }),
   ],
 });
+
+// Add a stream for Morgan middleware
+logger.stream = {
+  write: (message) => logger.info(message.trim()),
+};
 
 module.exports = logger;

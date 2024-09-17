@@ -1,89 +1,102 @@
-const WooliesStrategy = require("../src/strategies/wooliesStrategy");
-const logger = require("../src/utils/logger");
+const wooliesStrategy = require('../src/strategies/wooliesStrategy');
+const config = require('../src/config/scraper');
 
-describe("Woolies Strategy", () => {
-  describe("createProductDetails", () => {
-    test("should create product details with all information", () => {
+describe('WooliesStrategy', () => {
+  describe('extractProducts', () => {
+    // TODO: Use JSDOM for web element
+    it('should correctly extract product information for half-price items', () => {
       const ariaLabel =
-        "Half Price. On special. Save $5.75. Nescafe Blend 43 Instant Coffee 150g, $5.75, $3.83 / 100G.";
-      const link = "/test-product";
-      const image = "test-image.jpg";
+        'Half Price. On special. Save $4.25. Bulla Splits Multipack Raspberry, Mango & Lemon Lime 10 Pack, $4.25, $0.57 / 100ML.';
+      const link = '/shop/productdetails/123456';
+      const image = 'https://brand.com/image.jpg';
 
-      const result = WooliesStrategy.createProductDetails(
-        ariaLabel,
-        link,
-        image
-      );
+      const result = wooliesStrategy.extractProducts(ariaLabel, link, image);
 
       expect(result).toEqual({
-        pricePerUnit: "$3.83 / 100G",
-        image: "test-image.jpg",
-        link: "https://www.woolworths.com.au/test-product",
-        name: "Nescafe Blend 43 Instant Coffee 150g",
-        price: "$5.75",
-        brand: "Woolies",
+        name: 'Bulla Splits Multipack Raspberry, Mango & Lemon Lime 10 Pack',
+        price: 4.25,
+        savings: 4.25,
+        originalPrice: 8.5,
+        pricePerUnit: '$0.57 / 100ML',
+        link: `${config.woolies.baseURL}/shop/productdetails/123456`,
+        image: 'https://brand.com/image.jpg',
+        brand: 'Woolies',
       });
     });
 
-    test("should handle missing information", () => {
-      const ariaLabel = "Product. Details. Info. Test Product, $10.99";
-      const result = WooliesStrategy.createProductDetails(ariaLabel);
+    it('should correctly extract product information for other half-price items', () => {
+      const ariaLabel =
+        'Half Price. On special. Save $40.00. Blackmores Omega Triple Super Strength Fish Oil Capsules 150 Pack, $40, $0.27 / 1EA.';
+      const link = '/shop/productdetails/123456';
+      const image = 'https://brand.com/image.jpg';
+
+      const result = wooliesStrategy.extractProducts(ariaLabel, link, image);
 
       expect(result).toEqual({
-        name: "Test Product",
-        price: "$10.99",
-        pricePerUnit: null,
-        link: null,
-        image: null,
-        brand: "Woolies",
+        name: 'Blackmores Omega Triple Super Strength Fish Oil Capsules 150 Pack',
+        price: 40.0,
+        savings: 40.0,
+        originalPrice: 80,
+        pricePerUnit: '$0.27 / 1EA',
+        link: `${config.woolies.baseURL}/shop/productdetails/123456`,
+        image: 'https://brand.com/image.jpg',
+        brand: 'Woolies',
       });
     });
 
-    test("should handle empty aria label", () => {
-      const result = WooliesStrategy.createProductDetails("");
+    it('should correctly extract product information with missing pricePerUnit', () => {
+      const ariaLabel =
+        'Half Price. On special. Save $5.40. Decor Vent & Seal Glass Container, Oblong 600ml, $5.4, .';
+      const link = '/shop/productdetails/123456';
+      const image = 'https://brand.com/image.jpg';
+
+      const result = wooliesStrategy.extractProducts(ariaLabel, link, image);
 
       expect(result).toEqual({
-        name: null,
-        price: null,
+        name: 'Decor Vent & Seal Glass Container, Oblong 600ml',
+        price: 5.4,
+        savings: 5.4,
+        originalPrice: 10.8,
         pricePerUnit: null,
-        link: null,
-        image: null,
-        brand: "Woolies",
+        link: `${config.woolies.baseURL}/shop/productdetails/123456`,
+        image: 'https://brand.com/image.jpg',
+        brand: 'Woolies',
       });
+    });
+    it('should return null for arialabels that do not match the expected format', () => {
+      const ariaLabel =
+        'Mount Franklin Lightly Sparkling Water Natural Bottle 1.25l. Earn Bonus Card Pack^ . Non-member price $1.55, $1.24 / 1L.';
+      const link = '/shop/productdetails/789012';
+      const image = 'https://example.com/mount-franklin.jpg';
+
+      const result = wooliesStrategy.extractProducts(ariaLabel, link, image);
+
+      expect(result).toBeNull();
+    });
+
+    it('should return null for another arialabels that do not match the expected format', () => {
+      const ariaLabel =
+        'Mount Franklin Lightly Sparkling Water Pasionfruit Multipack Cans 375ml X10 Pack. Earn Bonus Card Pack^ . Non-member price $9.5, $2.53 / 1L.';
+      const link = '/shop/productdetails/987654';
+      const image = 'https://example.com/mount-franklin-passionfruit.jpg';
+
+      const result = wooliesStrategy.extractProducts(ariaLabel, link, image);
+
+      expect(result).toBeNull();
     });
   });
 
-  describe("extractProductInfo", () => {
-    test("should extract product info correctly", () => {
-      const parts = ["", "", "", "Test Product, $10.99, $1.10/kg."];
-      const result = WooliesStrategy.extractProductInfo(parts);
+  describe('extractProductInfo', () => {
+    it('should correctly extract name, price, and price per unit', () => {
+      const parts =
+        'Bulla Splits Multipack Raspberry, Mango & Lemon Lime 10 Pack, $4.25, $0.57 / 100ML.';
+
+      const result = wooliesStrategy.extractProductInfo(parts);
 
       expect(result).toEqual({
-        name: "Test Product",
-        price: "$10.99",
-        pricePerUnit: "$1.10/kg",
-      });
-    });
-
-    test("should handle missing price per unit", () => {
-      const parts = ["", "", "", "Test Product, $10.99"];
-      const result = WooliesStrategy.extractProductInfo(parts);
-
-      expect(result).toEqual({
-        name: "Test Product",
-        price: "$10.99",
-        pricePerUnit: null,
-      });
-    });
-
-    test("should handle empty parts", () => {
-      const parts = [];
-      const result = WooliesStrategy.extractProductInfo(parts);
-
-      expect(result).toEqual({
-        name: null,
-        price: null,
-        pricePerUnit: null,
+        name: 'Bulla Splits Multipack Raspberry, Mango & Lemon Lime 10 Pack',
+        price: 4.25,
+        pricePerUnit: '$0.57 / 100ML',
       });
     });
   });

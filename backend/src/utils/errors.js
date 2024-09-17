@@ -1,40 +1,73 @@
-class ApiError extends Error {
+class AppError extends Error {
   constructor(message, statusCode) {
     super(message);
     this.statusCode = statusCode;
     this.status = `${statusCode}`.startsWith("4") ? "fail" : "error";
+    this.isOperational = true;
+
     Error.captureStackTrace(this, this.constructor);
   }
-}
 
-class BadRequestError extends ApiError {
-  constructor(message) {
-    super(message || "Bad Request", 400);
+  toJSON() {
+    return {
+      message: this.message,
+      statusCode: this.statusCode,
+      status: this.status,
+      isOperational: this.isOperational,
+      stack: this.stack,
+    };
   }
 }
 
-class NotFoundError extends ApiError {
-  constructor(message) {
-    super(message || "Resource not found", 404);
+class BadRequestError extends AppError {
+  constructor(message = "Bad Request") {
+    super(message, 400);
   }
 }
 
-// TODO: Implement duplicate submission
-class ConflictError extends ApiError {
-  constructor(message) {
-    super(message || "Duplicate submission, 409");
+class UnauthorizedError extends AppError {
+  constructor(message = "Unauthorized") {
+    super(message, 401);
   }
 }
-class InternalServerError extends ApiError {
-  constructor(message) {
-    super(message || "Internal Server Error", 500);
+
+class ForbiddenError extends AppError {
+  constructor(message = "Forbidden") {
+    super(message, 403);
+  }
+}
+
+class NotFoundError extends AppError {
+  constructor(message = "Resource not found") {
+    super(message, 404);
+  }
+}
+
+class ConflictError extends AppError {
+  constructor(message = "Conflict") {
+    super(message, 409);
+  }
+}
+
+class ValidationError extends AppError {
+  constructor(message = "Validation Error") {
+    super(message, 422);
+  }
+}
+
+class InternalServerError extends AppError {
+  constructor(message = "Internal Server Error") {
+    super(message, 500);
   }
 }
 
 module.exports = {
-  ApiError,
+  AppError,
   BadRequestError,
+  UnauthorizedError,
+  ForbiddenError,
   NotFoundError,
   ConflictError,
+  ValidationError,
   InternalServerError,
 };

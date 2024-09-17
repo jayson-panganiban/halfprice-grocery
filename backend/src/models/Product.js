@@ -1,13 +1,26 @@
-const mongoose = require("mongoose");
-const Joi = require("joi");
+const mongoose = require('mongoose');
+const Joi = require('joi');
 
 const productValidationSchema = Joi.object({
-  name: Joi.string().required().trim().max(255),
-  price: Joi.string().allow(null, "").trim(),
-  pricePerUnit: Joi.string().allow(null, "").trim(),
-  link: Joi.string().allow(null, "").uri(),
-  image: Joi.string().allow(null, "").uri(),
+  name: Joi.string().required().trim(),
   brand: Joi.string().required().trim(),
+  price: Joi.number().required().precision(2),
+  savings: Joi.number().required().precision(2),
+  originalPrice: Joi.number().required().precision(2),
+  pricePerUnit: Joi.string().trim().allow(null, ''),
+  link: Joi.string().required().uri(),
+  image: Joi.string().required().uri(),
+  priceHistory: Joi.array()
+    .items(
+      Joi.object({
+        price: Joi.number().precision(2),
+        savings: Joi.number().precision(2),
+        originalPrice: Joi.number().precision(2),
+        pricePerUnit: Joi.string(),
+        timestamp: Joi.date(),
+      })
+    )
+    .optional(),
 });
 
 const ProductSchema = new mongoose.Schema(
@@ -16,26 +29,7 @@ const ProductSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      maxlength: 255,
       index: true,
-    },
-    price: {
-      type: String,
-      required: false,
-      trim: true,
-    },
-    pricePerUnit: {
-      type: String,
-      required: false,
-      trim: true,
-    },
-    link: {
-      type: String,
-      required: false,
-    },
-    image: {
-      type: String,
-      required: false,
     },
     brand: {
       type: String,
@@ -43,13 +37,42 @@ const ProductSchema = new mongoose.Schema(
       trim: true,
       index: true,
     },
-    version: {
+    price: {
       type: Number,
-      default: 1,
+      required: true,
+      get: (v) => parseFloat(v.toFixed(2)),
+      set: (v) => parseFloat(v.toFixed(2)),
+    },
+    savings: {
+      type: Number,
+      required: true,
+      get: (v) => parseFloat(v.toFixed(2)),
+      set: (v) => parseFloat(v.toFixed(2)),
+    },
+    originalPrice: {
+      type: Number,
+      required: true,
+      get: (v) => parseFloat(v.toFixed(2)),
+      set: (v) => parseFloat(v.toFixed(2)),
+    },
+    pricePerUnit: {
+      type: String,
+      trim: true,
+      default: null,
+    },
+    link: {
+      type: String,
+      required: true,
+    },
+    image: {
+      type: String,
+      required: true,
     },
     priceHistory: [
       {
-        price: String,
+        price: Number,
+        savings: Number,
+        originalPrice: Number,
         pricePerUnit: String,
         timestamp: Date,
       },
@@ -64,6 +87,20 @@ ProductSchema.methods.validateProduct = function () {
   return productValidationSchema.validate(this.toObject());
 };
 
-const Product = mongoose.model("Product", ProductSchema);
+ProductSchema.statics.findByBrandAndDateRange = function (
+  brand,
+  startDate,
+  endDate
+) {
+  const query = { createdAt: { $gte: startDate, $lt: endDate } };
+  if (brand) {
+    query.brand = new RegExp(brand, 'i');
+  }
+  return this.find(query);
+};
 
-module.exports = Product;
+module.exports = {
+  Product: mongoose.model('Product', ProductSchema),
+  productValidationSchema,
+  ProductSchema,
+};
