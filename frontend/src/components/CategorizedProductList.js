@@ -1,40 +1,54 @@
-import React, { useState, useEffect } from 'react';
-import { getCategorizedProducts } from '../utils/api';
-import useFilteredProducts from '../hooks/useFilteredProducts';
-import ProductCard from './ProductCard';
-import LoadingSkeleton from './LoadingSkeleton';
-import NoResults from './NoResults';
-import ErrorMessage from './ErrorMessage';
+import React, { useState, useEffect, useCallback } from "react";
+import { getCategorizedProducts } from "../utils/api";
+import useFilteredProducts from "../hooks/useFilteredProducts";
+import ProductCard from "./ProductCard";
+import LoadingSkeleton from "./LoadingSkeleton";
+import NoResults from "./NoResults";
+import ErrorMessage from "./ErrorMessage";
 
 function CategorizedProductList({
   selectedBrand,
   selectedCategory,
   searchTerm,
 }) {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    fetchCategorizedProducts();
-  }, [selectedBrand, selectedCategory]);
+  const fetchCategorizedProducts = useCallback(async () => {
+    if (products[selectedBrand]?.[selectedCategory]) {
+      setLoading(false);
+      return;
+    }
 
-  const fetchCategorizedProducts = async () => {
     setLoading(true);
     try {
       const data = await getCategorizedProducts(
         selectedBrand,
         selectedCategory
       );
-      setProducts(data[selectedCategory] || []);
+      setProducts((prevProducts) => ({
+        ...prevProducts,
+        [selectedBrand]: {
+          ...prevProducts[selectedBrand],
+          [selectedCategory]: data[selectedCategory] || [],
+        },
+      }));
     } catch (error) {
-      setError('Failed to fetch categorized products. Please try again later.');
+      setError("Failed to fetch categorized products. Please try again later.");
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedBrand, selectedCategory, products]);
 
-  const filteredProducts = useFilteredProducts(products, searchTerm);
+  useEffect(() => {
+    fetchCategorizedProducts();
+  }, [fetchCategorizedProducts]);
+
+  const filteredProducts = useFilteredProducts(
+    products[selectedBrand]?.[selectedCategory] || [],
+    searchTerm
+  );
 
   return (
     <>

@@ -3,7 +3,7 @@ import { getWeeklyProducts } from "../utils/api";
 import useFilteredProducts from "../hooks/useFilteredProducts";
 import ProductCard from "./ProductCard";
 import LoadingSkeleton from "./LoadingSkeleton";
-import SearchBar from "./SearchbBar";
+import SearchBar from "./SearchBar";
 import CategoryFilter from "./CategoryFilter";
 import CategorizedProductList from "./CategorizedProductList";
 import BackToTopButton from "./BackToTopButton";

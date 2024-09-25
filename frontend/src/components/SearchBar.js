@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { MagnifyingGlass, X } from "@phosphor-icons/react";
-import "../styles/components/SearchBar.css";
+import React, { useState, useEffect } from 'react';
+import { MagnifyingGlass, X } from '@phosphor-icons/react';
+import '../styles/components/SearchBar.css';
 
 function SearchBar({ onSearch }) {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     onSearch(searchTerm);
   }, [searchTerm, onSearch]);
 
   const handleClear = () => {
-    setSearchTerm("");
+    setSearchTerm('');
   };
 
   return (
