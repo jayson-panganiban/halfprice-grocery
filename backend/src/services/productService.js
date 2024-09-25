@@ -1,83 +1,144 @@
-const { Product, productValidationSchema } = require('../models/Product')
-const logger = require('../utils/logger')
+const { Product, productValidationSchema } = require('../models/Product');
+const logger = require('../utils/logger');
 const {
   NotFoundError,
   BadRequestError,
   InternalServerError,
-} = require('../utils/errors')
+} = require('../utils/errors');
 
 const productService = {
   async getProducts(brand) {
     try {
-      const query = brand ? { brand: new RegExp(brand, 'i') } : {}
-      return await Product.find(query).lean().exec()
+      const query = brand ? { brand: new RegExp(brand, 'i') } : {};
+      return await Product.find(query).lean().exec();
     } catch (error) {
-      logger.error(`Error in getProducts: ${error.message}`, { error, brand })
-      throw new BadRequestError('Error fetching products')
+      logger.error(`Error in getProducts: ${error.message}`, { error, brand });
+      throw new BadRequestError('Error fetching products');
+    }
+  },
+
+  async getWeeklyProducts(brand) {
+    try {
+      const now = new Date();
+      const currentDay = now.getDay();
+      const currentHour = now.getHours();
+
+      const startDate = new Date(now);
+      startDate.setDate(now.getDate() - ((currentDay + 4) % 7));
+      startDate.setHours(7, 0, 0, 0);
+
+      if (currentDay === 3 && currentHour < 7) {
+        startDate.setDate(startDate.getDate() - 7);
+      }
+
+      const endDate = new Date(startDate);
+      endDate.setDate(endDate.getDate() + 7);
+
+      const query = {
+        $or: [
+          { createdAt: { $gte: startDate, $lt: endDate } },
+          { updatedAt: { $gte: startDate, $lt: endDate } },
+        ],
+      };
+
+      if (brand) {
+        query.brand = new RegExp(brand, 'i');
+      }
+
+      const weeklyProducts = await Product.find(query).lean().exec();
+
+      return weeklyProducts;
+    } catch (error) {
+      logger.error(`Error in getWeeklyProducts: ${error.message}`, {
+        error,
+        brand,
+      });
+      throw new InternalServerError('Failed to retrieve weekly products');
     }
   },
 
   async getProductById(id) {
     try {
-      const product = await Product.findById(id).lean().exec()
+      const product = await Product.findById(id).lean().exec();
       if (!product) {
-        throw new NotFoundError(`Product with id ${id} not found`)
+        throw new NotFoundError(`Product with id ${id} not found`);
       }
-      return product
+      return product;
     } catch (error) {
-      logger.error(`Error in getProductById: ${error.message}`, { error, id })
+      logger.error(`Error in getProductById: ${error.message}`, { error, id });
       if (error instanceof NotFoundError) {
-        throw error
+        throw error;
       }
-      throw new BadRequestError(`Invalid product ID: ${id}`)
+      throw new BadRequestError(`Invalid product ID: ${id}`);
+    }
+  },
+
+  async getProductByName(name) {
+    try {
+      const product = await Product.findOne({ name: new RegExp(name, 'i') })
+        .lean()
+        .exec();
+      if (!product) {
+        throw new NotFoundError(`Product with name ${name} not found`);
+      }
+      return product;
+    } catch (error) {
+      logger.error(`Error in getProductByName: ${error.message}`, {
+        error,
+        name,
+      });
+      if (error instanceof NotFoundError) {
+        throw error;
+      }
+      throw new BadRequestError(`Error fetching product with name ${name}`);
     }
   },
 
   async getPriceHistory(id) {
     try {
-      const product = await Product.findById(id).lean().exec()
+      const product = await Product.findById(id).lean().exec();
       if (!product) {
-        throw new NotFoundError(`Product with id ${id} not found`)
+        throw new NotFoundError(`Product with id ${id} not found`);
       }
-      return product.priceHistory
+      return product.priceHistory;
     } catch (error) {
-      logger.error(`Error in getPriceHistory: ${error.message}`, { error, id })
+      logger.error(`Error in getPriceHistory: ${error.message}`, { error, id });
       if (error instanceof NotFoundError) {
-        throw error
+        throw error;
       }
       throw new BadRequestError(
         `Error fetching price history for product with id ${id}`
-      )
+      );
     }
   },
 
   async saveProducts(products) {
     try {
       const savedProducts = await Promise.all(
-        products.map(product => this.createProduct({ ...product }))
-      )
-      return savedProducts.filter(Boolean)
+        products.map((product) => this.createProduct({ ...product }))
+      );
+      return savedProducts.filter(Boolean);
     } catch (error) {
-      logger.error(`Error in saveProducts: ${error.message}`)
-      throw new InternalServerError('Failed to save products to database')
+      logger.error(`Error in saveProducts: ${error.message}`);
+      throw new InternalServerError('Failed to save products to database');
     }
   },
 
   async createProduct(productData) {
     try {
-      const { error } = productValidationSchema.validate(productData)
+      const { error } = productValidationSchema.validate(productData);
       if (error) {
         throw new BadRequestError(
           `Validation error: ${error.details[0].message}`
-        )
+        );
       }
 
       const existingProduct = await Product.findOne({
         name: productData.name,
         brand: productData.brand,
-      }).exec()
+      }).exec();
       if (existingProduct) {
-        return await this.updateProduct(existingProduct._id, productData)
+        return await this.updateProduct(existingProduct._id, productData);
       }
 
       const priceHistoryEntry = {
@@ -86,42 +147,42 @@ const productService = {
         originalPrice: productData.originalPrice,
         pricePerUnit: productData.pricePerUnit,
         timestamp: new Date(),
-      }
+      };
 
       const product = new Product({
         ...productData,
         priceHistory: [priceHistoryEntry],
-      })
+      });
 
-      const savedProduct = await product.save()
-      return savedProduct
+      const savedProduct = await product.save();
+      return savedProduct;
     } catch (error) {
       logger.error(`Error in createProduct: ${error.message}`, {
         error,
         productData,
-      })
-      throw new BadRequestError(`Error creating product: ${error.message}`)
+      });
+      throw new BadRequestError(`Error creating product: ${error.message}`);
     }
   },
 
   async updateProduct(id, updateData) {
     try {
-      const { error } = productValidationSchema.validate(updateData)
+      const { error } = productValidationSchema.validate(updateData);
       if (error) {
         throw new BadRequestError(
           `Validation error: ${error.details[0].message}`
-        )
+        );
       }
 
-      const product = await Product.findById(id)
+      const product = await Product.findById(id);
       if (!product) {
-        throw new NotFoundError(`Product with id ${id} not found`)
+        throw new NotFoundError(`Product with id ${id} not found`);
       }
 
-      const updatedFields = {}
+      const updatedFields = {};
       for (const [key, value] of Object.entries(updateData)) {
         if (product[key] !== value) {
-          updatedFields[key] = value
+          updatedFields[key] = value;
         }
       }
 
@@ -135,35 +196,35 @@ const productService = {
           originalPrice: updatedFields.originalPrice || product.originalPrice,
           pricePerUnit: updatedFields.pricePerUnit || product.pricePerUnit,
           timestamp: new Date(),
-        })
+        });
       }
 
-      Object.assign(product, updatedFields)
-      const updatedProduct = await product.save()
-      return updatedProduct
+      Object.assign(product, updatedFields);
+      const updatedProduct = await product.save();
+      return updatedProduct;
     } catch (error) {
       if (error instanceof NotFoundError) {
-        throw error
+        throw error;
       }
-      throw new InternalServerError(`Failed to update product with id ${id}`)
+      throw new InternalServerError(`Failed to update product with id ${id}`);
     }
   },
 
   async deleteProduct(id) {
     try {
-      const result = await Product.findByIdAndDelete(id).lean().exec()
+      const result = await Product.findByIdAndDelete(id).lean().exec();
       if (!result) {
-        throw new NotFoundError(`Product with id ${id} not found`)
+        throw new NotFoundError(`Product with id ${id} not found`);
       }
-      return { message: 'Product successfully deleted' }
+      return { message: 'Product successfully deleted' };
     } catch (error) {
-      logger.error(`Error in deleteProduct: ${error.message}`, { error, id })
+      logger.error(`Error in deleteProduct: ${error.message}`, { error, id });
       if (error instanceof NotFoundError) {
-        throw error
+        throw error;
       }
-      throw new InternalServerError(`Failed to delete product with id ${id}`)
+      throw new InternalServerError(`Failed to delete product with id ${id}`);
     }
   },
-}
+};
 
-module.exports = productService
+module.exports = productService;

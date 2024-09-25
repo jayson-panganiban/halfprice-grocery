@@ -1,4 +1,5 @@
 const productService = require('../services/productService');
+const categoryService = require('../services/categoryService');
 const { BadRequestError } = require('../utils/errors');
 const asyncHandler = require('../middleware/asyncHandler');
 
@@ -16,8 +17,37 @@ const productController = {
     res.json({ totalProducts, productsByBrand, products });
   }),
 
+  getWeeklyProducts: asyncHandler(async (req, res) => {
+    const { brand } = req.query;
+    const weeklyProducts = await productService.getWeeklyProducts(brand);
+
+    const totalProducts = weeklyProducts.length;
+    const productsByBrand = weeklyProducts.reduce((acc, product) => {
+      acc[product.brand] = (acc[product.brand] || 0) + 1;
+      return acc;
+    }, {});
+
+    res.json({ totalProducts, productsByBrand, products: weeklyProducts });
+  }),
+
+  getCategorizedProducts: asyncHandler(async (req, res) => {
+    const { brand, category, weekly = true } = req.query;
+    const categorizedProducts = await categoryService.categorizeProducts(
+      brand,
+      category,
+      weekly === 'true'
+    );
+    res.json(categorizedProducts);
+  }),
+
   getProductById: asyncHandler(async (req, res) => {
     const product = await productService.getProductById(req.params.id);
+    res.json(product);
+  }),
+
+  getProductByName: asyncHandler(async (req, res) => {
+    const { name } = req.query;
+    const product = await productService.getProductByName(name);
     res.json(product);
   }),
 

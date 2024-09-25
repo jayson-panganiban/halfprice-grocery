@@ -1,18 +1,18 @@
-const express = require("express");
-const helmet = require("helmet");
-const cors = require("cors");
-const morgan = require("morgan");
-const rateLimit = require("express-rate-limit");
-const compression = require("compression");
-const xss = require("xss-clean");
-const hpp = require("hpp");
-const mongoSanitize = require("express-mongo-sanitize");
+const express = require('express');
+const helmet = require('helmet');
+const cors = require('cors');
+const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
+const compression = require('compression');
+const xss = require('xss-clean');
+const hpp = require('hpp');
+const mongoSanitize = require('express-mongo-sanitize');
 
-const config = require("./config/environment");
-const { connectDB, disconnectDB } = require("./config/database");
-const routes = require("./routes");
-const logger = require("./utils/logger");
-const errorHandler = require("./middleware/errorHandler");
+const config = require('./config/environment');
+const { connectDB, disconnectDB } = require('./config/database');
+const routes = require('./routes');
+const logger = require('./utils/logger');
+const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
@@ -23,27 +23,17 @@ function setupMiddleware() {
   app.use(hpp());
   app.use(mongoSanitize());
   app.use(compression());
-  app.use(express.json({ limit: "10kb" }));
-  app.use(express.urlencoded({ extended: true, limit: "10kb" }));
+  app.use(express.json({ limit: '10kb' }));
+  app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
-  if (config.NODE_ENV !== "production") {
-    app.use(morgan("dev"));
-  }
-
-  if (config.NODE_ENV === "production") {
-    const limiter = rateLimit({
-      max: 100,
-      windowMs: 15 * 60 * 1000,
-      message:
-        "Too many requests from this IP, please try again in 15 minutes!",
-    });
-    app.use("/api", limiter);
+  if (config.NODE_ENV !== 'prod') {
+    app.use(morgan('dev'));
   }
 }
 
 function setupRoutes() {
-  app.use("/api", routes);
-  app.get("/health", (req, res) => res.status(200).json({ status: "OK" }));
+  app.use('/api', routes);
+  app.get('/health', (req, res) => res.status(200).json({ status: 'OK' }));
 }
 
 function setupErrorHandling() {
@@ -59,7 +49,7 @@ async function startServer() {
     });
     setupGracefulShutdown(server);
   } catch (error) {
-    logger.error("Failed to start server:", error);
+    logger.error('Failed to start server:', error);
     process.exit(1);
   }
 }
@@ -68,21 +58,21 @@ function setupGracefulShutdown(server) {
   const shutdown = async (signal) => {
     logger.info(`${signal} received. Starting graceful shutdown`);
     server.close(async () => {
-      logger.info("HTTP server closed");
+      logger.info('HTTP server closed');
       await disconnectDB();
-      logger.info("Graceful shutdown completed");
+      logger.info('Graceful shutdown completed');
       process.exit(0);
     });
 
     // Force shutdown after 10 seconds
     setTimeout(() => {
-      logger.error("Forced shutdown after timeout");
+      logger.error('Forced shutdown after timeout');
       process.exit(1);
     }, 10000);
   };
 
-  process.on("SIGTERM", () => shutdown("SIGTERM"));
-  process.on("SIGINT", () => shutdown("SIGINT"));
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
 }
 
 setupMiddleware();
@@ -91,7 +81,7 @@ setupErrorHandling();
 
 if (require.main === module) {
   startServer().catch((error) => {
-    logger.error("Failed to start server:", error);
+    logger.error('Failed to start server:', error);
     process.exit(1);
   });
 }
