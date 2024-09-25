@@ -1,0 +1,24 @@
+.error-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2rem;
+  background-color: #fff3f3;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  color: var(--color-secondary);
+  font-size: 1.2rem;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-message svg {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.error-message p {
+  margin: 0;
+}

@@ -1,0 +1,57 @@
+.price-history-chart {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.chart-container {
+  height: 300px;
+  position: relative;
+}
+
+.price-summary {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.summary-item {
+  text-align: center;
+}
+
+.summary-label {
+  display: block;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.summary-value {
+  font-size: 18px;
+  font-weight: bold;
+  color: #2d5a79;
+}
+
+@media (max-width: 600px) {
+  .price-history-chart {
+    padding: 15px;
+  }
+
+  .chart-container {
+    height: 250px;
+  }
+
+  .price-summary {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .summary-item {
+    margin-bottom: 10px;
+  }
+}

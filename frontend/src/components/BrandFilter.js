@@ -1,13 +1,30 @@
-import React from "react";
+import React from 'react';
+import { useBrand } from '../context/BrandContext';
+import '../styles/components/BrandFilter.css';
 
-function BrandFilter({ onBrandChange }) {
+function BrandFilter() {
+  const { activeBrand, setActiveBrand } = useBrand();
+
   return (
     <div className="brand-filter">
-      <select onChange={(e) => onBrandChange(e.target.value)}>
-        <option value="">All Brands</option>
-        <option value="Coles">Coles</option>
-        <option value="Woolies">Woolworths</option>
-      </select>
+      <button
+        className={`brand-button ${activeBrand === '' ? 'active' : ''}`}
+        onClick={() => setActiveBrand('')}
+      >
+        All Brands
+      </button>
+      <button
+        className={`brand-button ${activeBrand === 'Coles' ? 'active' : ''}`}
+        onClick={() => setActiveBrand('Coles')}
+      >
+        Coles
+      </button>
+      <button
+        className={`brand-button ${activeBrand === 'Woolies' ? 'active' : ''}`}
+        onClick={() => setActiveBrand('Woolies')}
+      >
+        Woolworths
+      </button>
     </div>
   );
 }

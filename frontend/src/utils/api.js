@@ -1,30 +1,53 @@
-import axios from "axios";
+import axios from 'axios';
 
-const API_BASE_URL = "http://localhost:3001/api";
+const API_BASE_URL = 'http://localhost:3001/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
 });
 
-export const getProducts = async (brand = "") => {
+export const getProducts = async (filters = {}) => {
   try {
-    const response = await api.get("/products", { params: { brand } });
+    const queryParams = new URLSearchParams(filters).toString();
+    const url = `/products${queryParams ? `?${queryParams}` : ''}`;
+    const response = await api.get(url);
     return response.data;
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.error('Error fetching products:', error);
     throw error;
   }
 };
 
-export const getAllProducts = async () => {
+export const getWeeklyProducts = async (filters = {}) => {
   try {
-    const [colesProducts, wooliesProducts] = await Promise.all([
-      getProducts("Coles"),
-      getProducts("Woolies"),
-    ]);
-    return [...colesProducts.products, ...wooliesProducts.products];
+    const queryParams = new URLSearchParams(filters).toString();
+    const url = `/products/weekly${queryParams ? `?${queryParams}` : ''}`;
+    const response = await api.get(url);
+    return response.data;
   } catch (error) {
-    console.error("Error fetching all products:", error);
+    console.error('Error fetching products:', error);
+    throw error;
+  }
+};
+
+export const getCategorizedProducts = async (brand, category) => {
+  try {
+    const params = new URLSearchParams({ brand, category, weekly: true });
+    const url = `/products/categorized?${params.toString()}`;
+    const response = await api.get(url);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching categorized products:', error);
+    throw error;
+  }
+};
+
+export const getLatestScrapeDate = async () => {
+  try {
+    const response = await api.get('/latest-scrape-date');
+    return response.data.latestDate;
+  } catch (error) {
+    console.error('Error fetching latest scrape date:', error);
     throw error;
   }
 };

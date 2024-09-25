@@ -1,0 +1,45 @@
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  color: var(--color-text);
+  font-size: 1.2rem;
+  margin-top: 2rem;
+  transition: all 0.3s ease;
+}
+
+.no-results:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.no-results svg {
+  font-size: 3rem;
+  color: var(--color-secondary);
+  margin-bottom: 1rem;
+  animation: pulse 2s infinite;
+}
+
+.no-results p {
+  margin: 0.5rem 0;
+}
+
+.no-results p:first-of-type {
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
