@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from "react";
-import { getWeeklyProducts } from "../utils/api";
-import useFilteredProducts from "../hooks/useFilteredProducts";
-import ProductCard from "./ProductCard";
-import LoadingSkeleton from "./LoadingSkeleton";
-import SearchBar from "./SearchBar";
-import CategoryFilter from "./CategoryFilter";
-import CategorizedProductList from "./CategorizedProductList";
-import BackToTopButton from "./BackToTopButton";
-import NoResults from "./NoResults";
-import ErrorMessage from "./ErrorMessage";
-import BrandTabs from "./BrandTabs";
-import ProductListLayout from "./ProductListLayout";
+import React, { useState, useEffect } from 'react';
+import { getWeeklyProducts } from '../utils/api';
+import useFilteredProducts from '../hooks/useFilteredProducts';
+import ProductCard from './ProductCard';
+import LoadingSkeleton from './LoadingSkeleton';
+import SearchBar from './SearchBar';
+import CategoryFilter from './CategoryFilter';
+import CategorizedProductList from './CategorizedProductList';
+import BackToTopButton from './BackToTopButton';
+import NoResults from './NoResults';
+import ErrorMessage from './ErrorMessage';
+import BrandTabs from './BrandTabs';
+import ProductListLayout from './ProductListLayout';
 
 function ProductList() {
   const [products, setProducts] = useState({ coles: [], woolies: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedBrand, setSelectedBrand] = useState("coles");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedBrand, setSelectedBrand] = useState('coles');
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
   useEffect(() => {
-    if (selectedCategory === "All") {
+    if (selectedCategory === 'All') {
       fetchProducts();
     }
   }, [selectedBrand, selectedCategory]);
@@ -36,7 +36,7 @@ function ProductList() {
         [selectedBrand]: data.products,
       }));
     } catch (error) {
-      setError("Failed to fetch products. Please try again later.");
+      setError('Failed to fetch products. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -48,7 +48,7 @@ function ProductList() {
 
   const handleBrandChange = (brand) => {
     setSelectedBrand(brand);
-    setSelectedCategory("All");
+    setSelectedCategory('All');
   };
 
   const handleCategoryChange = (category) => {
@@ -79,7 +79,7 @@ function ProductList() {
   const content = (
     <>
       {loading ? (
-        <LoadingSkeleton count={8} brand={selectedBrand} />
+        <LoadingSkeleton count={10} brand={selectedBrand} />
       ) : filteredProducts.length > 0 ? (
         filteredProducts.map((product) => (
           <ProductCard key={product._id} product={product} />
@@ -95,7 +95,7 @@ function ProductList() {
       <ProductListLayout
         filters={filters}
         content={
-          selectedCategory === "All" ? (
+          selectedCategory === 'All' ? (
             content
           ) : (
             <CategorizedProductList

@@ -1,20 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { MagnifyingGlass, X } from '@phosphor-icons/react';
 import '../styles/components/SearchBar.css';
 
 function SearchBar({ onSearch }) {
   const [searchTerm, setSearchTerm] = useState('');
 
+  const debouncedSearch = useCallback(
+    debounce((term) => {
+      onSearch(term);
+    }, 300),
+    [onSearch]
+  );
+
   useEffect(() => {
-    onSearch(searchTerm);
-  }, [searchTerm, onSearch]);
+    debouncedSearch(searchTerm);
+  }, [searchTerm, debouncedSearch]);
 
   const handleClear = () => {
     setSearchTerm('');
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSearch(searchTerm);
+  };
+
   return (
-    <form className="search-bar">
+    <form className="search-bar" onSubmit={handleSubmit}>
       <input
         type="text"
         value={searchTerm}
@@ -32,6 +44,14 @@ function SearchBar({ onSearch }) {
       </button>
     </form>
   );
+}
+
+function debounce(func, delay) {
+  let timeoutId;
+  return function (...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func(...args), delay);
+  };
 }
 
 export default SearchBar;

@@ -23,7 +23,6 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "postbuild": "cp public/custom-service-worker.js build/service-worker.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

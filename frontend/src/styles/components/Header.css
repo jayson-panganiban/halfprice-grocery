@@ -1,10 +1,11 @@
 .header {
-  background-color: rgba(255, 255, 255, 0.98);
+  background-color: rgba(255, 255, 255, 0.8);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
   z-index: 1000;
   backdrop-filter: blur(10px);
+  border-radius: 0 0 12px 12px;
 }
 
 .header-content {
@@ -14,9 +15,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 0 0 12px 12px;
 }
 
 .logo {
@@ -31,7 +31,7 @@
 
 .logo:hover {
   transform: scale(1.05);
-  color: var(--color-primary);
+  color: var(--color-secondary);
 }
 
 .logo-icon {
@@ -53,7 +53,7 @@
 }
 
 .nav-link::after {
-  content: "";
+  content: '';
   position: absolute;
   width: 0;
   height: 2px;
@@ -122,9 +122,10 @@
     top: 100%;
     left: 0;
     right: 0;
-    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.95);
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     padding: 22px;
+    backdrop-filter: blur(10px);
   }
 
   .mobile-menu-toggle {

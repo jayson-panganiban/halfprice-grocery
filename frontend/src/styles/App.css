@@ -1,19 +1,19 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
   --color-primary: #375e97;
   --color-secondary: #b85042;
   --color-accent: #ffbb00;
-  --color-background: #ffffff;
+  --color-background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   --color-text: #2c3e50;
 }
 
 body {
   margin: 0;
-  font-family: "Outfit", sans-serif;
+  font-family: 'Outfit', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--color-background);
+  background: var(--color-background);
   color: var(--color-text);
   line-height: 1.6;
 }
@@ -22,9 +22,11 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  background-color: var(--color-background);
+  background-color: rgba(255, 255, 255, 0.8);
   color: var(--color-text);
   transition: background-color 0.3s, color 0.3s;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .products-grid {

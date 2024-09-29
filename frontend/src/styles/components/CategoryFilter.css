@@ -23,7 +23,7 @@
 }
 
 .category-button:hover {
-  background-color: #e0e0e0;
+  background-color: var(--color-accent);
   transform: translateY(-2px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }

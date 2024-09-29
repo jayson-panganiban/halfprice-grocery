@@ -1,6 +1,10 @@
 import React from 'react';
-import { FaLeaf, FaShoppingBasket, FaChartLine } from 'react-icons/fa';
-import { FaCoffee } from 'react-icons/fa';
+import {
+  FaLeaf,
+  FaShoppingBasket,
+  FaChartLine,
+  FaCoffee,
+} from 'react-icons/fa';
 import '../styles/components/About.css';
 
 const About = () => {
@@ -13,37 +17,43 @@ const About = () => {
       </p>
 
       <div className="feature-grid">
-        <div className="feature-item">
-          <FaLeaf className="feature-icon" />
-          <h2>Fresh Deals Weekly</h2>
-          <p>
-            I update the prices every week because who doesn't love a good deal?
-          </p>
-        </div>
-        <div className="feature-item">
-          <FaShoppingBasket className="feature-icon" />
-          <h2>Wide Selection</h2>
-          <p>From snacks to veggies, I've got all your munchies covered.</p>
-        </div>
-        <div className="feature-item">
-          <FaChartLine className="feature-icon" />
-          <h2>Price History</h2>
-          <p>
-            Track the price trends of your favorite products over time to make
-            informed buying decisions.
-          </p>
-        </div>
+        {[
+          {
+            icon: FaLeaf,
+            title: 'Fresh Deals Weekly',
+            description:
+              "I update the prices every week because who doesn't love a good deal?",
+          },
+          {
+            icon: FaShoppingBasket,
+            title: 'Wide Selection',
+            description:
+              "From snacks to veggies, I've got all your munchies covered.",
+          },
+          {
+            icon: FaChartLine,
+            title: 'Price History',
+            description:
+              'Track the price trends of your favorite products over time to make informed buying decisions.',
+          },
+        ].map((feature, index) => (
+          <div key={index} className="feature-item">
+            <feature.icon className="feature-icon" />
+            <h2>{feature.title}</h2>
+            <p>{feature.description}</p>
+          </div>
+        ))}
       </div>
 
       <div className="about-story">
         <h2>My Story</h2>
         <p>
-          Hey there, bargain hunters! My partner and I are always on the lookout
-          for a good deal. That's when Half-Price Groceries was born. It's my
-          little pet project to help myself, my beautiful partner, and others
-          like us find the best grocery deals out there. It's not perfect, but
-          I'm having a blast working on it in my free time. Hope you find it
-          useful!
+          My partner and I are always on the hunt for great deals, and that's
+          how Half-Price Groceries came to life. It's a personal project I
+          started to help myself, my wonderful partner, and others like us find
+          the best grocery bargains. While it's still a work in progress, I'm
+          thoroughly enjoying the process in my spare time. I hope you find it
+          helpful!
         </p>
       </div>
 

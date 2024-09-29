@@ -42,7 +42,7 @@
 }
 
 .product-card-skeleton::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   right: 0;
@@ -63,5 +63,31 @@
   }
   100% {
     transform: translateX(100%);
+  }
+}
+
+@media (max-width: 768px) {
+  .product-card-skeleton {
+    display: flex;
+    width: 100%;
+    height: 120px;
+    margin-bottom: 10px;
+  }
+
+  .skeleton-image {
+    width: 120px;
+    height: 120px;
+  }
+
+  .skeleton-content {
+    flex: 1;
+    padding: 10px;
+  }
+
+  .skeleton-title,
+  .skeleton-price,
+  .skeleton-description {
+    height: 15px;
+    margin-bottom: 5px;
   }
 }

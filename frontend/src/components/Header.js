@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faBars } from '@fortawesome/free-solid-svg-icons';
-import { FaCoffee, FaShoppingCart } from 'react-icons/fa';
+import { FaShoppingCart } from 'react-icons/fa';
 import { FavoritesContext } from '../context/FavoritesContext';
 import FavoritesModal from './FavoritesModal';
 import '../styles/components/Header.css';
@@ -21,13 +21,25 @@ function Header() {
         </Link>
 
         <nav className={`main-nav ${showMobileMenu ? 'show' : ''}`}>
-          <Link to="/" className="nav-link">
+          <Link
+            to="/"
+            className="nav-link"
+            onClick={() => setShowMobileMenu(false)}
+          >
             Home
           </Link>
-          <Link to="/about" className="nav-link">
+          <Link
+            to="/about"
+            className="nav-link"
+            onClick={() => setShowMobileMenu(false)}
+          >
             About
           </Link>
-          <Link to="/contact" className="nav-link">
+          <Link
+            to="/contact"
+            className="nav-link"
+            onClick={() => setShowMobileMenu(false)}
+          >
             Contact
           </Link>
         </nav>

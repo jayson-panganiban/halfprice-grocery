@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaEnvelope, FaGithub, FaLinkedin } from 'react-icons/fa';
+import { FaEnvelope, FaGithub, FaLinkedin, FaPaperPlane } from 'react-icons/fa';
 import '../styles/components/Contact.css';
 
 const Contact = () => {
@@ -8,16 +8,52 @@ const Contact = () => {
     email: '',
     message: '',
   });
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors({ ...errors, [name]: '' });
+    }
   };
 
-  const handleSubmit = (e) => {
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.name.trim()) newErrors.name = 'Name is required';
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email is invalid';
+    }
+    if (!formData.message.trim()) newErrors.message = 'Message is required';
+    return newErrors;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    alert("Thanks for reaching out! I'll get back to you soon.");
-    setFormData({ name: '', email: '', message: '' });
+    const newErrors = validateForm();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      // Simulating an API call
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      console.log('Form submitted:', formData);
+      setSubmitSuccess(true);
+      setFormData({ name: '', email: '', message: '' });
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setErrors({ submit: 'Failed to submit the form. Please try again.' });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -33,11 +69,11 @@ const Contact = () => {
           <h2>Let's Connect</h2>
           <ul>
             <li>
-              <FaEnvelope />{' '}
+              <FaEnvelope className="contact-icon" />
               <a href="mailto:jsoncp@proton.me">jsoncp@proton.me</a>
             </li>
             <li>
-              <FaGithub />{' '}
+              <FaGithub className="contact-icon" />
               <a
                 href="https://github.com/jayson-panganiban"
                 target="_blank"
@@ -47,7 +83,7 @@ const Contact = () => {
               </a>
             </li>
             <li>
-              <FaLinkedin />{' '}
+              <FaLinkedin className="contact-icon" />
               <a
                 href="https://www.linkedin.com/in/jayson-panganiban"
                 target="_blank"
@@ -60,36 +96,66 @@ const Contact = () => {
         </div>
         <form className="contact-form" onSubmit={handleSubmit}>
           <h2>Send me a Message</h2>
-          <div className="form-group">
+          <div className={`form-group ${errors.name ? 'error' : ''}`}>
+            <label htmlFor="name">Your Name</label>
             <input
               type="text"
+              id="name"
               name="name"
-              placeholder="Your Name"
               value={formData.name}
               onChange={handleChange}
-              required
+              aria-invalid={errors.name ? 'true' : 'false'}
+              aria-describedby={errors.name ? 'name-error' : undefined}
             />
+            {errors.name && (
+              <p className="error-message" id="name-error">
+                {errors.name}
+              </p>
+            )}
           </div>
-          <div className="form-group">
+          <div className={`form-group ${errors.email ? 'error' : ''}`}>
+            <label htmlFor="email">Your Email</label>
             <input
               type="email"
+              id="email"
               name="email"
-              placeholder="Your Email"
               value={formData.email}
               onChange={handleChange}
-              required
+              aria-invalid={errors.email ? 'true' : 'false'}
+              aria-describedby={errors.email ? 'email-error' : undefined}
             />
+            {errors.email && (
+              <p className="error-message" id="email-error">
+                {errors.email}
+              </p>
+            )}
           </div>
-          <div className="form-group">
+          <div className={`form-group ${errors.message ? 'error' : ''}`}>
+            <label htmlFor="message">Your Message</label>
             <textarea
+              id="message"
               name="message"
-              placeholder="Your Message"
               value={formData.message}
               onChange={handleChange}
-              required
+              aria-invalid={errors.message ? 'true' : 'false'}
+              aria-describedby={errors.message ? 'message-error' : undefined}
             ></textarea>
+            {errors.message && (
+              <p className="error-message" id="message-error">
+                {errors.message}
+              </p>
+            )}
           </div>
-          <button type="submit">Send Message</button>
+          <button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Sending...' : 'Send Message'}{' '}
+            <FaPaperPlane className="send-icon" />
+          </button>
+          {errors.submit && <p className="error-message">{errors.submit}</p>}
+          {submitSuccess && (
+            <div className="success-message">
+              Thanks for reaching out! I'll get back to you soon.
+            </div>
+          )}
         </form>
       </div>
     </div>

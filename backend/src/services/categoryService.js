@@ -92,6 +92,7 @@ const categoryService = {
           'makeup',
           'supplement',
           'fish oil',
+          'sunscreen',
         ],
       ],
       [

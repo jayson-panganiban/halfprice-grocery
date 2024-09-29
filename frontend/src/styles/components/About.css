@@ -1,107 +1,85 @@
 .about-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 4rem 2rem;
+  padding: 3rem 2rem;
   font-family: 'Outfit', sans-serif;
   color: var(--color-text);
-  background-color: #ffffff;
 }
 
 .about-container h1 {
-  font-size: 3rem;
+  font-size: 3.5rem;
   color: var(--color-primary);
   margin-bottom: 1.5rem;
   text-align: center;
-  letter-spacing: -1px;
+  letter-spacing: -2px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.mission-statement,
+.feature-item p,
+.about-story p,
+.support-section p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: var(--color-text);
 }
 
 .mission-statement {
-  font-size: 1.4rem;
   text-align: center;
-  margin-bottom: 4rem;
-  color: var(--color-text);
+  margin-bottom: 3rem;
   font-weight: 300;
 }
 
 .feature-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-bottom: 4rem;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
 }
 
 .feature-item,
 .about-story,
-.contact-info,
-.contact-form {
-  background-color: #ffffff;
+.support-section {
+  background-color: rgba(255, 255, 255, 0.8);
   padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .feature-item:hover,
 .about-story:hover,
-.contact-info:hover,
-.contact-form:hover {
+.support-section:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
 }
 
 .feature-icon {
   font-size: 3.5rem;
   color: var(--color-secondary);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .feature-item h2,
 .about-story h2,
-.contact-info h2,
-.contact-form h2 {
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
-  color: var(--color-primary);
-}
-
-.feature-item p,
-.about-story p,
-.contact-info p {
-  font-size: 1.1rem;
-  color: var(--color-text);
-  line-height: 1.6;
-}
-
-.about-story {
-  padding: 3rem;
-}
-
-.about-story h2 {
-  font-size: 2.5rem;
-}
-
-.support-section {
-  margin-top: 4rem;
-  text-align: center;
-  background-color: #ffffff;
-  padding: 3rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
 .support-section h2 {
-  font-size: 2.5rem;
+  font-size: 2.2rem;
   color: var(--color-primary);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+  position: relative;
 }
 
-.support-section p {
-  font-size: 1.2rem;
-  color: var(--color-text);
-  max-width: 600px;
-  margin: 0 auto 2rem;
-  line-height: 1.8;
-  padding: 0 1rem;
+.feature-item h2::after,
+.about-story h2::after,
+.support-section h2::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background-color: var(--color-secondary);
 }
 
 .coffee-button {
@@ -111,20 +89,22 @@
   background-color: var(--color-secondary);
   color: #ffffff;
   border: none;
-  padding: 12px 24px;
-  border-radius: 4px;
+  padding: 1rem 2rem;
+  border-radius: 12px;
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 1px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .coffee-button:hover {
   background-color: var(--color-accent);
   color: var(--color-text);
   transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
 .coffee-button svg {
@@ -138,7 +118,13 @@
   }
 
   .about-container h1 {
-    font-size: 2.5rem;
+    font-size: 2.8rem;
+  }
+
+  .feature-item h2,
+  .about-story h2,
+  .support-section h2 {
+    font-size: 1.8rem;
   }
 
   .feature-grid {
