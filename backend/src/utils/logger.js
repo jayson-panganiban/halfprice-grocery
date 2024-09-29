@@ -1,9 +1,9 @@
-const { createLogger, format, transports } = require("winston");
-const { consoleFormat } = require("winston-console-format");
-require("winston-daily-rotate-file");
+const { createLogger, format, transports } = require('winston');
+const { consoleFormat } = require('winston-console-format');
+require('winston-daily-rotate-file');
 
 const logger = createLogger({
-  level: process.env.LOG_LEVEL || "info",
+  level: process.env.LOG_LEVEL || 'info',
   format: format.combine(
     format.timestamp(),
     format.errors({ stack: true }),
@@ -17,7 +17,7 @@ const logger = createLogger({
         format.padLevels(),
         consoleFormat({
           showMeta: true,
-          metaStrip: ["timestamp", "service"],
+          metaStrip: ['timestamp', 'service'],
           inspectOptions: {
             depth: Infinity,
             colors: true,
@@ -29,17 +29,17 @@ const logger = createLogger({
       ),
     }),
     new transports.DailyRotateFile({
-      filename: "logs/error-%DATE%.log",
-      datePattern: "YYYY-MM-DD",
-      level: "error",
-      maxSize: "20m",
-      maxFiles: "14d",
+      filename: 'logs/error-%DATE%.log',
+      datePattern: 'YYYY-MM-DD',
+      level: 'error',
+      maxSize: '20m',
+      maxFiles: '14d',
     }),
     new transports.DailyRotateFile({
-      filename: "logs/combined-%DATE%.log",
-      datePattern: "YYYY-MM-DD",
-      maxSize: "20m",
-      maxFiles: "14d",
+      filename: 'logs/combined-%DATE%.log',
+      datePattern: 'YYYY-MM-DD',
+      maxSize: '20m',
+      maxFiles: '14d',
     }),
   ],
 });

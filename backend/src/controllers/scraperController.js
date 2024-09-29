@@ -1,4 +1,4 @@
-const scraperService = require("../services/scraperService");
+const scraperService = require('../services/scraperService');
 
 const scraperController = {
   async runScraper(req, res) {

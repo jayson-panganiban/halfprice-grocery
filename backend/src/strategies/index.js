@@ -1,5 +1,5 @@
-const colesStrategy = require("./colesStrategy");
-const wooliesStrategy = require("./wooliesStrategy");
+const colesStrategy = require('./colesStrategy');
+const wooliesStrategy = require('./wooliesStrategy');
 
 module.exports = {
   coles: colesStrategy,

@@ -26,7 +26,7 @@ function setupMiddleware() {
   app.use(express.json({ limit: '10kb' }));
   app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
-  if (config.NODE_ENV !== 'prod') {
+  if (config.NODE_ENV !== 'production') {
     app.use(morgan('dev'));
   }
 }
@@ -43,7 +43,7 @@ function setupErrorHandling() {
 async function startServer() {
   try {
     await connectDB();
-    const port = config.PORT || 3000;
+    const port = config.PORT || 3001;
     const server = app.listen(port, () => {
       logger.info(`Server running in ${config.NODE_ENV} mode on port ${port}`);
     });

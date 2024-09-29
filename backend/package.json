@@ -4,7 +4,7 @@
   "description": "Backend service for the Half-Price project",
   "main": "server.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=prod node src/app.js",
+    "start": "cross-env NODE_ENV=production node src/app.js",
     "dev": "cross-env NODE_ENV=dev nodemon src/app.js",
     "test:server": "cross-env NODE_ENV=test node src/app.js",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles --reporters=default --reporters=jest-html-reporter"
@@ -29,10 +29,10 @@
     "winston": "^3.13.1",
     "winston-console-format": "^1.0.8",
     "winston-daily-rotate-file": "^5.0.0",
-    "xss-clean": "^0.1.4"
+    "xss-clean": "^0.1.4",
+    "@playwright/test": "^1.47.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.47.0",
     "@types/node": "^20.14.11",
     "axios-mock-adapter": "^2.0.0",
     "eslint": "^9.9.1",
