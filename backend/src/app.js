@@ -43,7 +43,7 @@ function setupErrorHandling() {
 async function startServer() {
   try {
     await connectDB();
-    const port = config.PORT || 3001;
+    const port = config.PORT || 3000;
     const server = app.listen(port, () => {
       logger.info(`Server running in ${config.NODE_ENV} mode on port ${port}`);
     });

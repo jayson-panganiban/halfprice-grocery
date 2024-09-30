@@ -10,11 +10,11 @@ if (environment !== 'production') {
   dotenv.config({ path: envFile });
   logger.info(`Loaded environment variables from ${envFile}`);
 } else {
-  logger.info('Using environment variables from process.env (Render)');
+  logger.info('Using environment variables from process.env');
 }
 
 module.exports = {
   NODE_ENV: environment,
-  PORT: process.env.PORT || 3001,
+  PORT: process.env.PORT || 3000,
   MONGODB_URI: process.env.MONGODB_URI || 'mongodb://localhost:27017/halfprice',
 };
