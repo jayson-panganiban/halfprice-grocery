@@ -1,9 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Modal from 'react-modal';
 import { FavoritesContext } from '../context/FavoritesContext';
-import { FaTimes, FaTrashAlt, FaHeart } from 'react-icons/fa';
+import { FaTimes, FaTrashAlt, FaHeart, FaChartLine } from 'react-icons/fa';
 import wooliesLogo from '../assets/woolies.png';
 import colesLogo from '../assets/coles.png';
+import PriceHistoryModal from './PriceHistoryModal';
 import '../styles/components/FavoritesModal.css';
 
 Modal.setAppElement('#root');
@@ -11,6 +12,8 @@ Modal.setAppElement('#root');
 function FavoritesModal({ isOpen, onClose }) {
   const { favorites, toggleFavorite, removeAllFavorites } =
     useContext(FavoritesContext);
+  const [showPriceHistory, setShowPriceHistory] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   const getBrandLogo = (brand) => {
     switch (brand.toLowerCase()) {
@@ -23,6 +26,11 @@ function FavoritesModal({ isOpen, onClose }) {
     }
   };
 
+  const handlePriceHistoryClick = (product) => {
+    setSelectedProduct(product);
+    setShowPriceHistory(true);
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -33,7 +41,7 @@ function FavoritesModal({ isOpen, onClose }) {
     >
       <div className="favorites-header">
         <h2>Your Favorites</h2>
-        <button className="close-button" onClick={onClose}>
+        <button className="favorites-close-button" onClick={onClose}>
           <FaTimes />
         </button>
       </div>
@@ -80,18 +88,32 @@ function FavoritesModal({ isOpen, onClose }) {
                       )}
                     </div>
                   </a>
-                  <button
-                    className="remove-favorite-button"
-                    onClick={() => toggleFavorite(product)}
-                  >
-                    <FaHeart className="heart-icon filled" />
-                  </button>
+                  <div className="favorite-actions">
+                    <button
+                      className="price-history-button"
+                      onClick={() => handlePriceHistoryClick(product)}
+                    >
+                      <FaChartLine />
+                    </button>
+                    <button
+                      className="remove-favorite-button"
+                      onClick={() => toggleFavorite(product)}
+                    >
+                      <FaHeart className="heart-icon filled" />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
           </>
         )}
       </div>
+      {showPriceHistory && selectedProduct && (
+        <PriceHistoryModal
+          product={selectedProduct}
+          onClose={() => setShowPriceHistory(false)}
+        />
+      )}
     </Modal>
   );
 }

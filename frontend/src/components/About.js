@@ -10,7 +10,7 @@ import '../styles/components/About.css';
 const About = () => {
   return (
     <div className="about-container">
-      <h1>About Half-Price Groceries</h1>
+      <h1>About Half-Price Grocery</h1>
       <p className="mission-statement">
         Helping fellow bargain hunters find the best grocery deals, one click at
         a time!
@@ -46,14 +46,13 @@ const About = () => {
       </div>
 
       <div className="about-story">
-        <h2>My Story</h2>
+        <h2>Story</h2>
         <p>
           My partner and I are always on the hunt for great deals, and that's
-          how Half-Price Groceries came to life. It's a personal project I
-          started to help myself, my wonderful partner, and others like us find
-          the best grocery bargains. While it's still a work in progress, I'm
-          thoroughly enjoying the process in my spare time. I hope you find it
-          helpful!
+          how Half-Price Grocery came to life. It's a hobby project I started to
+          help myself, my wonderful partner, and others like us find the best
+          grocery bargains. While it's still a work in progress, I'm thoroughly
+          enjoying the process in my spare time. I hope you find it helpful!
         </p>
       </div>
 

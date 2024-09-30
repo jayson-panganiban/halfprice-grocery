@@ -60,8 +60,17 @@ function ProductCard({ product }) {
           <p className="current-price">${product.price.toFixed(2)}</p>
           <p className="original-price">${product.originalPrice.toFixed(2)}</p>
         </div>
+        {product.pricePerUnit && (
+          <p className="price-per-unit">{product.pricePerUnit}</p>
+        )}
       </div>
       <div className="product-actions">
+        <button
+          className="price-history-button"
+          onClick={() => setShowPriceHistory(true)}
+        >
+          <FontAwesomeIcon icon={faChartLine} />
+        </button>
         <button
           className="favorite-button"
           onClick={() => toggleFavorite(product)}
@@ -106,6 +115,12 @@ function ProductCard({ product }) {
         )}
         <div className="product-actions">
           <button
+            className="price-history-button"
+            onClick={() => setShowPriceHistory(true)}
+          >
+            <FontAwesomeIcon icon={faChartLine} />
+          </button>
+          <button
             className="favorite-button"
             onClick={() => toggleFavorite(product)}
           >
@@ -115,12 +130,6 @@ function ProductCard({ product }) {
                 isFavorite(product._id) ? 'heart-icon filled' : 'heart-icon'
               }
             />
-          </button>
-          <button
-            className="price-history-button"
-            onClick={() => setShowPriceHistory(true)}
-          >
-            <FontAwesomeIcon icon={faChartLine} />
           </button>
         </div>
       </div>

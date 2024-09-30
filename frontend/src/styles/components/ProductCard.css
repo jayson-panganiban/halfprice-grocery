@@ -15,13 +15,13 @@
 .product-image-container {
   position: relative;
   overflow: hidden;
-  margin-top: 20px;
-  padding: 15px;
+  margin-top: 10px;
+  padding: 10px;
 }
 
 .product-image {
   width: 100%;
-  height: 250px;
+  height: 220px;
   object-fit: contain;
   transition: transform 0.3s ease-in-out;
 }
@@ -50,9 +50,10 @@
 }
 
 .product-name {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: 300;
-  margin: 0 0 10px 0;
+  line-height: 1;
+  margin: 0 0 20px 0;
   color: var(--color-text);
 }
 
@@ -61,8 +62,13 @@
   align-items: baseline;
 }
 
+.current-price,
+.original-price {
+  margin: 0 8px 0 0;
+}
+
 .current-price {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: var(--color-primary);
   margin-right: 10px;
@@ -77,8 +83,8 @@
 .price-per-unit {
   font-size: 0.8rem;
   color: #7f8c8d;
-  margin-top: 5px;
   display: block;
+  margin-bottom: 25px;
 }
 
 .brand-logo {
@@ -133,14 +139,7 @@
     padding: 10px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 15px;
     background-color: #ffffff;
-    height: 120px;
-  }
-
-  .product-card:active {
-    transform: scale(0.98);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
   }
 
   .product-image-container {
@@ -171,44 +170,46 @@
 
   .product-info {
     width: 100%;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     height: 100%;
   }
 
   .product-name {
     font-size: 1.2rem;
-    margin-bottom: 5px;
     color: #333;
-    line-height: 1.2;
-    max-height: 2.4em;
-    overflow: hidden;
+    line-height: 1;
     text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
   }
 
   .current-price {
     font-size: 1.1rem;
-    font-weight: 500;
-    margin-right: 8px;
   }
 
   .original-price {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .current-price,
+  .original-price {
+    margin: 0 8px 0 0;
+  }
+
+  .price-per-unit {
+    font-size: 0.7rem;
+    color: #7f8c8d;
+    margin: 0;
+  }
+
+  .product-actions {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    gap: 10px;
   }
 
   .favorite-button,
   .price-history-button {
-    font-size: 1.2rem;
-    padding: 5px;
-  }
-
-  .favorite-button:active,
-  .price-history-button:active {
-    transform: scale(0.9);
-  }
-
-  .heart-icon {
     font-size: 1.2rem;
   }
 }

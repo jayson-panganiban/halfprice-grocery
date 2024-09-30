@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart, faBars } from '@fortawesome/free-solid-svg-icons';
+import { faHeart, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FaShoppingCart } from 'react-icons/fa';
 import { FavoritesContext } from '../context/FavoritesContext';
 import FavoritesModal from './FavoritesModal';
@@ -12,12 +12,16 @@ function Header() {
   const [showFavorites, setShowFavorites] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
+  const toggleMobileMenu = () => {
+    setShowMobileMenu(!showMobileMenu);
+  };
+
   return (
     <header className="header">
       <div className="header-content">
         <Link to="/" className="logo">
           <FaShoppingCart size={28} className="logo-icon" />
-          <span className="logo-text">Half-Price Groceries</span>
+          <span className="logo-text">Half-Price Grocery</span>
         </Link>
 
         <nav className={`main-nav ${showMobileMenu ? 'show' : ''}`}>
@@ -54,9 +58,9 @@ function Header() {
           </button>
           <button
             className="icon-button mobile-menu-toggle"
-            onClick={() => setShowMobileMenu(!showMobileMenu)}
+            onClick={toggleMobileMenu}
           >
-            <FontAwesomeIcon icon={faBars} />
+            <FontAwesomeIcon icon={showMobileMenu ? faTimes : faBars} />
           </button>
         </div>
       </div>

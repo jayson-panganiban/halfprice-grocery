@@ -6,11 +6,18 @@ function Footer() {
   return (
     <footer className="footer">
       <div className="footer-content">
-        <p className="copyright">&copy; 2024 Half-Price Groceries</p>
-        <nav className="footer-nav">
-          <Link to="/about">About</Link>
-          <Link to="/contact">Contact</Link>
-        </nav>
+        <div className="footer-main">
+          <p className="copyright">&copy; 2024 Half-Price Grocery</p>
+          <nav className="footer-nav">
+            <Link to="/about">About</Link>
+            <Link to="/contact">Contact</Link>
+          </nav>
+        </div>
+        <p className="disclaimer">
+          Product names, images, and trademarks are the property of their
+          respective owners. Use of these does not imply any affiliation with or
+          endorsement by them.
+        </p>
       </div>
     </footer>
   );

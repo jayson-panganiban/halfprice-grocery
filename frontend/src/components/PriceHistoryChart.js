@@ -44,6 +44,10 @@ const PriceHistoryChart = ({ priceHistory, productName }) => {
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         borderColor: 'rgba(75, 192, 192, 1)',
         tension: 0.4,
+        pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: 'rgba(75, 192, 192, 1)',
       },
     ],
   };
@@ -61,9 +65,13 @@ const PriceHistoryChart = ({ priceHistory, productName }) => {
         backgroundColor: 'rgba(0, 0, 0, 0.7)',
         titleFont: {
           size: 14,
+          weight: 'bold',
         },
         bodyFont: {
           size: 12,
+        },
+        callbacks: {
+          label: (context) => `Price: $${context.parsed.y.toFixed(2)}`,
         },
       },
     },
@@ -76,9 +84,7 @@ const PriceHistoryChart = ({ priceHistory, productName }) => {
       y: {
         beginAtZero: false,
         ticks: {
-          callback: function (value, index, values) {
-            return '$' + value.toFixed(2);
-          },
+          callback: (value) => `$${value.toFixed(2)}`,
         },
       },
     },
@@ -86,6 +92,10 @@ const PriceHistoryChart = ({ priceHistory, productName }) => {
       mode: 'nearest',
       axis: 'x',
       intersect: false,
+    },
+    animation: {
+      duration: 1000,
+      easing: 'easeOutQuart',
     },
   };
 

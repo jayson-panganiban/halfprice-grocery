@@ -82,6 +82,11 @@
   background-color: var(--color-secondary);
 }
 
+.about-story,
+.support-section {
+  margin-top: 3rem;
+}
+
 .coffee-button {
   display: inline-flex;
   align-items: center;
@@ -98,6 +103,7 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 1.5rem;
 }
 
 .coffee-button:hover {
