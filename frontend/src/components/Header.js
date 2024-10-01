@@ -1,8 +1,12 @@
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { FaShoppingCart } from 'react-icons/fa';
+import {
+  faHeart,
+  faBars,
+  faTimes,
+  faCartShopping,
+} from '@fortawesome/free-solid-svg-icons';
 import { FavoritesContext } from '../context/FavoritesContext';
 import FavoritesModal from './FavoritesModal';
 import '../styles/components/Header.css';
@@ -20,7 +24,7 @@ function Header() {
     <header className="header">
       <div className="header-content">
         <Link to="/" className="logo">
-          <FaShoppingCart size={28} className="logo-icon" />
+          <FontAwesomeIcon icon={faCartShopping} className="logo-icon" />
           <span className="logo-text">Half-Price Grocery</span>
         </Link>
 

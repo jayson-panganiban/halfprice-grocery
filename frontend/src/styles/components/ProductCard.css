@@ -50,11 +50,16 @@
 }
 
 .product-name {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   font-weight: 300;
   line-height: 1;
   margin: 0 0 20px 0;
   color: var(--color-text);
+}
+
+.product-name:hover {
+  color: var(--color-secondary);
+  cursor: pointer;
 }
 
 .price-container {
@@ -68,20 +73,20 @@
 }
 
 .current-price {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   font-weight: 700;
   color: var(--color-primary);
   margin-right: 10px;
 }
 
 .original-price {
-  font-size: 1rem;
+  font-size: 1.2rem;
   color: #999;
   text-decoration: line-through;
 }
 
 .price-per-unit {
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: #7f8c8d;
   display: block;
   margin-bottom: 25px;
@@ -161,10 +166,10 @@
   }
 
   .brand-logo {
-    top: 6px;
+    bottom: 15px;
     left: 6px;
-    width: 28px;
-    background-color: rgba(255, 255, 255, 0.9);
+    width: 32px;
+    background-color: transparent;
     padding: 4px;
   }
 
@@ -175,18 +180,19 @@
   }
 
   .product-name {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
+    font-weight: 300;
     color: #333;
     line-height: 1;
     text-overflow: ellipsis;
   }
 
   .current-price {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
   }
 
   .original-price {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
   }
 
   .current-price,
@@ -195,7 +201,7 @@
   }
 
   .price-per-unit {
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     color: #7f8c8d;
     margin: 0;
   }
@@ -205,7 +211,7 @@
     bottom: 10px;
     right: 10px;
     display: flex;
-    gap: 10px;
+    gap: 1px;
   }
 
   .favorite-button,

@@ -72,9 +72,10 @@
 .clear-favorites {
   border: none;
   background: none;
+  color: var(--color-secondary);
   padding: 5px 15px;
   border-radius: 5px;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -166,32 +167,26 @@
 .favorite-actions {
   position: absolute;
   top: 5px;
-  left: 5px;
-  right: 5px;
+  left: 10px;
+  right: 10px;
   display: flex;
   justify-content: space-between;
 }
 
-.price-history-button {
-  left: 0;
-}
-
+.fave-price-history-button,
 .remove-favorite-button {
-  right: 0;
-}
-
-.price-history-button,
-.remove-favorite-button {
-  background-color: transparent;
+  background: none;
   border: none;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   cursor: pointer;
-  transition: transform 0.3s;
+  font-size: 1.2rem;
+  color: var(--color-primary);
+  transition: transform 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.fave-price-history-button:hover,
+.remove-favorite-button:hover {
+  transform: scale(1.1);
+  color: var(--color-secondary);
 }
 
 @media (max-width: 600px) {
@@ -216,7 +211,7 @@
     right: 3px;
   }
 
-  .price-history-button,
+  .fave-price-history-button,
   .remove-favorite-button {
     cursor: pointer;
     width: 25px;

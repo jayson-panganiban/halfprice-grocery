@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { FaArrowUp } from 'react-icons/fa';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowUp } from '@fortawesome/free-solid-svg-icons';
 import '../styles/components/BackToTopButton.css';
 
 const BackToTopButton = () => {
@@ -30,7 +31,7 @@ const BackToTopButton = () => {
     <>
       {isVisible && (
         <button onClick={scrollToTop} className="back-to-top">
-          <FaArrowUp />
+          <FontAwesomeIcon icon={faArrowUp} />
         </button>
       )}
     </>

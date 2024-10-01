@@ -47,7 +47,13 @@ function ProductCard({ product }) {
   const renderMobileView = () => (
     <div className="product-card mobile">
       <div className="product-image-container">
-        <img src={product.image} alt={product.name} className="product-image" />
+        <a href={product.link} target="_blank" rel="noopener noreferrer">
+          <img
+            src={product.image}
+            alt={product.name}
+            className="product-image"
+          />
+        </a>
         <img
           src={getBrandLogo(product.brand)}
           alt={product.brand}
@@ -55,7 +61,9 @@ function ProductCard({ product }) {
         />
       </div>
       <div className="product-info">
-        <h3 className="product-name">{product.name}</h3>
+        <a href={product.link} target="_blank" rel="noopener noreferrer">
+          <h3 className="product-name">{product.name}</h3>
+        </a>
         <div className="price-container">
           <p className="current-price">${product.price.toFixed(2)}</p>
           <p className="original-price">${product.originalPrice.toFixed(2)}</p>

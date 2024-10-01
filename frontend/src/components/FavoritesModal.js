@@ -1,7 +1,14 @@
 import React, { useContext, useState } from 'react';
 import Modal from 'react-modal';
 import { FavoritesContext } from '../context/FavoritesContext';
-import { FaTimes, FaTrashAlt, FaHeart, FaChartLine } from 'react-icons/fa';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faHeart,
+  faChartLine,
+  faTrash,
+  faXmark,
+} from '@fortawesome/free-solid-svg-icons';
+
 import wooliesLogo from '../assets/woolies.png';
 import colesLogo from '../assets/coles.png';
 import PriceHistoryModal from './PriceHistoryModal';
@@ -42,7 +49,7 @@ function FavoritesModal({ isOpen, onClose }) {
       <div className="favorites-header">
         <h2>Your Favorites</h2>
         <button className="favorites-close-button" onClick={onClose}>
-          <FaTimes />
+          <FontAwesomeIcon icon={faXmark} />
         </button>
       </div>
       <div className="favorites-content">
@@ -52,7 +59,7 @@ function FavoritesModal({ isOpen, onClose }) {
           <>
             <div className="favorites-actions">
               <button className="clear-favorites" onClick={removeAllFavorites}>
-                <FaTrashAlt /> Clear All
+                <FontAwesomeIcon icon={faTrash} /> Clear All
               </button>
             </div>
             <div className="favorites-grid">
@@ -90,16 +97,19 @@ function FavoritesModal({ isOpen, onClose }) {
                   </a>
                   <div className="favorite-actions">
                     <button
-                      className="price-history-button"
+                      className="fave-price-history-button"
                       onClick={() => handlePriceHistoryClick(product)}
                     >
-                      <FaChartLine />
+                      <FontAwesomeIcon icon={faChartLine} />
                     </button>
                     <button
                       className="remove-favorite-button"
                       onClick={() => toggleFavorite(product)}
                     >
-                      <FaHeart className="heart-icon filled" />
+                      <FontAwesomeIcon
+                        icon={faHeart}
+                        className="heart-icon filled"
+                      />
                     </button>
                   </div>
                 </div>
