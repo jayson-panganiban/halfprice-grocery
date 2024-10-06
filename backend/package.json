@@ -4,7 +4,7 @@
   "description": "Half-Price Backend",
   "main": "server.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=production node src/app.js",
+    "start": "node src/app.js",
     "dev": "cross-env NODE_ENV=dev nodemon src/app.js",
     "test:server": "cross-env NODE_ENV=test node src/app.js",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles --reporters=default --reporters=jest-html-reporter"
