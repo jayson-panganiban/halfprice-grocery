@@ -1,0 +1,29 @@
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text);
+  transition: color 0.3s ease, transform 0.3s ease;
+  opacity: 0.8;
+  display: flex;
+}
+
+.close-button svg {
+  font-size: 24px;
+}
+
+.close-button:hover {
+  color: var(--color-primary);
+  transform: rotate(90deg);
+  opacity: 1;
+}
+
+.mission-statement {
+  font-size: 1.5rem;
+  font-weight: 300;
+  line-height: 1.5;
+  margin-bottom: 4rem;
+}

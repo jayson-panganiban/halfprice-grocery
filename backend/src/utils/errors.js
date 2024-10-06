@@ -55,6 +55,12 @@ class ValidationError extends AppError {
   }
 }
 
+class DatabaseConnectionError extends AppError {
+  constructor(message = 'Database connection error') {
+    super(message, 503);
+  }
+}
+
 class InternalServerError extends AppError {
   constructor(message = 'Internal Server Error') {
     super(message, 500);
@@ -69,5 +75,6 @@ module.exports = {
   NotFoundError,
   ConflictError,
   ValidationError,
+  DatabaseConnectionError,
   InternalServerError,
 };

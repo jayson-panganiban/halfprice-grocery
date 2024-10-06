@@ -1,18 +1,13 @@
 import React, { useContext, useState } from 'react';
 import Modal from 'react-modal';
 import { FavoritesContext } from '../context/FavoritesContext';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faHeart,
-  faChartLine,
-  faTrash,
-  faXmark,
-} from '@fortawesome/free-solid-svg-icons';
-
+import { ChartLine, Trash, HeartBreak } from 'phosphor-react';
 import wooliesLogo from '../assets/woolies.png';
 import colesLogo from '../assets/coles.png';
 import PriceHistoryModal from './PriceHistoryModal';
+import CloseButton from './CloseButton';
 import '../styles/components/FavoritesModal.css';
+import { Chart } from 'chart.js';
 
 Modal.setAppElement('#root');
 
@@ -48,8 +43,11 @@ function FavoritesModal({ isOpen, onClose }) {
     >
       <div className="favorites-header">
         <h2>Your Favorites</h2>
-        <button className="favorites-close-button" onClick={onClose}>
-          <FontAwesomeIcon icon={faXmark} />
+        <CloseButton onClick={onClose} />
+      </div>
+      <div className="favorites-actions">
+        <button className="clear-favorites" onClick={removeAllFavorites}>
+          <Trash size={24} />
         </button>
       </div>
       <div className="favorites-content">
@@ -57,11 +55,6 @@ function FavoritesModal({ isOpen, onClose }) {
           <p className="no-favorites">You haven't added any favorites yet.</p>
         ) : (
           <>
-            <div className="favorites-actions">
-              <button className="clear-favorites" onClick={removeAllFavorites}>
-                <FontAwesomeIcon icon={faTrash} /> Clear All
-              </button>
-            </div>
             <div className="favorites-grid">
               {favorites.map((product) => (
                 <div key={product._id} className="favorite-item">
@@ -100,16 +93,13 @@ function FavoritesModal({ isOpen, onClose }) {
                       className="fave-price-history-button"
                       onClick={() => handlePriceHistoryClick(product)}
                     >
-                      <FontAwesomeIcon icon={faChartLine} />
+                      <ChartLine size={20} />
                     </button>
                     <button
                       className="remove-favorite-button"
                       onClick={() => toggleFavorite(product)}
                     >
-                      <FontAwesomeIcon
-                        icon={faHeart}
-                        className="heart-icon filled"
-                      />
+                      <HeartBreak size={20} className="heart-break-icon" />
                     </button>
                   </div>
                 </div>

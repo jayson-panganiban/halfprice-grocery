@@ -1,11 +1,8 @@
 {
-  "name": "half-price-frontend",
+  "name": "halfprice-grocery",
   "version": "1.0.0",
-  "description": "Half-Price frontend",
+  "description": "HalfPrice Grocery frontend",
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.6.0",
-    "@fortawesome/free-solid-svg-icons": "^6.6.0",
-    "@fortawesome/react-fontawesome": "^0.2.2",
     "@phosphor-icons/react": "^2.1.7",
     "axios": "^1.7.5",
     "chart.js": "^4.4.4",

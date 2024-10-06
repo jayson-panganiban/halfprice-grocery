@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { X } from '@phosphor-icons/react';
 import PriceHistoryChart from './PriceHistoryChart';
+import CloseButton from './CloseButton';
 import '../styles/components/PriceHistoryModal.css';
 
 function PriceHistoryModal({ product, onClose }) {
@@ -12,15 +12,13 @@ function PriceHistoryModal({ product, onClose }) {
 
   const handleClose = () => {
     setIsVisible(false);
-    setTimeout(onClose, 300); // Wait for the animation to finish before closing
+    setTimeout(onClose, 300);
   };
 
   return (
     <div className={`price-history-modal ${isVisible ? 'visible' : ''}`}>
       <div className="price-history-content">
-        <button className="price-history-close-button" onClick={handleClose}>
-          <X size={24} weight="bold" />
-        </button>
+        <CloseButton onClick={handleClose} />
         <h2 className="price-history-title">
           {product.name}
           <br />

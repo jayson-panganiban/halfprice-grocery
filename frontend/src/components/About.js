@@ -1,17 +1,11 @@
 import React from 'react';
-import {
-  FaLeaf,
-  FaShoppingBasket,
-  FaChartLine,
-  FaCoffee,
-} from 'react-icons/fa';
+import { Leaf, ShoppingCart, ChartLine, Coffee } from 'phosphor-react';
 import '../styles/components/About.css';
 
 const About = () => {
   return (
     <div className="about-container">
-      <h1>About Half-Price Grocery</h1>
-      <p className="mission-statement">
+      <p className="mission-statement gradient-text">
         Helping fellow bargain hunters find the best grocery deals, one click at
         a time!
       </p>
@@ -19,26 +13,26 @@ const About = () => {
       <div className="feature-grid">
         {[
           {
-            icon: FaLeaf,
+            icon: Leaf,
             title: 'Fresh Deals Weekly',
             description:
               "I update the prices every week because who doesn't love a good deal?",
           },
           {
-            icon: FaShoppingBasket,
+            icon: ShoppingCart,
             title: 'Wide Selection',
             description:
               "From snacks to veggies, I've got all your munchies covered.",
           },
           {
-            icon: FaChartLine,
+            icon: ChartLine,
             title: 'Price History',
             description:
               'Track the price trends of your favorite products over time to make informed buying decisions.',
           },
         ].map((feature, index) => (
           <div key={index} className="feature-item">
-            <feature.icon className="feature-icon" />
+            <feature.icon size={32} className="feature-icon animate-icon" />
             <h2>{feature.title}</h2>
             <p>{feature.description}</p>
           </div>
@@ -49,7 +43,7 @@ const About = () => {
         <h2>Story</h2>
         <p>
           My partner and I are always on the hunt for great deals, and that's
-          how Half-Price Grocery came to life. It's a hobby project I started to
+          how HalfPrice Grocery came to life. It's a hobby project I started to
           help myself, my wonderful partner, and others like us find the best
           grocery bargains. While it's still a work in progress, I'm thoroughly
           enjoying the process in my spare time. I hope you find it helpful!
@@ -64,12 +58,12 @@ const About = () => {
           improve the site.
         </p>
         <button
-          className="coffee-button"
+          className="coffee-button hover-effect"
           onClick={() =>
             window.open('https://www.buymeacoffee.com/jsonpanganiban', '_blank')
           }
         >
-          <FaCoffee />
+          <Coffee size={24} />
           <span>Buy me a coffee</span>
         </button>
       </div>

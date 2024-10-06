@@ -1,10 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;700&display=swap');
+
 .header {
-  background-color: var(--color-background);
-  padding: 20px 0;
-  transition: all 0.3s ease;
+  padding: 25px 0 15px 0;
   position: sticky;
   top: 0;
   z-index: 1000;
+  background-color: var(--color-background);
+  box-shadow: 0 6px 100px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
 .header-content {
@@ -13,7 +16,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 15px;
 }
 
 .logo {
@@ -23,21 +26,51 @@
   font-weight: 700;
   color: var(--color-primary);
   text-decoration: none;
-  transition: all 0.3s ease;
 }
 
 .logo-text {
-  font-size: 32px;
-  font-weight: 500;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 28px;
+  /* letter-spacing: 2px; */
+}
+.logo-half {
+  font-size: 28px;
+  color: var(--color-primary);
+  transition: color 0.3s ease;
 }
 
-.logo:hover,
-.logo-text:hover {
+.logo-half::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 3px;
+  background-color: #ff0000;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.logo-price {
+  font-size: 28px;
+  /* color: #008000; */
+  transition: color 0.3s ease;
+}
+
+.logo-grocery {
+  font-size: 20px;
+  font-family: 'Quicksand', sans-serif;
   color: var(--color-secondary);
+  font-weight: 100;
+  text-transform: uppercase;
 }
 
-.logo-icon {
-  margin-right: 12px;
+.logo:hover .logo-half {
+  color: #00a000;
+}
+
+.logo:hover .logo-price {
+  color: #ff3333;
 }
 
 .main-nav {
@@ -46,7 +79,7 @@
 }
 
 .nav-link {
-  font-size: 18px;
+  font-size: 16px;
   color: var(--color-text);
   text-decoration: none;
   font-weight: 500;
@@ -60,7 +93,7 @@
   position: absolute;
   width: 0;
   height: 2px;
-  bottom: 0;
+  bottom: -2px;
   left: 0;
   background-color: var(--color-accent);
   transition: width 0.3s ease;
@@ -72,60 +105,64 @@
 
 .user-actions {
   display: flex;
-  gap: 20px;
+  align-items: center;
+  gap: 5px;
 }
 
-.icon-button {
+.heart-icon {
+  position: relative;
   background: none;
   border: none;
-  font-size: 22px;
-  color: var(--color-primary);
   cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
+  color: var(--color-text);
+  transition: color 0.3s ease;
 }
 
-.icon-button:hover {
-  color: var(--color-secondary);
+.heart-icon {
+  color: #e74c3c;
+}
+
+.heart-icon:hover {
+  transform: scale(1.1);
 }
 
 .favorites-count {
   position: absolute;
   top: -8px;
   right: -8px;
-  background-color: var(--color-secondary);
-  color: #fff;
+  background-color: var(--color-accent);
+  color: black;
   font-size: 12px;
+  font-weight: 700;
   padding: 2px 6px;
-  border-radius: 50%;
-  font-weight: bold;
+  border-radius: 12px;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.heart-icon:hover .favorites-count {
+  transform: scale(1.1);
 }
 
 .mobile-menu-toggle {
   display: none;
-}
-
-.mobile-search {
-  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text);
 }
 
 @media (max-width: 768px) {
-  .logo-text {
-    font-size: 22px;
-    font-weight: 500;
-  }
-
-  .logo:hover,
-  .logo-text:hover {
-    color: var(--color-secondary);
+  .header-content {
+    padding: 0 0 0 5px;
   }
 
   .main-nav {
     display: none;
-  }
-
-  .main-nav.show {
-    display: flex;
     flex-direction: column;
     position: absolute;
     top: 100%;
@@ -133,48 +170,14 @@
     right: 0;
     background-color: var(--color-background);
     padding: 20px;
-    animation: slideDown 0.3s ease-out;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   }
 
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .nav-link {
-    padding: 10px 0;
-    font-size: 16px;
+  .main-nav.show {
+    display: flex;
   }
 
   .mobile-menu-toggle {
     display: block;
-  }
-
-  .user-actions {
-    gap: 15px;
-  }
-
-  .icon-button {
-    font-size: 20px;
-  }
-
-  .mobile-search {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 10px 20px;
-    background-color: var(--color-background);
-    transform: translateY(-100%);
-    transition: transform 0.3s ease-out;
-  }
-
-  .mobile-search.show {
-    transform: translateY(0);
   }
 }

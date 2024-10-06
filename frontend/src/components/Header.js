@@ -1,12 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faHeart,
-  faBars,
-  faTimes,
-  faCartShopping,
-} from '@fortawesome/free-solid-svg-icons';
+import { Heart, ShoppingBag, List, X } from 'phosphor-react';
 import { FavoritesContext } from '../context/FavoritesContext';
 import FavoritesModal from './FavoritesModal';
 import '../styles/components/Header.css';
@@ -24,18 +18,14 @@ function Header() {
     <header className="header">
       <div className="header-content">
         <Link to="/" className="logo">
-          <FontAwesomeIcon icon={faCartShopping} className="logo-icon" />
-          <span className="logo-text">Half-Price Grocery</span>
+          <ShoppingBag size={32} weight="fill" />
+          <span className="logo-text">
+            <span className="logo-half">Half</span>
+            <span className="logo-price">Price</span>
+            <span className="logo-grocery">Grocery</span>
+          </span>
         </Link>
-
         <nav className={`main-nav ${showMobileMenu ? 'show' : ''}`}>
-          <Link
-            to="/"
-            className="nav-link"
-            onClick={() => setShowMobileMenu(false)}
-          >
-            Home
-          </Link>
           <Link
             to="/about"
             className="nav-link"
@@ -51,24 +41,22 @@ function Header() {
             Contact
           </Link>
         </nav>
-
         <div className="user-actions">
-          <button
-            className="icon-button favorite-button"
-            onClick={() => setShowFavorites(true)}
-          >
-            <FontAwesomeIcon icon={faHeart} />
-            <span className="favorites-count">{favorites.length}</span>
+          <button className="heart-icon" onClick={() => setShowFavorites(true)}>
+            <Heart size={32} weight="fill" />
+            {favorites.length > 0 && (
+              <span className="favorites-count">{favorites.length}</span>
+            )}
           </button>
           <button
-            className="icon-button mobile-menu-toggle"
+            className="mobile-menu-toggle"
             onClick={toggleMobileMenu}
+            aria-label="Toggle mobile menu"
           >
-            <FontAwesomeIcon icon={showMobileMenu ? faTimes : faBars} />
+            {showMobileMenu ? <X size={28} /> : <List size={28} />}
           </button>
         </div>
       </div>
-
       <FavoritesModal
         isOpen={showFavorites}
         onClose={() => setShowFavorites(false)}

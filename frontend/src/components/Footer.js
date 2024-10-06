@@ -7,7 +7,7 @@ function Footer() {
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-main">
-          <p className="copyright">&copy; 2024 Half-Price Grocery</p>
+          <p className="copyright">&copy; 2024 HalfPrice Grocery</p>
           <nav className="footer-nav">
             <Link to="/about">About</Link>
             <Link to="/contact">Contact</Link>

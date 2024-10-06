@@ -5,4 +5,4 @@ node_modules/
 /playwright/.cache/
 *.log
 test-report.html
-*.env*
+*.env.*

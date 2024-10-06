@@ -24,22 +24,6 @@
   animation: slideUp 0.3s ease-out;
 }
 
-.price-history-close-button {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: none;
-  border: none;
-  font-size: 24px;
-  color: #777;
-  cursor: pointer;
-}
-
-.price-history-close-button:hover {
-  color: var(--color-secondary);
-  transform: scale(1.1);
-}
-
 .price-history-title {
   font-size: 24px;
   color: var(--color-primary);
@@ -69,6 +53,6 @@
 
 @media (max-width: 600px) {
   .price-history-content {
-    padding: 20px;
+    padding: 10px;
   }
 }

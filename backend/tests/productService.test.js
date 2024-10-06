@@ -1,26 +1,30 @@
-const mongoose = require('mongoose')
-const { MongoMemoryServer } = require('mongodb-memory-server')
-const productService = require('../src/services/productService')
-const { Product } = require('../src/models/Product')
-const { NotFoundError } = require('../src/utils/errors')
-const logger = require('../src/utils/logger')
+const mongoose = require('mongoose');
+const { MongoMemoryServer } = require('mongodb-memory-server');
+const productService = require('../src/services/productService');
+const { Product } = require('../src/models/Product');
+const { NotFoundError } = require('../src/utils/errors');
+const moment = require('moment-timezone');
+const logger = require('../src/utils/logger');
+const { request } = require('http');
+const e = require('express');
+const { expect } = require('@playwright/test');
 
 describe('Product Service', () => {
-  let mongoServer
+  let mongoServer;
 
   beforeAll(async () => {
-    mongoServer = await MongoMemoryServer.create()
-    await mongoose.connect(mongoServer.getUri())
-  })
+    mongoServer = await MongoMemoryServer.create();
+    await mongoose.connect(mongoServer.getUri());
+  });
 
   afterAll(async () => {
-    await mongoose.disconnect()
-    await mongoServer.stop()
-  })
+    await mongoose.disconnect();
+    await mongoServer.stop();
+  });
 
   beforeEach(async () => {
-    await Product.deleteMany({})
-  })
+    await Product.deleteMany({});
+  });
 
   describe('getProducts', () => {
     test('should return all products when no brand is specified', async () => {
@@ -45,11 +49,11 @@ describe('Product Service', () => {
           link: 'http://example.com/2',
           image: 'http://example.com/2.jpg',
         },
-      ])
+      ]);
 
-      const products = await productService.getProducts()
-      expect(products).toHaveLength(2)
-    })
+      const products = await productService.getProducts();
+      expect(products).toHaveLength(2);
+    });
 
     test('should return filtered products when brand is specified', async () => {
       await Product.create([
@@ -73,13 +77,13 @@ describe('Product Service', () => {
           link: 'http://example.com/2',
           image: 'http://example.com/2.jpg',
         },
-      ])
+      ]);
 
-      const products = await productService.getProducts('Brand A')
-      expect(products).toHaveLength(1)
-      expect(products[0].name).toBe('Product 1')
-    })
-  })
+      const products = await productService.getProducts('Brand A');
+      expect(products).toHaveLength(1);
+      expect(products[0].name).toBe('Product 1');
+    });
+  });
 
   describe('getProductById', () => {
     test('should return a product when valid id is provided', async () => {
@@ -92,18 +96,18 @@ describe('Product Service', () => {
         pricePerUnit: '$1/unit',
         link: 'http://example.com/test',
         image: 'http://example.com/test.jpg',
-      })
-      const product = await productService.getProductById(createdProduct._id)
-      expect(product.name).toBe('Test Product')
-    })
+      });
+      const product = await productService.getProductById(createdProduct._id);
+      expect(product.name).toBe('Test Product');
+    });
 
     test('should throw NotFoundError when product is not found', async () => {
-      const nonExistentId = new mongoose.Types.ObjectId()
+      const nonExistentId = new mongoose.Types.ObjectId();
       await expect(
         productService.getProductById(nonExistentId)
-      ).rejects.toThrow(NotFoundError)
-    })
-  })
+      ).rejects.toThrow(NotFoundError);
+    });
+  });
 
   describe('getPriceHistory', () => {
     test('should return price history for a product', async () => {
@@ -125,19 +129,19 @@ describe('Product Service', () => {
             timestamp: new Date(),
           },
         ],
-      })
-      const priceHistory = await productService.getPriceHistory(product._id)
-      expect(priceHistory).toHaveLength(1)
-      expect(priceHistory[0].price).toBe(10)
-    })
+      });
+      const priceHistory = await productService.getPriceHistory(product._id);
+      expect(priceHistory).toHaveLength(1);
+      expect(priceHistory[0].price).toBe(10);
+    });
 
     test('should throw NotFoundError when product is not found', async () => {
-      const nonExistentId = new mongoose.Types.ObjectId()
+      const nonExistentId = new mongoose.Types.ObjectId();
       await expect(
         productService.getPriceHistory(nonExistentId)
-      ).rejects.toThrow(NotFoundError)
-    })
-  })
+      ).rejects.toThrow(NotFoundError);
+    });
+  });
 
   describe('saveProducts', () => {
     test('should save multiple products', async () => {
@@ -162,22 +166,22 @@ describe('Product Service', () => {
           link: 'https://example.com/product2',
           image: 'https://example.com/product2.jpg',
         },
-      ]
-      const savedProducts = await productService.saveProducts(products)
-      expect(savedProducts).toHaveLength(2)
-      expect(savedProducts[0].name).toBe('Product 1')
-      expect(savedProducts[0].price).toBe(9.99)
-      expect(savedProducts[0].priceHistory[0].price).toBe(9.99)
-      expect(savedProducts[0].priceHistory[0].savings).toBe(2.0)
-      expect(savedProducts[0].priceHistory[0].originalPrice).toBe(11.99)
+      ];
+      const savedProducts = await productService.saveProducts(products);
+      expect(savedProducts).toHaveLength(2);
+      expect(savedProducts[0].name).toBe('Product 1');
+      expect(savedProducts[0].price).toBe(9.99);
+      expect(savedProducts[0].priceHistory[0].price).toBe(9.99);
+      expect(savedProducts[0].priceHistory[0].savings).toBe(2.0);
+      expect(savedProducts[0].priceHistory[0].originalPrice).toBe(11.99);
 
-      expect(savedProducts[1].name).toBe('Product 2')
-      expect(savedProducts[1].price).toBe(19.99)
-      expect(savedProducts[1].priceHistory[0].price).toBe(19.99)
-      expect(savedProducts[1].priceHistory[0].savings).toBe(5.0)
-      expect(savedProducts[1].priceHistory[0].originalPrice).toBe(24.99)
-    })
-  })
+      expect(savedProducts[1].name).toBe('Product 2');
+      expect(savedProducts[1].price).toBe(19.99);
+      expect(savedProducts[1].priceHistory[0].price).toBe(19.99);
+      expect(savedProducts[1].priceHistory[0].savings).toBe(5.0);
+      expect(savedProducts[1].priceHistory[0].originalPrice).toBe(24.99);
+    });
+  });
 
   describe('createProduct', () => {
     test('should create a new product', async () => {
@@ -190,20 +194,20 @@ describe('Product Service', () => {
         pricePerUnit: '$1.5/unit',
         link: 'http://example.com',
         image: 'http://example.com/image.jpg',
-      }
+      };
 
-      const createdProduct = await productService.createProduct(product)
+      const createdProduct = await productService.createProduct(product);
 
-      expect(createdProduct.name).toBe('New Product')
-      expect(createdProduct.priceHistory).toHaveLength(1)
-      expect(createdProduct.priceHistory[0].price).toBe(15)
-      expect(createdProduct.brand).toBe('Brand C')
-      expect(createdProduct.savings).toBe(5)
-      expect(createdProduct.originalPrice).toBe(20)
-      expect(createdProduct.pricePerUnit).toBe('$1.5/unit')
-      expect(createdProduct.link).toBe('http://example.com')
-      expect(createdProduct.image).toBe('http://example.com/image.jpg')
-    })
+      expect(createdProduct.name).toBe('New Product');
+      expect(createdProduct.priceHistory).toHaveLength(1);
+      expect(createdProduct.priceHistory[0].price).toBe(15);
+      expect(createdProduct.brand).toBe('Brand C');
+      expect(createdProduct.savings).toBe(5);
+      expect(createdProduct.originalPrice).toBe(20);
+      expect(createdProduct.pricePerUnit).toBe('$1.5/unit');
+      expect(createdProduct.link).toBe('http://example.com');
+      expect(createdProduct.image).toBe('http://example.com/image.jpg');
+    });
 
     test('should create a new product with missing pricePerUnit', async () => {
       const product = {
@@ -215,21 +219,21 @@ describe('Product Service', () => {
         pricePerUnit: null,
         link: 'http://example.com',
         image: 'http://example.com/image.jpg',
-      }
+      };
 
-      const createdProduct = await productService.createProduct(product)
+      const createdProduct = await productService.createProduct(product);
 
-      expect(createdProduct.name).toBe('New Product')
-      expect(createdProduct.priceHistory).toHaveLength(1)
-      expect(createdProduct.priceHistory[0].price).toBe(15)
-      expect(createdProduct.brand).toBe('Brand C')
-      expect(createdProduct.savings).toBe(5)
-      expect(createdProduct.originalPrice).toBe(20)
-      expect(createdProduct.pricePerUnit).toBe(null)
-      expect(createdProduct.link).toBe('http://example.com')
-      expect(createdProduct.image).toBe('http://example.com/image.jpg')
-    })
-  })
+      expect(createdProduct.name).toBe('New Product');
+      expect(createdProduct.priceHistory).toHaveLength(1);
+      expect(createdProduct.priceHistory[0].price).toBe(15);
+      expect(createdProduct.brand).toBe('Brand C');
+      expect(createdProduct.savings).toBe(5);
+      expect(createdProduct.originalPrice).toBe(20);
+      expect(createdProduct.pricePerUnit).toBe(null);
+      expect(createdProduct.link).toBe('http://example.com');
+      expect(createdProduct.image).toBe('http://example.com/image.jpg');
+    });
+  });
 
   describe('updateProduct', () => {
     test('should update an existing product', async () => {
@@ -242,7 +246,7 @@ describe('Product Service', () => {
         pricePerUnit: '$1/unit',
         link: 'http://example.com/product-x',
         image: 'http://example.com/product-x.jpg',
-      })
+      });
 
       const updatedProduct = await productService.updateProduct(
         existingProduct._id,
@@ -256,19 +260,19 @@ describe('Product Service', () => {
           link: 'http://example.com/product-x',
           image: 'http://example.com/product-x.jpg',
         }
-      )
+      );
 
-      expect(updatedProduct.name).toBe('Product X')
-      expect(updatedProduct.brand).toBe('Brand X')
-      expect(updatedProduct.price).toBe(15)
-      expect(updatedProduct.savings).toBe(3)
-      expect(updatedProduct.originalPrice).toBe(18)
-      expect(updatedProduct.pricePerUnit).toBe('$1.5/unit')
-      expect(updatedProduct.link).toBe('http://example.com/product-x')
-      expect(updatedProduct.image).toBe('http://example.com/product-x.jpg')
-      expect(updatedProduct.priceHistory).toHaveLength(2)
-    })
-  })
+      expect(updatedProduct.name).toBe('Product X');
+      expect(updatedProduct.brand).toBe('Brand X');
+      expect(updatedProduct.price).toBe(15);
+      expect(updatedProduct.savings).toBe(3);
+      expect(updatedProduct.originalPrice).toBe(18);
+      expect(updatedProduct.pricePerUnit).toBe('$1.5/unit');
+      expect(updatedProduct.link).toBe('http://example.com/product-x');
+      expect(updatedProduct.image).toBe('http://example.com/product-x.jpg');
+      expect(updatedProduct.priceHistory).toHaveLength(2);
+    });
+  });
 
   describe('deleteProduct', () => {
     test('should delete an existing product', async () => {
@@ -281,18 +285,18 @@ describe('Product Service', () => {
         pricePerUnit: '$1/unit',
         link: 'http://example.com/delete',
         image: 'http://example.com/delete.jpg',
-      })
-      const result = await productService.deleteProduct(product._id)
-      expect(result.message).toBe('Product successfully deleted')
-      const deletedProduct = await Product.findById(product._id)
-      expect(deletedProduct).toBeNull()
-    })
+      });
+      const result = await productService.deleteProduct(product._id);
+      expect(result.message).toBe('Product successfully deleted');
+      const deletedProduct = await Product.findById(product._id);
+      expect(deletedProduct).toBeNull();
+    });
 
     test('should throw NotFoundError when deleting non-existent product', async () => {
-      const productId = new mongoose.Types.ObjectId()
+      const productId = new mongoose.Types.ObjectId();
       await expect(productService.deleteProduct(productId)).rejects.toThrow(
         NotFoundError
-      )
-    })
-  })
-})
+      );
+    });
+  });
+});

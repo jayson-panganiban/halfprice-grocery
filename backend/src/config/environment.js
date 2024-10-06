@@ -15,6 +15,6 @@ if (environment !== 'production') {
 
 module.exports = {
   NODE_ENV: environment,
-  PORT: process.env.PORT || 3000,
+  PORT: process.env.PORT || 3003,
   MONGODB_URI: process.env.MONGODB_URI || 'mongodb://localhost:27017/halfprice',
 };

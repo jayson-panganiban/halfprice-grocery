@@ -1,10 +1,22 @@
 const { Product, productValidationSchema } = require('../models/Product');
+const moment = require('moment-timezone');
 const logger = require('../utils/logger');
 const {
   NotFoundError,
   BadRequestError,
+  DatabaseConnectionError,
   InternalServerError,
 } = require('../utils/errors');
+
+const handleDatabaseError = (error) => {
+  if (
+    error.name === 'MongoNetworkError' ||
+    error.name === 'MongoTimeoutError'
+  ) {
+    throw new DatabaseConnectionError();
+  }
+  throw error;
+};
 
 const productService = {
   async getProducts(brand) {
@@ -12,6 +24,7 @@ const productService = {
       const query = brand ? { brand: new RegExp(brand, 'i') } : {};
       return await Product.find(query).lean().exec();
     } catch (error) {
+      handleDatabaseError(error);
       logger.error(`Error in getProducts: ${error.message}`, { error, brand });
       throw new BadRequestError('Error fetching products');
     }
@@ -19,25 +32,28 @@ const productService = {
 
   async getWeeklyProducts(brand) {
     try {
-      const now = new Date();
-      const currentDay = now.getDay();
-      const currentHour = now.getHours();
+      const now = moment().tz('Australia/Sydney');
+      const currentDay = now.day();
+      const currentHour = now.hour();
 
-      const startDate = new Date(now);
-      startDate.setDate(now.getDate() - ((currentDay + 4) % 7));
-      startDate.setHours(7, 0, 0, 0);
+      let startDate = now
+        .clone()
+        .startOf('week')
+        .add(3, 'days')
+        .hour(7)
+        .minute(0)
+        .second(0);
 
-      if (currentDay === 3 && currentHour < 7) {
-        startDate.setDate(startDate.getDate() - 7);
+      if (currentDay < 3 || (currentDay === 3 && currentHour < 7)) {
+        startDate.subtract(7, 'days');
       }
 
-      const endDate = new Date(startDate);
-      endDate.setDate(endDate.getDate() + 7);
+      const endDate = startDate.clone().add(7, 'days').subtract(1, 'minute');
 
       const query = {
         $or: [
-          { createdAt: { $gte: startDate, $lt: endDate } },
-          { updatedAt: { $gte: startDate, $lt: endDate } },
+          { createdAt: { $gte: startDate.toDate(), $lt: endDate.toDate() } },
+          { updatedAt: { $gte: startDate.toDate(), $lt: endDate.toDate() } },
         ],
       };
 
@@ -65,10 +81,9 @@ const productService = {
       }
       return product;
     } catch (error) {
+      handleDatabaseError(error);
       logger.error(`Error in getProductById: ${error.message}`, { error, id });
-      if (error instanceof NotFoundError) {
-        throw error;
-      }
+      if (error instanceof NotFoundError) throw error;
       throw new BadRequestError(`Invalid product ID: ${id}`);
     }
   },
@@ -83,29 +98,27 @@ const productService = {
       }
       return product;
     } catch (error) {
+      handleDatabaseError(error);
       logger.error(`Error in getProductByName: ${error.message}`, {
         error,
         name,
       });
-      if (error instanceof NotFoundError) {
-        throw error;
-      }
+      if (error instanceof NotFoundError) throw error;
       throw new BadRequestError(`Error fetching product with name ${name}`);
     }
   },
 
   async getPriceHistory(id) {
     try {
-      const product = await Product.findById(id).lean().exec();
+      const product = await Product.findById(id, 'priceHistory').lean().exec();
       if (!product) {
         throw new NotFoundError(`Product with id ${id} not found`);
       }
       return product.priceHistory;
     } catch (error) {
+      handleDatabaseError(error);
       logger.error(`Error in getPriceHistory: ${error.message}`, { error, id });
-      if (error instanceof NotFoundError) {
-        throw error;
-      }
+      if (error instanceof NotFoundError) throw error;
       throw new BadRequestError(
         `Error fetching price history for product with id ${id}`
       );
@@ -218,10 +231,9 @@ const productService = {
       }
       return { message: 'Product successfully deleted' };
     } catch (error) {
+      handleDatabaseError(error);
       logger.error(`Error in deleteProduct: ${error.message}`, { error, id });
-      if (error instanceof NotFoundError) {
-        throw error;
-      }
+      if (error instanceof NotFoundError) throw error;
       throw new InternalServerError(`Failed to delete product with id ${id}`);
     }
   },

@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart, faChartLine } from '@fortawesome/free-solid-svg-icons';
+import { Heart, ChartLine, Percent } from 'phosphor-react';
 import { FavoritesContext } from '../context/FavoritesContext';
 import PriceHistoryModal from './PriceHistoryModal';
 import wooliesLogo from '../assets/woolies.png';
@@ -48,17 +47,21 @@ function ProductCard({ product }) {
     <div className="product-card mobile">
       <div className="product-image-container">
         <a href={product.link} target="_blank" rel="noopener noreferrer">
+          <div className="savings-badge">
+            <span className="savings-text">-{savings.percentage}</span>
+            <Percent size={14} weight="bold" />
+          </div>
           <img
             src={product.image}
             alt={product.name}
             className="product-image"
           />
+          <img
+            src={getBrandLogo(product.brand)}
+            alt={product.brand}
+            className="brand-logo"
+          />
         </a>
-        <img
-          src={getBrandLogo(product.brand)}
-          alt={product.brand}
-          className="brand-logo"
-        />
       </div>
       <div className="product-info">
         <a href={product.link} target="_blank" rel="noopener noreferrer">
@@ -71,25 +74,26 @@ function ProductCard({ product }) {
         {product.pricePerUnit && (
           <p className="price-per-unit">{product.pricePerUnit}</p>
         )}
-      </div>
-      <div className="product-actions">
-        <button
-          className="price-history-button"
-          onClick={() => setShowPriceHistory(true)}
-        >
-          <FontAwesomeIcon icon={faChartLine} />
-        </button>
-        <button
-          className="favorite-button"
-          onClick={() => toggleFavorite(product)}
-        >
-          <FontAwesomeIcon
-            icon={faHeart}
-            className={
-              isFavorite(product._id) ? 'heart-icon filled' : 'heart-icon'
-            }
-          />
-        </button>
+        <div className="product-actions">
+          <button
+            className="price-history-button"
+            onClick={() => setShowPriceHistory(true)}
+          >
+            <ChartLine size={24} />
+          </button>
+          <button
+            className="favorite-button"
+            onClick={() => toggleFavorite(product)}
+          >
+            <Heart
+              size={24}
+              weight={isFavorite(product._id) ? 'fill' : 'regular'}
+              className={
+                isFavorite(product._id) ? 'heart-icon filled' : 'heart-icon'
+              }
+            />
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -104,7 +108,10 @@ function ProductCard({ product }) {
             className="product-image"
           />
         </a>
-        <div className="savings-badge">-{savings.percentage}%</div>
+        <div className="savings-badge">
+          <span className="savings-text">-{savings.percentage}</span>
+          <Percent size={16} weight="bold" />
+        </div>
         <img
           src={getBrandLogo(product.brand)}
           alt={product.brand}
@@ -117,28 +124,30 @@ function ProductCard({ product }) {
           <p className="current-price">${product.price.toFixed(2)}</p>
           <p className="original-price">${product.originalPrice.toFixed(2)}</p>
         </div>
-        {/* <p className="savings">You save ${savings.amount}</p> */}
-        {product.pricePerUnit && (
-          <p className="price-per-unit">{product.pricePerUnit}</p>
-        )}
-        <div className="product-actions">
-          <button
-            className="price-history-button"
-            onClick={() => setShowPriceHistory(true)}
-          >
-            <FontAwesomeIcon icon={faChartLine} />
-          </button>
-          <button
-            className="favorite-button"
-            onClick={() => toggleFavorite(product)}
-          >
-            <FontAwesomeIcon
-              icon={faHeart}
-              className={
-                isFavorite(product._id) ? 'heart-icon filled' : 'heart-icon'
-              }
-            />
-          </button>
+        <div className="price-actions-container">
+          {product.pricePerUnit && (
+            <p className="price-per-unit">{product.pricePerUnit}</p>
+          )}
+          <div className="product-actions">
+            <button
+              className="price-history-button"
+              onClick={() => setShowPriceHistory(true)}
+            >
+              <ChartLine size={24} />
+            </button>
+            <button
+              className="favorite-button"
+              onClick={() => toggleFavorite(product)}
+            >
+              <Heart
+                size={24}
+                weight={isFavorite(product._id) ? 'fill' : 'regular'}
+                className={
+                  isFavorite(product._id) ? 'heart-icon filled' : 'heart-icon'
+                }
+              />
+            </button>
+          </div>
         </div>
       </div>
     </div>

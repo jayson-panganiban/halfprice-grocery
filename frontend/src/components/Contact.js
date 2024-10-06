@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { FaEnvelope, FaGithub, FaLinkedin, FaPaperPlane } from 'react-icons/fa';
+import {
+  Envelope,
+  GithubLogo,
+  LinkedinLogo,
+  PaperPlaneTilt,
+} from 'phosphor-react';
 import '../styles/components/Contact.css';
 
 const Contact = () => {
@@ -44,6 +49,7 @@ const Contact = () => {
     setIsSubmitting(true);
     try {
       // Simulating an API call
+      // TODO: Replace with actual API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
       console.log('Form submitted:', formData);
       setSubmitSuccess(true);
@@ -58,7 +64,7 @@ const Contact = () => {
 
   return (
     <div className="contact-container">
-      <h1>Get in Touch</h1>
+      <h1 className="contact-title">Get in Touch</h1>
       <p className="contact-intro">
         Hey there! I'm always excited to hear from fellow bargain hunters.
         Whether you've got a suggestion, found a bug, or just want to say hi,
@@ -69,11 +75,11 @@ const Contact = () => {
           <h2>Let's Connect</h2>
           <ul>
             <li>
-              <FaEnvelope className="contact-icon" />
+              <Envelope size={24} />
               <a href="mailto:jsoncp@proton.me">jsoncp@proton.me</a>
             </li>
             <li>
-              <FaGithub className="contact-icon" />
+              <GithubLogo size={24} />
               <a
                 href="https://github.com/jayson-panganiban"
                 target="_blank"
@@ -83,7 +89,7 @@ const Contact = () => {
               </a>
             </li>
             <li>
-              <FaLinkedin className="contact-icon" />
+              <LinkedinLogo size={24} />
               <a
                 href="https://www.linkedin.com/in/jayson-panganiban"
                 target="_blank"
@@ -147,8 +153,8 @@ const Contact = () => {
             )}
           </div>
           <button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Sending...' : 'Send Message'}{' '}
-            <FaPaperPlane className="send-icon" />
+            {isSubmitting ? 'Sending...' : 'Submit'}
+            <PaperPlaneTilt size={20} />
           </button>
           {errors.submit && <p className="error-message">{errors.submit}</p>}
           {submitSuccess && (

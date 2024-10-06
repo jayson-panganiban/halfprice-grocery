@@ -41,13 +41,13 @@ const PriceHistoryChart = ({ priceHistory, productName }) => {
         label: 'Price',
         data: priceHistory.map((entry) => entry.price),
         fill: true,
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(255, 187, 0, 0.2)',
+        borderColor: 'rgba(255, 187, 0, 1)',
         tension: 0.4,
-        pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+        pointBackgroundColor: 'rgba(255, 187, 0, 1)',
         pointBorderColor: '#fff',
         pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(75, 192, 192, 1)',
+        pointHoverBorderColor: 'rgba(255, 187, 0, 1)',
       },
     ],
   };
@@ -62,7 +62,7 @@ const PriceHistoryChart = ({ priceHistory, productName }) => {
       tooltip: {
         mode: 'index',
         intersect: false,
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        backgroundColor: 'rgba(28, 39, 76, 0.8)',
         titleFont: {
           size: 14,
           weight: 'bold',

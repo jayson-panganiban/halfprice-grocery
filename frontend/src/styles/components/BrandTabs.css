@@ -1,57 +1,41 @@
 .brand-tabs {
   display: flex;
-  gap: 10px;
-  background-color: #f0f0f0;
-  padding: 5px;
+  background-color: var(--color-surface);
   border-radius: 25px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .brand-tab {
-  padding: 12px 24px;
+  padding: 1em;
   border: none;
-  border-radius: 20px;
+  border-radius: 25px;
   background-color: transparent;
   color: var(--color-text);
   cursor: pointer;
-  transition: all 0.3s ease;
   font-weight: 500;
-  font-size: 16px;
+  /* font-size: 16px; */
   position: relative;
   overflow: hidden;
+  transition: all 0.3s ease;
 }
 
-.brand-tab::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: var(--color-primary);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: -1;
+.brand-tab[data-brand='coles']:hover {
+  color: #ff3333;
 }
 
-.brand-tab:hover::before {
-  opacity: 0.1;
+.brand-tab[data-brand='woolworths']:hover {
+  color: #00a000;
 }
 
 .brand-tab.active {
-  background-color: var(--color-accent);
-  color: var(--color-primary);
+  background-color: var(--color-primary);
+  color: var(--color-background);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.brand-tab:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(55, 94, 151, 0.2);
-}
-
 @media (max-width: 768px) {
-  .brand-tabs {
-    flex-wrap: wrap;
-    justify-content: center;
+  .brand-tab {
+    padding: 0.7em;
+    cursor: pointer;
   }
 }

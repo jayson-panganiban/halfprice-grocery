@@ -2,9 +2,11 @@
   background-color: #ffffff;
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  padding: 28px;
+  /* padding: 28px; */
+  padding: 1em;
   max-width: 800px;
   margin: 0 auto;
+  /* margin: 0; */
   transition: all 0.3s ease;
 }
 
@@ -55,7 +57,7 @@
 .price-history-subtitle {
   font-size: 20px;
   color: var(--color-secondary);
-  font-weight: normal;
+  /* font-weight: normal; */
   display: block;
   margin-top: 8px;
 }
