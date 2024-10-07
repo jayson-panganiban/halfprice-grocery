@@ -64,7 +64,7 @@ const Contact = () => {
 
   return (
     <div className="contact-container">
-      <h1 className="contact-title">Get in Touch</h1>
+      <h1 className="contact-title gradient-text">Get in Touch</h1>
       <p className="contact-intro">
         Hey there! I'm always excited to hear from fellow bargain hunters.
         Whether you've got a suggestion, found a bug, or just want to say hi,

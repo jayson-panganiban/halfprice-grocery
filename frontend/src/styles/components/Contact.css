@@ -5,6 +5,12 @@
   color: var(--color-primary);
 }
 
+.gradient-text {
+  background: linear-gradient(45deg, var(--color-primary), var(--color-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .contact-title {
   font-size: 2.5rem;
   font-weight: 300;
@@ -34,15 +40,12 @@
   background-color: #ffffff;
   padding: 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
-.contact-info:hover {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-}
-
+.contact-info:hover,
 .contact-form:hover {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
 }
 
 .contact-info h2,
@@ -96,13 +99,12 @@
 }
 
 .contact-form button {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   background-color: var(--color-accent);
   color: var(--color-secondary);
   border: none;
-  padding: 10px 25px;
   border-radius: 4px;
   font-size: 1rem;
   cursor: pointer;

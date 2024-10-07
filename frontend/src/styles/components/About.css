@@ -2,7 +2,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 4rem 2rem;
-  font-family: 'Inter', sans-serif;
+  /* font-family: 'Inter', sans-serif; */
   color: #1c274c;
 }
 
@@ -32,23 +32,23 @@
 .feature-item,
 .about-story,
 .support-section {
-  background-color: #ffffff;
+  background-color: var(--color-background);
   border-radius: 8px;
   padding: 1.5rem;
-  transition: box-shadow 0.2s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
 .feature-item:hover,
 .about-story:hover,
 .support-section:hover {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
 }
 
 .feature-icon {
   font-size: 2rem;
   color: var(--color-accent);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .feature-item h2,
@@ -104,6 +104,12 @@
 
   .feature-grid {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .feature-item p,
+  .about-story p,
+  .support-section p {
+    font-size: 1rem;
   }
 
   .mission-statement {

@@ -9,16 +9,19 @@
   flex-wrap: wrap;
   border: none;
   background: none;
-  padding: 1em 0 1em 0;
+  padding: 5px 0;
 }
 
 .brand-and-search {
   display: flex;
-  justify-content: space-between;
+  flex-direction: row;
+  padding: 0 0 10px 0;
+  gap: 10px;
+  /* justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   padding: 0 0 1em 0;
-  gap: 5px;
+  gap: 5px; */
 }
 
 .products-grid {
@@ -30,16 +33,19 @@
 
 @media (max-width: 768px) {
   .product-list-layout {
-    padding: 0 5px 0 5px;
+    padding: 0 5px;
   }
 
   .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 0.5em;
+    gap: 1px;
+  }
+
+  .filter-container {
+    padding: 15px 0;
   }
 
   .brand-and-search {
-    padding: 0 0 15px 0;
+    padding: 0 0 10px 0;
   }
 }

@@ -12,8 +12,7 @@
   background-color: transparent;
   color: var(--color-text);
   cursor: pointer;
-  font-weight: 500;
-  /* font-size: 16px; */
+  font-size: 16px;
   position: relative;
   overflow: hidden;
   transition: all 0.3s ease;
@@ -38,4 +37,13 @@
     padding: 0.7em;
     cursor: pointer;
   }
+
+  /* .brand-tabs {
+    display: flex;
+    gap: 10px;
+    background-color: #f0f0f0;
+    padding: 5px;
+    border-radius: 25px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  } */
 }

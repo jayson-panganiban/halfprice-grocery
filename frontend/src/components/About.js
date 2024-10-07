@@ -42,11 +42,9 @@ const About = () => {
       <div className="about-story">
         <h2>Story</h2>
         <p>
-          My partner and I are always on the hunt for great deals, and that's
-          how HalfPrice Grocery came to life. It's a hobby project I started to
-          help myself, my wonderful partner, and others like us find the best
-          grocery bargains. While it's still a work in progress, I'm thoroughly
-          enjoying the process in my spare time. I hope you find it helpful!
+          Halfprice Grocery is a hobby project I started to help myself and my
+          wonderful partner find halfprice grocery specials. It's an evolving
+          platform that I'm excited to develop in my free time. Happy savings!
         </p>
       </div>
 

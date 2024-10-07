@@ -11,7 +11,6 @@ import NoResults from './NoResults';
 import ErrorMessage from './ErrorMessage';
 import BrandTabs from './BrandTabs';
 import ProductListLayout from './ProductListLayout';
-import ShoppingTool from './ShoppingTool';
 
 function ProductList() {
   const [products, setProducts] = useState({ coles: [], woolies: [] });
