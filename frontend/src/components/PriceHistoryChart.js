@@ -80,6 +80,10 @@ const PriceHistoryChart = ({ priceHistory, productName }) => {
         grid: {
           display: false,
         },
+        ticks: {
+          maxRotation: 45,
+          minRotation: 45,
+        },
       },
       y: {
         beginAtZero: false,

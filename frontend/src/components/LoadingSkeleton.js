@@ -1,11 +1,11 @@
 import React from 'react';
 import ProductCardSkeleton from './ProductCardSkeleton';
 
-function LoadingSkeleton({ count = 8, isMobile }) {
+function LoadingSkeleton({ count = 8 }) {
   return (
     <>
       {Array.from({ length: count }).map((_, index) => (
-        <ProductCardSkeleton key={index} isMobile={isMobile} />
+        <ProductCardSkeleton key={index} />
       ))}
     </>
   );

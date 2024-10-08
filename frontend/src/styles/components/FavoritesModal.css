@@ -71,17 +71,17 @@
 
 .favorites-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 6px;
-  padding: 0 15px;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 }
 
 .favorite-item {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   position: relative;
   overflow: visible;
-  background-color: #f9f9f9;
+  background-color: var(--color-background);
   border-radius: 8px;
-  /* padding: 0 0 0 10px; */
   overflow: hidden;
   transition: transform 0.3s, box-shadow 0.3s;
 }
@@ -89,11 +89,6 @@
 .favorite-item:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.favorite-link {
-  text-decoration: none;
-  color: inherit;
 }
 
 .favorite-image-container {
@@ -108,7 +103,6 @@
   left: 0;
   width: 100%;
   height: 100%;
-  /* object-fit: cover; */
 }
 
 .favorite-brand-logo {
@@ -122,28 +116,40 @@
   padding: 2px;
 }
 
-.favorite-details {
-  padding: 0 10px;
-}
-
-.favorite-details h3 {
-  font-size: 14px;
-  font-weight: 100;
-  margin: 0 0 5px 0;
-  white-space: nowrap;
+.favorite-name {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--color-text);
+  line-height: 1.2;
+  margin-bottom: 2px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-.favorite-price {
-  font-size: 14px;
-  /* font-weight: bold; */
+.favorite-price-container {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.favorite-current-price {
+  font-size: 1.2rem;
+  font-weight: 700;
   color: var(--color-primary);
-  margin: 0;
+}
+
+.favorite-original-price {
+  font-size: 1rem;
+  text-decoration: line-through;
+  color: var(--color-secondary);
+  opacity: 0.7;
 }
 
 .favorite-price-per-unit {
-  font-size: 10px;
+  font-size: 12px;
   color: #666;
   margin: 5px 0 10px 0;
 }
@@ -156,8 +162,8 @@
   z-index: 10;
 }
 
-.fave-price-history-button,
-.remove-favorite-button {
+.favorite-price-history-button,
+.favorite-remove-button {
   background-color: transparent;
   border: none;
   width: 30px;
@@ -180,6 +186,14 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+@media (max-width: 768px) {
+  .favorites-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 5px;
+    padding: 5px;
+  }
+}
+
 @media (max-width: 600px) {
   .favorites-grid {
     grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -188,19 +202,6 @@
   .favorite-actions {
     gap: 0;
   }
-  /* .fave-price-history-button {
-    background-color: transparent;
-    width: 25px;
-    height: 25px;
-    font-size: 0.9rem;
-  }
-
-  .remove-favorite-button {
-    background-color: transparent;
-    width: 25px;
-    height: 25px;
-    font-size: 0.2rem;
-  } */
 }
 
 @media (max-width: 400px) {

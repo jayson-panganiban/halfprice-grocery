@@ -4,14 +4,14 @@
   max-width: 300px;
   position: relative;
   background-color: var(--color-surface);
-  border-radius: 20px;
+  border-radius: 25px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
 
 .search-input {
   width: 100%;
-  padding: 10px 40px 10px 15px;
+  padding: 10px 50px 10px 15px;
   border: none;
   font-size: 16px;
   color: var(--color-text);

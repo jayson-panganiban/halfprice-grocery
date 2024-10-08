@@ -1,32 +1,18 @@
 import React, { useContext, useState } from 'react';
 import Modal from 'react-modal';
 import { FavoritesContext } from '../context/FavoritesContext';
-import { ChartLine, Trash, HeartBreak } from 'phosphor-react';
-import wooliesLogo from '../assets/woolies.png';
-import colesLogo from '../assets/coles.png';
+import { Trash } from 'phosphor-react';
+import ProductCard from './ProductCard';
 import PriceHistoryModal from './PriceHistoryModal';
 import CloseButton from './CloseButton';
 import '../styles/components/FavoritesModal.css';
-import { Chart } from 'chart.js';
 
 Modal.setAppElement('#root');
 
 function FavoritesModal({ isOpen, onClose }) {
-  const { favorites, toggleFavorite, removeAllFavorites } =
-    useContext(FavoritesContext);
+  const { favorites, removeAllFavorites } = useContext(FavoritesContext);
   const [showPriceHistory, setShowPriceHistory] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-
-  const getBrandLogo = (brand) => {
-    switch (brand.toLowerCase()) {
-      case 'woolies':
-        return wooliesLogo;
-      case 'coles':
-        return colesLogo;
-      default:
-        return null;
-    }
-  };
 
   const handlePriceHistoryClick = (product) => {
     setSelectedProduct(product);
@@ -54,58 +40,15 @@ function FavoritesModal({ isOpen, onClose }) {
         {favorites.length === 0 ? (
           <p className="no-favorites">You haven't added any favorites yet.</p>
         ) : (
-          <>
-            <div className="favorites-grid">
-              {favorites.map((product) => (
-                <div key={product._id} className="favorite-item">
-                  <a
-                    href={product.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="favorite-link"
-                  >
-                    <div className="favorite-image-container">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="favorite-image"
-                      />
-                      <img
-                        src={getBrandLogo(product.brand)}
-                        alt={product.brand}
-                        className="favorite-brand-logo"
-                      />
-                    </div>
-                    <div className="favorite-details">
-                      <h3>{product.name}</h3>
-                      <p className="favorite-price">
-                        ${product.price.toFixed(2)}
-                      </p>
-                      {product.pricePerUnit && (
-                        <p className="favorite-price-per-unit">
-                          {product.pricePerUnit}
-                        </p>
-                      )}
-                    </div>
-                  </a>
-                  <div className="favorite-actions">
-                    <button
-                      className="fave-price-history-button"
-                      onClick={() => handlePriceHistoryClick(product)}
-                    >
-                      <ChartLine size={20} />
-                    </button>
-                    <button
-                      className="remove-favorite-button"
-                      onClick={() => toggleFavorite(product)}
-                    >
-                      <HeartBreak size={20} className="heart-break-icon" />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
+          <div className="favorites-grid">
+            {favorites.map((product) => (
+              <ProductCard
+                key={product._id}
+                product={product}
+                onPriceHistoryClick={() => handlePriceHistoryClick(product)}
+              />
+            ))}
+          </div>
         )}
       </div>
       {showPriceHistory && selectedProduct && (

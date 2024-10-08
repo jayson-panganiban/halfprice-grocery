@@ -1,7 +1,7 @@
 .about-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 4rem 2rem;
+  padding: 2rem 1rem;
   /* font-family: 'Inter', sans-serif; */
   color: #1c274c;
 }
@@ -26,15 +26,15 @@
 .feature-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .feature-item,
 .about-story,
 .support-section {
-  background-color: var(--color-background);
+  background-color: var(--color-surface);
   border-radius: 8px;
-  padding: 1.5rem;
+  padding: 1.2rem;
   transition: all 0.3s ease;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }

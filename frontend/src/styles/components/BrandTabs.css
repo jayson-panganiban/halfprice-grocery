@@ -6,7 +6,7 @@
 }
 
 .brand-tab {
-  padding: 1em;
+  padding: 15px;
   border: none;
   border-radius: 25px;
   background-color: transparent;
@@ -37,13 +37,4 @@
     padding: 0.7em;
     cursor: pointer;
   }
-
-  /* .brand-tabs {
-    display: flex;
-    gap: 10px;
-    background-color: #f0f0f0;
-    padding: 5px;
-    border-radius: 25px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  } */
 }
