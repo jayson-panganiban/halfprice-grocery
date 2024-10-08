@@ -21,26 +21,26 @@ function ProductList() {
   const [selectedCategory, setSelectedCategory] = useState('All');
 
   useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const filters = { brand: selectedBrand };
+        const data = await getWeeklyProducts(filters);
+        setProducts((prevProducts) => ({
+          ...prevProducts,
+          [selectedBrand]: data.products,
+        }));
+      } catch (error) {
+        setError('Failed to fetch products. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (selectedCategory === 'All') {
       fetchProducts();
     }
   }, [selectedBrand, selectedCategory]);
-
-  const fetchProducts = async () => {
-    setLoading(true);
-    try {
-      const filters = { brand: selectedBrand };
-      const data = await getWeeklyProducts(filters);
-      setProducts((prevProducts) => ({
-        ...prevProducts,
-        [selectedBrand]: data.products,
-      }));
-    } catch (error) {
-      setError('Failed to fetch products. Please try again later.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleSearch = (term) => {
     setSearchTerm(term);
