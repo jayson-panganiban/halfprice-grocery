@@ -110,13 +110,13 @@ const PriceHistoryChart = ({ priceHistory, productName }) => {
       </div>
       <div className="price-summary">
         <div className="summary-item">
-          <span className="summary-label">Lowest Price:</span>
+          <span className="summary-label">Lowest Price: </span>
           <span className="summary-value">
             ${Math.min(...priceHistory.map((entry) => entry.price)).toFixed(2)}
           </span>
         </div>
         <div className="summary-item">
-          <span className="summary-label">Highest Price:</span>
+          <span className="summary-label">Highest Price: </span>
           <span className="summary-value">
             ${Math.max(...priceHistory.map((entry) => entry.price)).toFixed(2)}
           </span>

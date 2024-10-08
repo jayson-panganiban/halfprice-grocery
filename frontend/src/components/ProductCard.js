@@ -40,12 +40,18 @@ function ProductCard({ product }) {
           <span>-{savings.percentage}%</span>
           {/* <Percent size={14} weight="bold" /> */}
         </div>
-        <img src={product.image} alt={product.name} className="product-image" />
-        <img
-          src={getBrandLogo(product.brand)}
-          alt={product.brand}
-          className="brand-logo"
-        />
+        <a href={product.link} target="_blank" rel="noopener noreferrer">
+          <img
+            src={product.image}
+            alt={product.name}
+            className="product-image"
+          />
+          <img
+            src={getBrandLogo(product.brand)}
+            alt={product.brand}
+            className="brand-logo"
+          />
+        </a>
       </div>
       <div className="product-info-container">
         <div className="product-name">{product.name}</div>
