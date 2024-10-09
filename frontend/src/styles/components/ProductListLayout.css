@@ -1,7 +1,7 @@
 .product-list-layout {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 12px;
+  padding: 5px 10px;
 }
 
 .filter-container {
@@ -26,8 +26,12 @@
 }
 
 @media screen and (max-width: 767px) {
+  .product-list-layout {
+    padding: 0 10px;
+  }
+
   .filter-container {
-    padding: 15px 0;
+    padding: 10px 0;
   }
 
   .brand-and-search {

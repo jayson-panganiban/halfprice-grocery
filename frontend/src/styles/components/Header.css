@@ -26,9 +26,16 @@
   text-decoration: none;
 }
 
+.logo-image {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
 .logo-text {
   font-size: 28px;
 }
+
 .logo-half {
   font-size: 28px;
   color: var(--color-primary);
@@ -54,7 +61,6 @@
 
 .logo-grocery {
   font-size: 20px;
-  font-family: 'Quicksand', sans-serif;
   color: var(--color-secondary);
   font-weight: 100;
   text-transform: uppercase;

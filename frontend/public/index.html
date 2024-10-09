@@ -1,21 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-AU">
   <head>
     <meta charset="utf-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
     />
-    <meta name="theme-color" content="#4a90e2" />
-    <meta name="description" content="Find the best half-price grocery deals" />
+    <meta name="theme-color" content="#f8fafc" />
+    <meta
+      name="description"
+      content="Discover the best half-price grocery deals from major Australian supermarkets. Save on your weekly shop with HalfPrice Grocery."
+    />
+
+    <meta name="apple-mobile-web-app-status-bar-style" content="#f8fafc" />
+    <meta name="geo.region" content="AU" />
+    <meta name="geo.position" content="-25.2744;133.7751" />
+    <meta name="ICBM" content="-25.2744, 133.7751" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="%PUBLIC_URL%/apple-touch-icon.png"
+    />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap"
       rel="stylesheet"
     />
-    <title>HalfPrice Grocery | Best Deals on OZ Groceries</title>
+    <title>
+      HalfPrice Grocery | Best Deals on Australian Supermarket Products
+    </title>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "HalfPrice Grocery",
+        "url": "https://halfprice-grocery.com",
+        "description": "Find the best half-price grocery specials from major Australian supermarkets",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://halfprice-grocery.com/search?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

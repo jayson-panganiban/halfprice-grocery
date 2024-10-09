@@ -28,7 +28,7 @@
 
 .brand-tab.active {
   background-color: var(--color-primary);
-  color: var(--color-background);
+  color: var(--color-accent);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
