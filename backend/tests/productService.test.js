@@ -28,7 +28,7 @@ describe('Product Service', () => {
 
   describe('getProducts', () => {
     test('should return all products when no brand is specified', async () => {
-      await Product.create([
+      await productService.saveProducts([
         {
           name: 'Product 1',
           brand: 'Brand A',
@@ -56,7 +56,7 @@ describe('Product Service', () => {
     });
 
     test('should return filtered products when brand is specified', async () => {
-      await Product.create([
+      await productService.saveProducts([
         {
           name: 'Product 1',
           brand: 'Brand A',
@@ -87,7 +87,7 @@ describe('Product Service', () => {
 
   describe('getProductById', () => {
     test('should return a product when valid id is provided', async () => {
-      const createdProduct = await Product.create({
+      const createdProduct = await productService.createProduct({
         name: 'Test Product',
         price: 10,
         brand: 'Test Brand',
@@ -111,7 +111,7 @@ describe('Product Service', () => {
 
   describe('getPriceHistory', () => {
     test('should return price history for a product', async () => {
-      const product = await Product.create({
+      const product = await productService.createProduct({
         name: 'Test Product',
         price: 10,
         brand: 'Test Brand',
@@ -140,6 +140,88 @@ describe('Product Service', () => {
       await expect(
         productService.getPriceHistory(nonExistentId)
       ).rejects.toThrow(NotFoundError);
+    });
+  });
+
+  describe('getWeeklyProducts', () => {
+    test('should return all weekly products when no brand is specified', async () => {
+      const currentDate = new Date();
+      const oldDate = new Date(currentDate.getTime() - 8 * 24 * 60 * 60 * 1000); // 8 days ago
+
+      await Product.create([
+        {
+          name: 'Weekly Product 1',
+          brand: 'Brand X',
+          price: 9.99,
+          savings: 2.0,
+          originalPrice: 11.99,
+          pricePerUnit: '$9.99/kg',
+          link: 'https://example.com/product1',
+          image: 'https://example.com/product1.jpg',
+          createdAt: currentDate,
+        },
+        {
+          name: 'Weekly Product 2',
+          brand: 'Brand Y',
+          price: 19.99,
+          savings: 5.0,
+          originalPrice: 24.99,
+          pricePerUnit: '$19.99/kg',
+          link: 'https://example.com/product2',
+          image: 'https://example.com/product2.jpg',
+          createdAt: currentDate,
+        },
+        {
+          name: 'Old Product',
+          brand: 'Brand Z',
+          price: 29.99,
+          savings: 7.0,
+          originalPrice: 36.99,
+          pricePerUnit: '$29.99/kg',
+          link: 'https://example.com/product3',
+          image: 'https://example.com/product3.jpg',
+          createdAt: oldDate,
+        },
+      ]);
+
+      const weeklyProducts = await productService.getWeeklyProducts();
+      expect(weeklyProducts).toHaveLength(2);
+      expect(weeklyProducts[0].name).toBe('Weekly Product 1');
+      expect(weeklyProducts[1].name).toBe('Weekly Product 2');
+    });
+
+    test('should return filtered weekly products when brand is specified', async () => {
+      const currentDate = new Date();
+
+      await Product.create([
+        {
+          name: 'Weekly Product 1',
+          brand: 'Brand X',
+          price: 9.99,
+          savings: 2.0,
+          originalPrice: 11.99,
+          pricePerUnit: '$9.99/kg',
+          link: 'https://example.com/product1',
+          image: 'https://example.com/product1.jpg',
+          createdAt: currentDate,
+        },
+        {
+          name: 'Weekly Product 2',
+          brand: 'Brand Y',
+          price: 19.99,
+          savings: 5.0,
+          originalPrice: 24.99,
+          pricePerUnit: '$19.99/kg',
+          link: 'https://example.com/product2',
+          image: 'https://example.com/product2.jpg',
+          createdAt: currentDate,
+        },
+      ]);
+
+      const weeklyProducts = await productService.getWeeklyProducts('Brand X');
+      expect(weeklyProducts).toHaveLength(1);
+      expect(weeklyProducts[0].name).toBe('Weekly Product 1');
+      expect(weeklyProducts[0].brand).toBe('Brand X');
     });
   });
 
@@ -276,7 +358,7 @@ describe('Product Service', () => {
 
   describe('deleteProduct', () => {
     test('should delete an existing product', async () => {
-      const product = await Product.create({
+      const product = await productService.createProduct({
         name: 'Product to Delete',
         price: 10,
         brand: 'Brand F',

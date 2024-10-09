@@ -115,6 +115,114 @@ describe('Product Controller', () => {
     });
   });
 
+  describe('GET /api/products/weekly', () => {
+    test('should return weekly products when no brand is specified', async () => {
+      const currentDate = new Date();
+      await Product.create([
+        {
+          name: 'Weekly Product 1',
+          brand: 'Brand X',
+          price: 9.99,
+          savings: 2.0,
+          originalPrice: 11.99,
+          pricePerUnit: '$9.99/kg',
+          link: 'https://example.com/product1',
+          image: 'https://example.com/product1.jpg',
+        },
+        {
+          name: 'Weekly Product 2',
+          brand: 'Brand Y',
+          price: 19.99,
+          savings: 5.0,
+          originalPrice: 24.99,
+          pricePerUnit: '$19.99/kg',
+          link: 'https://example.com/product2',
+          image: 'https://example.com/product2.jpg',
+        },
+      ]);
+
+      const response = await request(app).get('/api/products/weekly');
+      expect(response.status).toBe(200);
+      expect(response.body.totalProducts).toBe(2);
+      expect(response.body.productsByBrand).toEqual({
+        'Brand X': 1,
+        'Brand Y': 1,
+      });
+      expect(response.body.products).toHaveLength(2);
+    });
+
+    test('should return filtered weekly products when brand is specified', async () => {
+      const currentDate = new Date();
+      await Product.create([
+        {
+          name: 'Weekly Product 1',
+          brand: 'Brand X',
+          price: 9.99,
+          savings: 2.0,
+          originalPrice: 11.99,
+          pricePerUnit: '$9.99/kg',
+          link: 'https://example.com/product1',
+          image: 'https://example.com/product1.jpg',
+        },
+        {
+          name: 'Weekly Product 2',
+          brand: 'Brand Y',
+          price: 19.99,
+          savings: 5.0,
+          originalPrice: 24.99,
+          pricePerUnit: '$19.99/kg',
+          link: 'https://example.com/product2',
+          image: 'https://example.com/product2.jpg',
+        },
+      ]);
+
+      const response = await request(app).get(
+        '/api/products/weekly?brand=Brand X'
+      );
+      expect(response.status).toBe(200);
+      expect(response.body.totalProducts).toBe(1);
+      expect(response.body.productsByBrand).toEqual({ 'Brand X': 1 });
+      expect(response.body.products).toHaveLength(1);
+      expect(response.body.products[0].name).toBe('Weekly Product 1');
+    });
+
+    test('should not return products older than a week', async () => {
+      const currentDate = new Date();
+      const oldDate = new Date(currentDate.getTime() - 8 * 24 * 60 * 60 * 1000); // 8 days ago
+      await Product.create([
+        {
+          name: 'Weekly Product',
+          brand: 'Brand X',
+          price: 9.99,
+          savings: 2.0,
+          originalPrice: 11.99,
+          pricePerUnit: '$9.99/kg',
+          link: 'https://example.com/product1',
+          image: 'https://example.com/product1.jpg',
+          createdAt: currentDate,
+        },
+        {
+          name: 'Old Product',
+          brand: 'Brand Y',
+          price: 19.99,
+          savings: 5.0,
+          originalPrice: 24.99,
+          pricePerUnit: '$19.99/kg',
+          link: 'https://example.com/product2',
+          image: 'https://example.com/product2.jpg',
+          createdAt: oldDate,
+        },
+      ]);
+
+      const response = await request(app).get('/api/products/weekly');
+      expect(response.status).toBe(200);
+      expect(response.body.totalProducts).toBe(1);
+      expect(response.body.productsByBrand).toEqual({ 'Brand X': 1 });
+      expect(response.body.products).toHaveLength(1);
+      expect(response.body.products[0].name).toBe('Weekly Product');
+    });
+  });
+
   describe('POST /api/products', () => {
     test('should create a new product', async () => {
       const newProduct = {
