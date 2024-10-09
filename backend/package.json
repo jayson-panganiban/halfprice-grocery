@@ -1,7 +1,7 @@
 {
-  "name": "half-price-backend",
+  "name": "halfprice-grocery-backend",
   "version": "1.0.0",
-  "description": "Half-Price Backend",
+  "description": "HalfPrice Grocery Backend",
   "main": "server.js",
   "scripts": {
     "start": "node src/app.js",
@@ -50,7 +50,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jayson-panganiban/half-price.git"
+    "url": "https://github.com/jayson-panganiban/halfprice-grocery.git"
   },
   "author": "Jayson Panganiban",
   "license": "Apache-2.0"
