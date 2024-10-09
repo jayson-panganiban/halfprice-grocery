@@ -34,7 +34,7 @@
 
 .favorites-header h2 {
   font-size: 24px;
-  color: var(--color-primary);
+  color: var(--color-text);
   margin: 0;
 }
 
@@ -48,24 +48,50 @@
   font-style: italic;
 }
 
-.favorites-actions {
+/* .favorites-actions {
   display: flex;
+  flex-direction: row;
   justify-content: flex-end;
+} */
+
+.favorites-tabs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--color-surface);
+  padding: 5px;
+}
+
+.favorites-tab {
+  background-color: transparent;
+  border: none;
+  color: var(--color-secondary);
+  font-size: 16px;
+  font-weight: 300;
+  cursor: pointer;
+}
+
+.favorites-tab:hover,
+.favorites-tab.active {
+  color: var(--color-primary);
 }
 
 .clear-favorites {
+  /* display: flex; */
+  /* justify-content: flex-end; */
   background-color: transparent;
   color: var(--color-secondary);
   border: none;
-  padding: 5px 15px 0 0;
-  border-radius: 4px;
+  /* padding: 5px 15px 0 0; */
+  /* border-radius: 4px; */
   cursor: pointer;
   opacity: 0.8;
   transition: background-color 0.2s, color 0.2s;
 }
 
 .clear-favorites:hover {
-  color: var(--color-primary);
+  color: var(--color-text);
   transform: scale(1.1);
 }
 
