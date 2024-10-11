@@ -1,42 +1,39 @@
 .about-container {
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 2rem 1rem;
-  /* font-family: 'Inter', sans-serif; */
-  color: #1c274c;
+  padding: 1.5rem 1rem;
+  color: var(--color-primary);
 }
 
 .mission-statement {
   text-align: center;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 300;
   line-height: 1.5;
   margin-bottom: 2rem;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .gradient-text {
   background: linear-gradient(45deg, var(--color-primary), var(--color-accent));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .feature-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .feature-item,
 .about-story,
 .support-section {
   background-color: var(--color-surface);
-  border-radius: 8px;
-  padding: 1.2rem;
+  border-radius: 12px;
+  padding: 1.5rem;
   transition: all 0.3s ease;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
 
 .feature-item:hover,
@@ -48,16 +45,15 @@
 .feature-icon {
   font-size: 2rem;
   color: var(--color-accent);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.8rem;
 }
 
 .feature-item h2,
 .about-story h2,
 .support-section h2 {
   font-size: 1.2rem;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-  color: var(--color-primary);
+  font-weight: 600;
+  margin-bottom: 0.8rem;
 }
 
 .feature-item p,
@@ -78,19 +74,20 @@
   align-items: center;
   justify-content: center;
   background-color: var(--color-accent);
-  color: var(--color-secondary);
+  color: var(--color-primary);
   border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 4px;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.3s ease;
   margin-top: 1rem;
 }
 
 .coffee-button:hover {
   background-color: var(--color-primary);
   color: var(--color-background);
+  transform: translateY(-2px);
 }
 
 .coffee-button svg {
@@ -99,20 +96,33 @@
 
 @media (min-width: 768px) {
   .about-container {
-    padding: 4rem 2rem;
+    padding: 3rem 2rem;
+  }
+
+  .mission-statement {
+    font-size: 1.3rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .feature-grid {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   }
 
-  .feature-item p,
-  .about-story p,
-  .support-section p {
-    font-size: 1rem;
+  .feature-icon {
+    font-size: 2.5rem;
   }
 
-  .mission-statement {
-    font-size: 1.5rem;
+  .feature-item h2,
+  .about-story h2,
+  .support-section h2 {
+    font-size: 1.4rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .about-container {
+    max-width: 1200px;
   }
 }

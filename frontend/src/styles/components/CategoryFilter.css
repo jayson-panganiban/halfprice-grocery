@@ -1,71 +1,85 @@
 .category-filter {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: left;
-  gap: 5px;
-  padding: 0 0 15px 0;
+  flex-wrap: nowrap;
+  padding: 5px 0;
+  justify-content: flex-start;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.category-filter::-webkit-scrollbar {
+  display: none;
 }
 
 .category-button {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
   padding: 12px 20px;
   border: none;
-  border-radius: 25px;
+  border-radius: 20px;
   background-color: var(--color-surface);
   color: var(--color-text);
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
 }
-p .category-button:hover {
+
+.category-button:hover {
   background-color: var(--color-accent);
-  color: black;
+  color: var(--color-primary);
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .category-button.active {
   background-color: var(--color-primary);
-  color: white;
-  transform: translateY(-2px);
+  color: var(--color-accent);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .category-icon {
-  font-size: 20px;
+  font-size: 16px;
+  transition: transform 0.3s ease;
+}
+
+.category-button:hover .category-icon {
+  transform: scale(1.1);
 }
 
 .category-name {
   white-space: nowrap;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 600px) {
   .category-filter {
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    overflow-x: auto;
-    padding: 5px 0 5px 0;
+    flex-wrap: wrap;
+    justify-content: left;
+    padding: 5px 0;
     gap: 5px;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-
-  .category-filter::-webkit-scrollbar {
-    display: none;
   }
 
   .category-button {
-    background-color: var(--color-surface);
-    padding: 10px 15px;
-    font-size: 12px;
-    flex-shrink: 0;
+    padding: 12px 18px;
+    font-size: 14px;
   }
 
   .category-icon {
     font-size: 18px;
+  }
+}
+
+@media (min-width: 900px) {
+  .category-button {
+    padding: 12px 18px;
+    font-size: 14px;
+  }
+
+  .category-icon {
+    font-size: 20px;
   }
 }

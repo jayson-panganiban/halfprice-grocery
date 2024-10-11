@@ -59,27 +59,25 @@ function FavoritesModal({ isOpen, onClose }) {
       overlayClassName="favorites-modal-overlay"
     >
       <div className="favorites-header">
-        <h2>Your Favorites</h2>
-        <CloseButton onClick={onClose} />
-      </div>
-      <div className="favorites-tabs">
-        <button
-          className={`favorites-tab ${
-            activeTab === 'thisWeek' ? 'active' : ''
-          }`}
-          onClick={() => setActiveTab('thisWeek')}
-        >
-          This Week's Favorites
-        </button>
-        <button
-          className={`favorites-tab ${activeTab === 'allTime' ? 'active' : ''}`}
-          onClick={() => setActiveTab('allTime')}
-        >
-          All-Time Favorites
-        </button>
-        <button className="clear-favorites" onClick={removeAllFavorites}>
-          <Trash size={24} />
-        </button>
+        <h2 className="favorites-tabs">
+          <button
+            className={`favorites-tab ${
+              activeTab === 'thisWeek' ? 'active' : ''
+            }`}
+            onClick={() => setActiveTab('thisWeek')}
+          >
+            This Week's Favorites
+          </button>
+          <button
+            className={`favorites-tab ${
+              activeTab === 'allTime' ? 'active' : ''
+            }`}
+            onClick={() => setActiveTab('allTime')}
+          >
+            All-Time Favorites
+          </button>{' '}
+          <CloseButton onClick={onClose} />
+        </h2>
       </div>
 
       <div className="favorites-content">
@@ -109,8 +107,6 @@ function FavoritesModal({ isOpen, onClose }) {
           </div>
         )}
       </div>
-
-      {/* ... (rest of the JSX remains the same) */}
     </Modal>
   );
 }

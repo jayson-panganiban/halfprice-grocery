@@ -18,16 +18,16 @@ import '../styles/components/CategoryFilter.css';
 
 const categories = [
   { name: 'All', icon: null },
-  { name: 'Bakery', icon: Bread },
+  { name: 'Household', icon: Broom },
   { name: 'Pantry', icon: Package },
+  { name: 'Dairy, Eggs & Fridge', icon: Egg },
   { name: 'Freezer', icon: Snowflake },
   { name: 'Drinks', icon: Coffee },
   { name: 'Liquor', icon: BeerBottle },
-  { name: 'Dairy, Eggs & Fridge', icon: Egg },
   { name: 'Health & Beauty', icon: FirstAidKit },
-  { name: 'Pet', icon: PawPrint },
+  { name: 'Bakery', icon: Bread },
   { name: 'Baby', icon: BabyCarriage },
-  { name: 'Household', icon: Broom },
+  { name: 'Pet', icon: PawPrint },
 ];
 
 function CategoryFilter({ selectedCategory, onCategoryChange }) {

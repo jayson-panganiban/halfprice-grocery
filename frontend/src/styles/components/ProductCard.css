@@ -1,20 +1,19 @@
-/* @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;700&display=swap'); */
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
-
 .product-card {
   position: relative;
   background-color: var(--color-surface);
-  border-radius: 8px;
+  border-radius: 6px;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  /* box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px; */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
 }
 
 .product-card:hover {
   box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px,
     rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
 }
+
 .product-image-container {
   position: relative;
   overflow: hidden;
@@ -25,13 +24,12 @@
 
 .product-image {
   width: 100%;
-  height: 220px;
+  height: 140px;
   object-fit: contain;
   transition: transform 0.3s ease-in-out;
 }
-
 .product-card:hover .product-image {
-  transform: scale(1.05);
+  transform: scale(1.1);
 }
 
 .savings-badge {
@@ -42,7 +40,7 @@
   color: var(--color-primary);
   font-weight: 700;
   padding: 5px 10px;
-  border-radius: 25px;
+  border-radius: 20px;
   font-size: 0.9rem;
   display: flex;
   align-items: center;
@@ -61,8 +59,8 @@
 .brand-logo {
   position: absolute;
   bottom: 10px;
-  left: 10px;
-  width: 40px;
+  left: 15px;
+  width: 50px;
   height: auto;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 4px;
@@ -71,9 +69,7 @@
 
 .product-info-container {
   background-color: var(--color-background);
-  padding: 1rem;
-  /* font-family: 'Manrope', sans-serif; */
-  min-height: 140px;
+  padding: 0.8rem;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -81,23 +77,17 @@
 }
 
 .product-name {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   line-height: 1.2;
   color: var(--color-primary);
-  flex-grow: 1;
-  margin: 0;
-  padding: 0;
+  margin-bottom: 0.3rem;
 }
 
 .price-container {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   gap: 0.5rem;
-}
-
-.current-price,
-.original-price {
-  margin: 2px 0 0 0;
 }
 
 .current-price {
@@ -112,17 +102,23 @@
   text-decoration: line-through;
 }
 
+.current-price,
+.original-price {
+  margin: 5px 0;
+}
+
 .price-per-unit {
-  font-size: 1rem;
+  font-size: 0.85rem;
   color: var(--color-secondary);
-  margin: 5px 0 0 0;
 }
 
 .product-actions {
   position: absolute;
-  bottom: 10px;
+  bottom: 5px;
   right: 10px;
   display: flex;
+  gap: 2px;
+  padding-bottom: 5px;
 }
 
 .favorite-button,
@@ -130,72 +126,37 @@
   background: none;
   border: none;
   cursor: pointer;
-  margin: 0;
-  padding: 0 5px;
+  padding: 0;
   color: var(--color-primary);
+  transition: transform 0.2s ease-in-out;
   transition: color 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
 
 .favorite-button:hover,
 .price-history-button:hover {
-  transform: scale(1.4);
+  transform: scale(1.2);
 }
 
-.heart-icon.filled {
-  color: #e74c3c;
-}
-
-.heart-icon {
-  color: #e74c3c;
-}
-
-@media screen and (max-width: 767px) {
-  .product-card {
-    max-width: 200px;
-  }
-
-  .savings-badge {
-    font-size: 0.75rem;
-    padding: 3px 6px;
-    top: 5px;
-    right: 10px;
-  }
-
+@media (min-width: 600px) {
   .product-image {
-    height: 140px;
+    height: 160px;
   }
-
-  .product-info-container {
-    padding: 0.75rem;
-    min-height: 140px;
-  }
-
   .product-name {
     font-size: 1rem;
   }
-
-  .price-container {
-    padding: 5px 0 0 0;
-  }
-
   .current-price {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
+}
 
-  .original-price {
-    font-size: 0.9rem;
+@media (min-width: 900px) {
+  .product-image {
+    height: 180px;
   }
-
-  .price-per-unit {
-    font-size: 0.8rem;
+  .product-name {
+    font-size: 1.1rem;
   }
-
-  .favorite-button,
-  .price-history-button {
-    padding: 0 1px;
-  }
-
-  .product-actions {
-    gap: 5px;
+  .current-price {
+    font-size: 1.2rem;
   }
 }

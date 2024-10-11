@@ -29,8 +29,12 @@ const BackToTopButton = () => {
   return (
     <>
       {isVisible && (
-        <button onClick={scrollToTop} className="back-to-top">
-          <ArrowUp size={32} weight="bold" />
+        <button
+          onClick={scrollToTop}
+          className="back-to-top"
+          aria-label="Back to top"
+        >
+          <ArrowUp size={24} weight="bold" />
         </button>
       )}
     </>
