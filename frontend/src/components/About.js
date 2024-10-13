@@ -8,7 +8,7 @@ const About = () => {
   const structuredData = {
     name: 'HalfPrice Grocery',
     description:
-      'Helping fellow bargain hunters find the best grocery deals, one click at a time!',
+      'Discover half-price grocery specials from Coles and Woolworths instantly. Create your half-price shopping list, maximize savings and time.',
     url: 'https://halfpricegrocery.com',
     sameAs: [
       'https://github.com/jayson-panganiban',
@@ -19,10 +19,12 @@ const About = () => {
   return (
     <div className="about-container">
       <Helmet>
-        <title>About HalfPrice Grocery - Our Mission and Features</title>
+        <title>
+          About Half Price Grocery - Your Source for Grocery Savings
+        </title>
         <meta
           name="description"
-          content="Learn about HalfPrice Grocery's mission to help bargain hunters find the best grocery deals. Discover our features and support the project."
+          content="Learn how Half Price Grocery helps you discover half-price specials from Coles and Woolworths instantly. Create your shopping list and save time and money."
         />
       </Helmet>
       <StructuredData type="Organization" data={structuredData} />

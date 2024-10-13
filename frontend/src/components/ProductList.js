@@ -102,7 +102,7 @@ function ProductList() {
       item: {
         '@type': 'Product',
         name: product.name,
-        description: `${product.name} on sale at ${product.brand}`,
+        description: `${product.name} available at Half Price Grocery`,
         offers: {
           '@type': 'Offer',
           price: product.price,
@@ -116,10 +116,12 @@ function ProductList() {
   return (
     <>
       <Helmet>
-        <title>Weekly Deals - HalfPrice Grocery</title>
+        <title>
+          Half Price Grocery Specials - Save on Your Weekly Groceries
+        </title>
         <meta
           name="description"
-          content={`Browse this week's half-price deals from ${selectedBrand}. Save big on your grocery shopping!`}
+          content={`Browse this week's half-price grocery specials from ${selectedBrand}. Find amazing discounts at Half Price Grocery!`}
         />
       </Helmet>
       <StructuredData type="ItemList" data={structuredData} />

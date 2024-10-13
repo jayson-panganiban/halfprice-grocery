@@ -65,7 +65,7 @@ const Contact = () => {
   };
 
   const structuredData = {
-    name: 'Contact HalfPrice Grocery',
+    name: 'Contact Half Price Grocery',
     description:
       'Get in touch with HalfPrice Grocery. Share your suggestions, report bugs, or just say hi.',
     url: 'https://halfpricegrocery.com/contact',
@@ -79,10 +79,10 @@ const Contact = () => {
   return (
     <div className="contact-container">
       <Helmet>
-        <title>Contact Us - HalfPrice Grocery</title>
+        <title>Contact Half Price Grocery</title>
         <meta
           name="description"
-          content="Get in touch with HalfPrice Grocery."
+          content="Questions about half-price grocery specials from Coles and Woolworths? Contact Half Price Grocery."
         />
       </Helmet>
       <StructuredData type="ContactPage" data={structuredData} />

@@ -19,10 +19,10 @@ function Header() {
   return (
     <>
       <Helmet>
-        <title>HalfPrice Grocery - Halfprice Specials on Groceries</title>
+        <title>Half Price Grocery - Best Deals from Coles and Woolworths</title>
         <meta
           name="description"
-          content="Find the best half-price specials on groceries from major Australian supermarkets at HalfPrice Grocery."
+          content="Discover half-price grocery specials from Coles and Woolworths instantly. Create your half-price shopping list, maximize savings and time."
         />
       </Helmet>
       <Headroom>
