@@ -14,10 +14,10 @@ function App() {
       <Router>
         <div className="App">
           <Helmet>
-            <title>HalfPrice Grocery - Halfprice Specials on Groceries</title>
+            <title>HalfPrice Grocery - Half-price Grocery Specials</title>
             <meta
               name="description"
-              content="Find the best half-price specials on groceries from major Australian supermarkets at HalfPrice Grocery."
+              content="Discover the best half-price grocery specials from Coles and Woolworths at HalfPrice Grocery."
             />
           </Helmet>
           <Header />
