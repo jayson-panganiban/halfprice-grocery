@@ -23,12 +23,12 @@ const BackToTopButton = () => {
   const scrollToTop = () => {
     scroll.scrollToTop({
       duration: 500,
-      smooth: 'easeInOutQuart',
+      smooth: 'easeOutCubic',
     });
   };
 
   return (
-    <>
+    <div className="back-to-top-container">
       {isVisible && (
         <button
           onClick={scrollToTop}
@@ -38,7 +38,7 @@ const BackToTopButton = () => {
           <ArrowUp size={24} weight="bold" />
         </button>
       )}
-    </>
+    </div>
   );
 };
 
