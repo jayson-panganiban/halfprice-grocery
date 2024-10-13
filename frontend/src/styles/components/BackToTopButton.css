@@ -2,7 +2,8 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: var(--color-surface);
+  background-color: var(--color-accent);
+  color: var(--color-primary);
   border: none;
   border-radius: 50%;
   width: 40px;
@@ -13,14 +14,21 @@
   justify-content: center;
   align-items: center;
   transition: all 0.3s ease;
-  opacity: 0.7;
+  opacity: 0;
+  visibility: hidden;
   z-index: 1000;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
+.back-to-top.visible {
+  opacity: 0.8;
+  visibility: visible;
+}
+
 .back-to-top:hover,
 .back-to-top:focus {
-  opacity: 1;
+  background-color: var(--color-primary);
+  color: var(--color-accent);
   transform: translateY(-5px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
