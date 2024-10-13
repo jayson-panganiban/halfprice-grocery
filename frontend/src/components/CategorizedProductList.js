@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { getCategorizedProducts } from "../utils/api";
-import useFilteredProducts from "../hooks/useFilteredProducts";
-import ProductCard from "./ProductCard";
-import LoadingSkeleton from "./LoadingSkeleton";
-import NoResults from "./NoResults";
-import ErrorMessage from "./ErrorMessage";
+import React, { useState, useEffect, useCallback } from 'react';
+import { Helmet } from 'react-helmet';
+import { getCategorizedProducts } from '../utils/api';
+import useFilteredProducts from '../hooks/useFilteredProducts';
+import ProductCard from './ProductCard';
+import LoadingSkeleton from './LoadingSkeleton';
+import NoResults from './NoResults';
+import ErrorMessage from './ErrorMessage';
 
 function CategorizedProductList({
   selectedBrand,
@@ -35,7 +36,7 @@ function CategorizedProductList({
         },
       }));
     } catch (error) {
-      setError("Failed to fetch categorized products. Please try again later.");
+      setError('Failed to fetch categorized products. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -52,6 +53,13 @@ function CategorizedProductList({
 
   return (
     <>
+      <Helmet>
+        <title>{`${selectedCategory} Deals - ${selectedBrand} | HalfPrice Grocery`}</title>
+        <meta
+          name="description"
+          content={`Browse half-price ${selectedCategory} deals from ${selectedBrand}. Find great savings on your favorite products at HalfPrice Grocery.`}
+        />
+      </Helmet>
       {loading ? (
         <LoadingSkeleton count={8} brand={selectedBrand} />
       ) : filteredProducts.length > 0 ? (

@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { Heart, ChartLine, Percent } from 'phosphor-react';
+import { Helmet } from 'react-helmet';
+import { Heart, ChartLine } from 'phosphor-react';
 import { FavoritesContext } from '../context/FavoritesContext';
 import PriceHistoryModal from './PriceHistoryModal';
 import wooliesLogo from '../assets/woolies.png';
@@ -34,62 +35,71 @@ function ProductCard({ product }) {
   const savings = calculateSavings();
 
   return (
-    <div className="product-card">
-      <div className="product-image-container">
-        <div className="savings-badge">
-          <span>-{savings.percentage}%</span>
-          {/* <Percent size={14} weight="bold" /> */}
-        </div>
-        <a href={product.link} target="_blank" rel="noopener noreferrer">
-          <img
-            src={product.image}
-            alt={product.name}
-            className="product-image"
-          />
-          <img
-            src={getBrandLogo(product.brand)}
-            alt={product.brand}
-            className="brand-logo"
-          />
-        </a>
-      </div>
-      <div className="product-info-container">
-        <div className="product-name">{product.name}</div>
-        <div className="price-container">
-          <p className="current-price">${product.price.toFixed(2)}</p>
-          <p className="original-price">${product.originalPrice.toFixed(2)}</p>
-        </div>
-        {product.pricePerUnit && (
-          <p className="price-per-unit">{product.pricePerUnit}</p>
-        )}
-        <div className="product-actions">
-          <button
-            className="price-history-button"
-            onClick={() => setShowPriceHistory(true)}
-          >
-            <ChartLine size={20} />
-          </button>
-          <button
-            className="favorite-button"
-            onClick={() => toggleFavorite(product)}
-          >
-            <Heart
-              size={20}
-              weight={isFavorite(product._id) ? 'fill' : 'regular'}
-              className={
-                isFavorite(product._id) ? 'heart-icon filled' : 'heart-icon'
-              }
+    <>
+      <Helmet>
+        <meta
+          name="description"
+          content={`${product.name} on sale at ${product.brand}. Save ${savings.percentage}% now!`}
+        />
+      </Helmet>
+      <div className="product-card">
+        <div className="product-image-container">
+          <div className="savings-badge">
+            <span>-{savings.percentage}%</span>
+          </div>
+          <a href={product.link} target="_blank" rel="noopener noreferrer">
+            <img
+              src={product.image}
+              alt={product.name}
+              className="product-image"
             />
-          </button>
+            <img
+              src={getBrandLogo(product.brand)}
+              alt={product.brand}
+              className="brand-logo"
+            />
+          </a>
         </div>
-        {showPriceHistory && (
-          <PriceHistoryModal
-            product={product}
-            onClose={() => setShowPriceHistory(false)}
-          />
-        )}
+        <div className="product-info-container">
+          <div className="product-name">{product.name}</div>
+          <div className="price-container">
+            <p className="current-price">${product.price.toFixed(2)}</p>
+            <p className="original-price">
+              ${product.originalPrice.toFixed(2)}
+            </p>
+          </div>
+          {product.pricePerUnit && (
+            <p className="price-per-unit">{product.pricePerUnit}</p>
+          )}
+          <div className="product-actions">
+            <button
+              className="price-history-button"
+              onClick={() => setShowPriceHistory(true)}
+            >
+              <ChartLine size={20} />
+            </button>
+            <button
+              className="favorite-button"
+              onClick={() => toggleFavorite(product)}
+            >
+              <Heart
+                size={20}
+                weight={isFavorite(product._id) ? 'fill' : 'regular'}
+                className={
+                  isFavorite(product._id) ? 'heart-icon filled' : 'heart-icon'
+                }
+              />
+            </button>
+          </div>
+          {showPriceHistory && (
+            <PriceHistoryModal
+              product={product}
+              onClose={() => setShowPriceHistory(false)}
+            />
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

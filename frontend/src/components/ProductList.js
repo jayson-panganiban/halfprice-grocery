@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet';
 import { getWeeklyProducts } from '../utils/api';
 import useFilteredProducts from '../hooks/useFilteredProducts';
 import ProductCard from './ProductCard';
@@ -11,6 +12,7 @@ import NoResults from './NoResults';
 import ErrorMessage from './ErrorMessage';
 import BrandTabs from './BrandTabs';
 import ProductListLayout from './ProductListLayout';
+import StructuredData from './StructuredData';
 
 function ProductList() {
   const [products, setProducts] = useState({ coles: [], woolies: [] });
@@ -81,17 +83,46 @@ function ProductList() {
       {loading ? (
         <LoadingSkeleton count={10} brand={selectedBrand} />
       ) : filteredProducts.length > 0 ? (
-        filteredProducts.map((product) => (
-          <ProductCard key={product._id} product={product} />
-        ))
+        <>
+          <StructuredData products={filteredProducts} />
+          {filteredProducts.map((product) => (
+            <ProductCard key={product._id} product={product} />
+          ))}
+        </>
       ) : (
         <NoResults />
       )}
     </>
   );
 
+  const structuredData = {
+    itemListElement: filteredProducts.map((product, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Product',
+        name: product.name,
+        description: `${product.name} on sale at ${product.brand}`,
+        offers: {
+          '@type': 'Offer',
+          price: product.price,
+          priceCurrency: 'AUD',
+          availability: 'https://schema.org/InStock',
+        },
+      },
+    })),
+  };
+
   return (
     <>
+      <Helmet>
+        <title>Weekly Deals - HalfPrice Grocery</title>
+        <meta
+          name="description"
+          content={`Browse this week's half-price deals from ${selectedBrand}. Save big on your grocery shopping!`}
+        />
+      </Helmet>
+      <StructuredData type="ItemList" data={structuredData} />
       <ProductListLayout
         filters={filters}
         content={

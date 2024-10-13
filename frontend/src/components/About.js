@@ -1,15 +1,35 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
+import StructuredData from './StructuredData';
 import { Leaf, ShoppingCart, ChartLine, Coffee } from 'phosphor-react';
 import '../styles/components/About.css';
 
 const About = () => {
+  const structuredData = {
+    name: 'HalfPrice Grocery',
+    description:
+      'Helping fellow bargain hunters find the best grocery deals, one click at a time!',
+    url: 'https://halfpricegrocery.com',
+    sameAs: [
+      'https://github.com/jayson-panganiban',
+      'https://www.linkedin.com/in/jayson-panganiban',
+    ],
+  };
+
   return (
     <div className="about-container">
+      <Helmet>
+        <title>About HalfPrice Grocery - Our Mission and Features</title>
+        <meta
+          name="description"
+          content="Learn about HalfPrice Grocery's mission to help bargain hunters find the best grocery deals. Discover our features and support the project."
+        />
+      </Helmet>
+      <StructuredData type="Organization" data={structuredData} />
       <p className="mission-statement gradient-text">
         Helping fellow bargain hunters find the best grocery deals, one click at
         a time!
       </p>
-
       <div className="feature-grid">
         {[
           {
@@ -38,7 +58,6 @@ const About = () => {
           </div>
         ))}
       </div>
-
       <div className="about-story">
         <h2>Story</h2>
         <p>
@@ -47,7 +66,6 @@ const About = () => {
           platform that I'm excited to develop in my free time. Happy savings!
         </p>
       </div>
-
       <div className="support-section">
         <h2>Support This Project</h2>
         <p>

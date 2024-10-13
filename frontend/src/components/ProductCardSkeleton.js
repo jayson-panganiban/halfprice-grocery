@@ -3,7 +3,10 @@ import '../styles/components/ProductCardSkeleton.css';
 
 const ProductCardSkeleton = () => {
   return (
-    <div className="product-card-skeleton">
+    <div
+      className="product-card-skeleton"
+      aria-label="Loading product information"
+    >
       <div className="skeleton-image-container">
         <div className="skeleton-image"></div>
         <div className="skeleton-brand-logo"></div>

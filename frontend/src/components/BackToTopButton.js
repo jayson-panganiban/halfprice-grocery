@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { animateScroll as scroll } from 'react-scroll';
 import { ArrowUp } from 'phosphor-react';
 import '../styles/components/BackToTopButton.css';
 
@@ -20,9 +21,9 @@ const BackToTopButton = () => {
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
+    scroll.scrollToTop({
+      duration: 500,
+      smooth: 'easeInOutQuart',
     });
   };
 
@@ -31,7 +32,7 @@ const BackToTopButton = () => {
       {isVisible && (
         <button
           onClick={scrollToTop}
-          className="back-to-top"
+          className={`back-to-top ${isVisible ? 'visible' : ''}`}
           aria-label="Back to top"
         >
           <ArrowUp size={24} weight="bold" />

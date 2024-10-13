@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { FavoritesProvider } from './context/FavoritesContext';
 import Header from './components/Header';
@@ -12,6 +13,13 @@ function App() {
     <FavoritesProvider>
       <Router>
         <div className="App">
+          <Helmet>
+            <title>HalfPrice Grocery - Halfprice Specials on Groceries</title>
+            <meta
+              name="description"
+              content="Find the best half-price specials on groceries from major Australian supermarkets at HalfPrice Grocery."
+            />
+          </Helmet>
           <Header />
           <main className="main-content">
             <Routes>

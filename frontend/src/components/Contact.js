@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet';
+import StructuredData from './StructuredData';
 import {
   Envelope,
   GithubLogo,
@@ -62,8 +64,28 @@ const Contact = () => {
     }
   };
 
+  const structuredData = {
+    name: 'Contact HalfPrice Grocery',
+    description:
+      'Get in touch with HalfPrice Grocery. Share your suggestions, report bugs, or just say hi.',
+    url: 'https://halfpricegrocery.com/contact',
+    contactPoint: {
+      '@type': 'ContactPoint',
+      email: 'jsoncp@proton.me',
+      contactType: 'customer support',
+    },
+  };
+
   return (
     <div className="contact-container">
+      <Helmet>
+        <title>Contact Us - HalfPrice Grocery</title>
+        <meta
+          name="description"
+          content="Get in touch with HalfPrice Grocery."
+        />
+      </Helmet>
+      <StructuredData type="ContactPage" data={structuredData} />
       <h1 className="contact-title gradient-text">Get in Touch</h1>
       <p className="contact-intro">
         Hey there! I'm always excited to hear from fellow bargain hunters.
