@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Helmet } from 'react-helmet';
 import StructuredData from './StructuredData';
 import { Leaf, ShoppingCart, ChartLine, Coffee } from 'phosphor-react';
 import '../styles/components/About.css';
 
-const About = () => {
+const About = memo(() => {
   const structuredData = {
     name: 'HalfPrice Grocery',
     description:
@@ -14,6 +14,10 @@ const About = () => {
       'https://github.com/jayson-panganiban',
       'https://www.linkedin.com/in/jayson-panganiban',
     ],
+  };
+
+  const handleSupportClick = () => {
+    window.open('https://www.buymeacoffee.com/jsonpanganiban', '_blank');
   };
 
   return (
@@ -54,7 +58,10 @@ const About = () => {
           },
         ].map((feature, index) => (
           <div key={index} className="feature-item">
-            <feature.icon size={32} className="feature-icon animate-icon" />
+            {React.createElement(feature.icon, {
+              size: 32,
+              className: 'feature-icon animate-icon',
+            })}
             <h2>{feature.title}</h2>
             <p>{feature.description}</p>
           </div>
@@ -77,9 +84,7 @@ const About = () => {
         </p>
         <button
           className="coffee-button hover-effect"
-          onClick={() =>
-            window.open('https://www.buymeacoffee.com/jsonpanganiban', '_blank')
-          }
+          onClick={handleSupportClick}
         >
           <Coffee size={24} />
           <span>Buy me a coffee</span>
@@ -87,6 +92,6 @@ const About = () => {
       </div>
     </div>
   );
-};
+});
 
 export default About;

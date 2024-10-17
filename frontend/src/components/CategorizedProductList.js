@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import { Helmet } from 'react-helmet';
 import { getCategorizedProducts } from '../utils/api';
 import useFilteredProducts from '../hooks/useFilteredProducts';
@@ -57,7 +57,7 @@ function CategorizedProductList({
         <title>{`${selectedCategory} Deals - ${selectedBrand} | HalfPrice Grocery`}</title>
         <meta
           name="description"
-          content={`Browse half-price ${selectedCategory} deals from ${selectedBrand}. Find great savings on your favorite products at HalfPrice Grocery.`}
+          content={`Browse half-price ${selectedCategory} deals from ${selectedBrand}.`}
         />
       </Helmet>
       {loading ? (
@@ -74,4 +74,12 @@ function CategorizedProductList({
   );
 }
 
-export default CategorizedProductList;
+const areEqual = (prevProps, nextProps) => {
+  return (
+    prevProps.selectedBrand === nextProps.selectedBrand &&
+    prevProps.selectedCategory === nextProps.selectedCategory &&
+    prevProps.searchTerm === nextProps.searchTerm
+  );
+};
+
+export default memo(CategorizedProductList, areEqual);

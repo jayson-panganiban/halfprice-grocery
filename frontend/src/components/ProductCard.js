@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, memo } from 'react';
 import { Helmet } from 'react-helmet';
 import { Heart, ChartLine } from 'phosphor-react';
 import { FavoritesContext } from '../context/FavoritesContext';
@@ -7,7 +7,7 @@ import wooliesLogo from '../assets/woolies.png';
 import colesLogo from '../assets/coles.png';
 import '../styles/components/ProductCard.css';
 
-function ProductCard({ product }) {
+const ProductCard = memo(({ product }) => {
   const { toggleFavorite, isFavorite } = useContext(FavoritesContext);
   const [showPriceHistory, setShowPriceHistory] = useState(false);
 
@@ -52,11 +52,13 @@ function ProductCard({ product }) {
               src={product.image}
               alt={product.name}
               className="product-image"
+              loading="lazy"
             />
             <img
               src={getBrandLogo(product.brand)}
               alt={product.brand}
               className="brand-logo"
+              loading="lazy"
             />
           </a>
         </div>
@@ -68,28 +70,30 @@ function ProductCard({ product }) {
               ${product.originalPrice.toFixed(2)}
             </p>
           </div>
-          {product.pricePerUnit && (
-            <p className="price-per-unit">{product.pricePerUnit}</p>
-          )}
-          <div className="product-actions">
-            <button
-              className="price-history-button"
-              onClick={() => setShowPriceHistory(true)}
-            >
-              <ChartLine size={20} />
-            </button>
-            <button
-              className="favorite-button"
-              onClick={() => toggleFavorite(product)}
-            >
-              <Heart
-                size={20}
-                weight={isFavorite(product._id) ? 'fill' : 'regular'}
-                className={
-                  isFavorite(product._id) ? 'heart-icon filled' : 'heart-icon'
-                }
-              />
-            </button>
+          <div className="price-and-actions-container">
+            {product.pricePerUnit && (
+              <p className="price-per-unit">{product.pricePerUnit}</p>
+            )}
+            <div className="product-actions">
+              <button
+                className="price-history-button"
+                onClick={() => setShowPriceHistory(true)}
+              >
+                <ChartLine size={24} />
+              </button>
+              <button
+                className="favorite-button"
+                onClick={() => toggleFavorite(product)}
+              >
+                <Heart
+                  size={24}
+                  weight={isFavorite(product._id) ? 'fill' : 'regular'}
+                  className={
+                    isFavorite(product._id) ? 'heart-icon filled' : 'heart-icon'
+                  }
+                />
+              </button>
+            </div>
           </div>
           {showPriceHistory && (
             <PriceHistoryModal
@@ -101,6 +105,6 @@ function ProductCard({ product }) {
       </div>
     </>
   );
-}
+});
 
 export default ProductCard;

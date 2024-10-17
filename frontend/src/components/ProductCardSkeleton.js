@@ -28,4 +28,4 @@ const ProductCardSkeleton = () => {
   );
 };
 
-export default ProductCardSkeleton;
+export default React.memo(ProductCardSkeleton);

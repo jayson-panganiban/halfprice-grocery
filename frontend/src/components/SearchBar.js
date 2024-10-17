@@ -6,14 +6,21 @@ function SearchBar({ onSearch }) {
   const [searchTerm, setSearchTerm] = useState('');
 
   const debouncedSearch = useCallback(
-    debounce((term) => {
-      onSearch(term);
-    }, 300),
+    (term) => {
+      const handler = setTimeout(() => {
+        onSearch(term);
+      }, 300);
+
+      return () => {
+        clearTimeout(handler);
+      };
+    },
     [onSearch]
   );
 
   useEffect(() => {
-    debouncedSearch(searchTerm);
+    const cleanup = debouncedSearch(searchTerm);
+    return cleanup;
   }, [searchTerm, debouncedSearch]);
 
   const handleClear = () => {
@@ -44,14 +51,6 @@ function SearchBar({ onSearch }) {
       </button>
     </form>
   );
-}
-
-function debounce(func, delay) {
-  let timeoutId;
-  return function (...args) {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => func(...args), delay);
-  };
 }
 
 export default SearchBar;

@@ -1,7 +1,5 @@
 import React from 'react';
 import {
-  Carrot,
-  Fish,
   Bread,
   Egg,
   Package,
@@ -49,4 +47,4 @@ function CategoryFilter({ selectedCategory, onCategoryChange }) {
   );
 }
 
-export default CategoryFilter;
+export default React.memo(CategoryFilter);

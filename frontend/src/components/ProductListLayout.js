@@ -13,4 +13,4 @@ function ProductListLayout({ filters, content, error }) {
   );
 }
 
-export default ProductListLayout;
+export default React.memo(ProductListLayout);

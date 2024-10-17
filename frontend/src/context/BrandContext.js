@@ -1,14 +1,14 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useMemo } from 'react';
 
 const BrandContext = createContext();
 
 export const BrandProvider = ({ children }) => {
   const [activeBrand, setActiveBrand] = useState('');
 
+  const value = useMemo(() => ({ activeBrand, setActiveBrand }), [activeBrand]);
+
   return (
-    <BrandContext.Provider value={{ activeBrand, setActiveBrand }}>
-      {children}
-    </BrandContext.Provider>
+    <BrandContext.Provider value={value}>{children}</BrandContext.Provider>
   );
 };
 

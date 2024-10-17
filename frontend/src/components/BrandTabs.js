@@ -22,4 +22,4 @@ function BrandTabs({ selectedBrand, onBrandChange }) {
   );
 }
 
-export default BrandTabs;
+export default React.memo(BrandTabs);

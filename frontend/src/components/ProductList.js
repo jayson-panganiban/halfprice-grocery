@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Helmet } from 'react-helmet';
 import { getWeeklyProducts } from '../utils/api';
 import useFilteredProducts from '../hooks/useFilteredProducts';
@@ -13,6 +13,8 @@ import ErrorMessage from './ErrorMessage';
 import BrandTabs from './BrandTabs';
 import ProductListLayout from './ProductListLayout';
 import StructuredData from './StructuredData';
+
+const MemoizedProductCard = React.memo(ProductCard);
 
 function ProductList() {
   const [products, setProducts] = useState({ coles: [], woolies: [] });
@@ -44,74 +46,89 @@ function ProductList() {
     }
   }, [selectedBrand, selectedCategory]);
 
-  const handleSearch = (term) => {
+  const handleSearch = useCallback((term) => {
     setSearchTerm(term);
-  };
+  }, []);
 
-  const handleBrandChange = (brand) => {
+  const handleBrandChange = useCallback((brand) => {
     setSelectedBrand(brand);
     setSelectedCategory('All');
-  };
+  }, []);
 
-  const handleCategoryChange = (category) => {
+  const handleCategoryChange = useCallback((category) => {
     setSelectedCategory(category);
-  };
+  }, []);
 
   const filteredProducts = useFilteredProducts(
     products[selectedBrand],
     searchTerm
   );
 
-  const filters = (
-    <>
-      <div className="brand-and-search">
-        <BrandTabs
-          selectedBrand={selectedBrand}
-          onBrandChange={handleBrandChange}
+  const filters = useMemo(
+    () => (
+      <>
+        <div className="brand-and-search">
+          <BrandTabs
+            selectedBrand={selectedBrand}
+            onBrandChange={handleBrandChange}
+          />
+          <SearchBar onSearch={handleSearch} />
+        </div>
+        <CategoryFilter
+          selectedCategory={selectedCategory}
+          onCategoryChange={handleCategoryChange}
         />
-        <SearchBar onSearch={handleSearch} />
-      </div>
-      <CategoryFilter
-        selectedCategory={selectedCategory}
-        onCategoryChange={handleCategoryChange}
-      />
-    </>
+      </>
+    ),
+    [
+      selectedBrand,
+      selectedCategory,
+      handleBrandChange,
+      handleCategoryChange,
+      handleSearch,
+    ]
   );
 
-  const content = (
-    <>
-      {loading ? (
-        <LoadingSkeleton count={10} brand={selectedBrand} />
-      ) : filteredProducts.length > 0 ? (
-        <>
-          <StructuredData products={filteredProducts} />
-          {filteredProducts.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
-        </>
-      ) : (
-        <NoResults />
-      )}
-    </>
+  const content = useMemo(
+    () => (
+      <>
+        {loading ? (
+          <LoadingSkeleton count={10} brand={selectedBrand} />
+        ) : filteredProducts.length > 0 ? (
+          <>
+            <StructuredData products={filteredProducts} />
+            {filteredProducts.map((product) => (
+              <MemoizedProductCard key={product._id} product={product} />
+            ))}
+          </>
+        ) : (
+          <NoResults />
+        )}
+      </>
+    ),
+    [loading, selectedBrand, filteredProducts]
   );
 
-  const structuredData = {
-    itemListElement: filteredProducts.map((product, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      item: {
-        '@type': 'Product',
-        name: product.name,
-        description: `${product.name} available at Half Price Grocery`,
-        offers: {
-          '@type': 'Offer',
-          price: product.price,
-          priceCurrency: 'AUD',
-          availability: 'https://schema.org/InStock',
+  const structuredData = useMemo(
+    () => ({
+      itemListElement: filteredProducts.map((product, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': 'Product',
+          name: product.name,
+          description: `${product.name} available at Half Price Grocery`,
+          offers: {
+            '@type': 'Offer',
+            price: product.price,
+            priceCurrency: 'AUD',
+            availability: 'https://schema.org/InStock',
+          },
         },
-      },
-    })),
-  };
+      })),
+    }),
+    [filteredProducts]
+  );
 
   return (
     <>
@@ -145,4 +162,4 @@ function ProductList() {
   );
 }
 
-export default ProductList;
+export default React.memo(ProductList);
