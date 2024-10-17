@@ -1,40 +1,38 @@
 .brand-tabs {
   display: flex;
   background-color: var(--color-surface);
-  border-radius: 25px;
+  border-radius: var(--brand-tab-border-radius);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .brand-tab {
-  padding: 15px;
+  padding: var(--brand-tab-padding);
   border: none;
-  border-radius: 25px;
+  border-radius: var(--brand-tab-border-radius);
   background-color: transparent;
   color: var(--color-text);
   cursor: pointer;
-  font-size: 16px;
+  font-size: var(--brand-tab-font-size);
   position: relative;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: var(--brand-tab-transition);
 }
 
 .brand-tab[data-brand='coles']:hover {
-  color: #ff3333;
+  color: var(--coles-color);
 }
 
 .brand-tab[data-brand='woolworths']:hover {
-  color: #00a000;
+  color: var(--woolworths-color);
 }
 
 .brand-tab.active {
   background-color: var(--color-primary);
   color: var(--color-accent);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 768px) {
   .brand-tab {
     padding: 0.7em;
-    cursor: pointer;
   }
 }

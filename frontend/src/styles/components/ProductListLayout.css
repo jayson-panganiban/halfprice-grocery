@@ -7,32 +7,25 @@
 .filter-container {
   display: flex;
   flex-wrap: wrap;
-  border: none;
-  background: none;
   padding-bottom: 5px;
 }
 
 .brand-and-search {
   display: flex;
-  flex-direction: row;
   gap: 5px;
-  padding-top: 2px;
+  padding: 5px 0;
 }
 
 .products-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 4px;
+  gap: 5px;
   padding-top: 5px;
 }
 
 @media (min-width: 600px) {
   .product-list-layout {
     padding: 10px;
-  }
-
-  .brand-and-search {
-    flex-direction: row;
   }
 
   .products-grid {
@@ -47,5 +40,6 @@
 
   .products-grid {
     grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
   }
 }

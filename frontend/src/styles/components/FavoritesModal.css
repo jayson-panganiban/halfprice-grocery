@@ -159,12 +159,12 @@
 
 .favorite-current-price {
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-primary);
 }
 
 .favorite-original-price {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   text-decoration: line-through;
   color: var(--color-secondary);
 }
@@ -230,7 +230,7 @@
   }
 
   .favorite-original-price {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
 
   .favorite-price-per-unit {

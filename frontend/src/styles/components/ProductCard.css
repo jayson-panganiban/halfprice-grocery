@@ -27,7 +27,9 @@
   height: 140px;
   object-fit: contain;
   transition: transform 0.3s ease-in-out;
+  will-change: transform;
 }
+
 .product-card:hover .product-image {
   transform: scale(1.1);
 }
@@ -45,7 +47,7 @@
   display: flex;
   align-items: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease;
   transform: rotate(-5deg);
   overflow: hidden;
   z-index: 2;
@@ -53,7 +55,6 @@
 
 .savings-badge:hover {
   transform: rotate(0deg) scale(1.05);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .brand-logo {
@@ -76,9 +77,10 @@
   justify-content: space-between;
 }
 
-.product-name {
-  font-size: 1.1rem;
+.product-card .product-name {
+  font-size: 1rem;
   line-height: 1.2;
+  font-weight: 300;
   color: var(--color-primary);
   margin-bottom: 0.3rem;
 }
@@ -90,35 +92,33 @@
   gap: 0.5rem;
 }
 
-.current-price {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--color-primary);
-}
-
-.original-price {
-  font-size: 1.1rem;
-  color: var(--color-secondary);
-  text-decoration: line-through;
-}
-
-.current-price,
-.original-price {
+.product-card .current-price,
+.product-card .original-price {
   margin: 5px 0;
 }
 
+.product-card .current-price {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--color-primary);
+}
+
+.price-and-actions-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
 .price-per-unit {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--color-secondary);
+  margin: 0;
 }
 
 .product-actions {
-  position: absolute;
-  bottom: 5px;
-  right: 10px;
   display: flex;
-  gap: 2px;
-  padding-bottom: 5px;
+  gap: 5px;
 }
 
 .favorite-button,
@@ -128,7 +128,6 @@
   cursor: pointer;
   padding: 0;
   color: var(--color-primary);
-  transition: transform 0.2s ease-in-out;
   transition: color 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
 
@@ -141,11 +140,11 @@
   .product-image {
     height: 160px;
   }
-  .product-name {
+  .product-card .product-name {
     font-size: 1rem;
   }
-  .current-price {
-    font-size: 1.1rem;
+  .product-card .current-price {
+    font-size: 1rem;
   }
 }
 
@@ -153,10 +152,10 @@
   .product-image {
     height: 180px;
   }
-  .product-name {
+  .product-card .product-name {
     font-size: 1.1rem;
   }
-  .current-price {
-    font-size: 1.2rem;
+  .product-card .current-price {
+    font-size: 1.1rem;
   }
 }

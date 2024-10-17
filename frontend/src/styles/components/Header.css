@@ -43,18 +43,6 @@
   transition: color 0.3s ease;
 }
 
-.logo-half::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  height: 3px;
-  background-color: #ff0000;
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
-}
-
 .logo-price {
   font-size: 28px;
   transition: color 0.3s ease;
@@ -68,11 +56,11 @@
 }
 
 .logo:hover .logo-half {
-  color: #00a000;
+  color: var(--woolworths-color);
 }
 
 .logo:hover .logo-price {
-  color: #ff3333;
+  color: var(--coles-color);
 }
 
 .main-nav {
@@ -105,12 +93,8 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--color-text);
-  transition: color 0.3s ease;
-}
-
-.heart-icon {
-  color: #e74c3c;
+  color: var(--color-error);
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .heart-icon:hover {
@@ -144,22 +128,6 @@
   border: none;
   cursor: pointer;
   color: var(--color-text);
-}
-
-.nav-link:focus,
-.heart-icon:focus,
-.mobile-menu-toggle:focus {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .logo,
-  .nav-link,
-  .heart-icon,
-  .mobile-menu-toggle {
-    transition: none;
-  }
 }
 
 @media (max-width: 768px) {

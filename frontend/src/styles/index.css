@@ -1,27 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
-
-/* Reset and Normalize */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-body,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-figure,
-blockquote,
-dl,
-dd {
-  margin: 0;
-}
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
 :root {
   --color-primary: #1c274c;
@@ -34,6 +11,19 @@ dd {
   --color-error: #f44336;
   --color-warning: #ff9800;
   --color-info: #2196f3;
+  --brand-tab-padding: 15px;
+  --brand-tab-border-radius: 25px;
+  --brand-tab-font-size: 16px;
+  --brand-tab-transition: background-color 0.3s ease, color 0.3s ease;
+  --coles-color: #ff3333;
+  --woolworths-color: #00a000;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
 }
 
 body {
@@ -54,7 +44,6 @@ h5,
 h6 {
   font-family: 'Manrope', sans-serif;
   font-weight: 300;
-  /* line-height: 1.2; */
 }
 
 h1 {
@@ -86,7 +75,6 @@ a:hover {
   color: var(--color-primary);
 }
 
-/* Layout Utilities */
 .container {
   width: 100%;
   max-width: 1200px;
@@ -116,7 +104,6 @@ a:hover {
   gap: 1rem;
 }
 
-/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -140,12 +127,10 @@ a:hover {
 .fade-in {
   animation: fadeIn 0.3s ease-in-out;
 }
-
 .slide-in {
   animation: slideInFromBottom 0.3s ease-in-out;
 }
 
-/* Print Styles */
 @media print {
   body {
     font-size: 12pt;
@@ -153,12 +138,10 @@ a:hover {
     color: var(--color-text);
     background: var(--color-surface);
   }
-
   a {
     color: var(--color-text);
     text-decoration: underline;
   }
-
   .no-print {
     display: none;
   }

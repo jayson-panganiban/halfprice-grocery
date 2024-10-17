@@ -44,7 +44,7 @@
 
 .contact-info:hover,
 .contact-form:hover {
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.1);
 }
 
 .contact-info h2,
@@ -92,11 +92,9 @@
 }
 
 .contact-form textarea {
-  min-height: 120px;
-  resize: vertical;
-
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   min-height: 150px;
+  resize: vertical;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .contact-form input:focus,
