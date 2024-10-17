@@ -1,20 +1,36 @@
 const dotenv = require('dotenv');
 const path = require('path');
+const envalid = require('envalid');
 const logger = require('../utils/logger');
 
-const environment = process.env.NODE_ENV || 'dev';
+const NODE_ENV = process.env.NODE_ENV;
+
+if (!NODE_ENV) {
+  throw new Error(
+    'NODE_ENV is not set. Please set it to "development", "test", or "production".'
+  );
+}
 
 // Load .env file only for non-production environments
-if (environment !== 'production') {
-  const envFile = path.join(__dirname, `../../.env.${environment}`);
+if (NODE_ENV !== 'production') {
+  const envFile = path.resolve(__dirname, `../../.env.${NODE_ENV}`);
   dotenv.config({ path: envFile });
   logger.info(`Loaded environment variables from ${envFile}`);
 } else {
-  logger.info('Using environment variables from process.env');
+  logger.info(
+    'Running in production mode. Ensure all necessary environment variables are set.'
+  );
 }
 
+// Validate and export environment variables
+const env = envalid.cleanEnv(process.env, {
+  NODE_ENV: envalid.str({ choices: ['development', 'test', 'production'] }),
+  PORT: envalid.port({ default: 3003 }),
+  MONGODB_URI: envalid.str(),
+});
+
 module.exports = {
-  NODE_ENV: environment,
-  PORT: process.env.PORT || 3003,
-  MONGODB_URI: process.env.MONGODB_URI || 'mongodb://localhost:27017/halfprice',
+  NODE_ENV: env.NODE_ENV,
+  PORT: env.PORT,
+  MONGODB_URI: env.MONGODB_URI,
 };
