@@ -1,54 +1,22 @@
-import moment from 'moment-timezone';
-import React, { useContext, useState, useMemo } from 'react';
+import React, { useContext, useState } from 'react';
 import Modal from 'react-modal';
 import { FavoritesContext } from '../context/FavoritesContext';
-import { Trash } from 'phosphor-react';
 import ProductCard from './ProductCard';
-import PriceHistoryModal from './PriceHistoryModal';
 import CloseButton from './CloseButton';
 import '../styles/components/FavoritesModal.css';
 
 Modal.setAppElement('#root');
 
 function FavoritesModal({ isOpen, onClose }) {
-  const { favorites, removeAllFavorites } = useContext(FavoritesContext);
-  const [showPriceHistory, setShowPriceHistory] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const { favorites, allTimeFavorites } = useContext(FavoritesContext);
+  const [setShowPriceHistory] = useState(false);
+  const [setSelectedProduct] = useState(null);
   const [activeTab, setActiveTab] = useState('thisWeek');
 
   const handlePriceHistoryClick = (product) => {
     setSelectedProduct(product);
     setShowPriceHistory(true);
   };
-
-  const isCurrentWeek = (product) => {
-    const now = moment().tz('Australia/Sydney');
-    const currentDay = now.day();
-    const currentHour = now.hour();
-
-    let startDate = now
-      .clone()
-      .startOf('week')
-      .add(3, 'days')
-      .hour(7)
-      .minute(0)
-      .second(0);
-
-    if (currentDay < 3 || (currentDay === 3 && currentHour < 7)) {
-      startDate.subtract(7, 'days');
-    }
-
-    const endDate = startDate.clone().add(7, 'days').subtract(1, 'minute');
-
-    const productDate = moment(product.date).tz('Australia/Sydney');
-    return productDate.isBetween(startDate, endDate, null, '[]');
-  };
-
-  const { thisWeekFavorites, allTimeFavorites } = useMemo(() => {
-    const thisWeek = favorites.filter(isCurrentWeek);
-    const allTime = favorites.filter((product) => !isCurrentWeek(product));
-    return { thisWeekFavorites: thisWeek, allTimeFavorites: allTime };
-  }, [favorites]);
 
   return (
     <Modal
@@ -75,13 +43,13 @@ function FavoritesModal({ isOpen, onClose }) {
             onClick={() => setActiveTab('allTime')}
           >
             All-Time Favorites
-          </button>{' '}
+          </button>
           <CloseButton onClick={onClose} />
         </h2>
       </div>
 
       <div className="favorites-content">
-        {activeTab === 'thisWeek' && thisWeekFavorites.length === 0 && (
+        {activeTab === 'thisWeek' && favorites.length === 0 && (
           <p className="no-favorites">
             You haven't added any favorites for this week yet.
           </p>
@@ -91,19 +59,18 @@ function FavoritesModal({ isOpen, onClose }) {
             You haven't added any all-time favorites yet.
           </p>
         )}
-        {((activeTab === 'thisWeek' && thisWeekFavorites.length > 0) ||
+        {((activeTab === 'thisWeek' && favorites.length > 0) ||
           (activeTab === 'allTime' && allTimeFavorites.length > 0)) && (
           <div className="favorites-grid">
-            {(activeTab === 'thisWeek'
-              ? thisWeekFavorites
-              : allTimeFavorites
-            ).map((product) => (
-              <ProductCard
-                key={product._id}
-                product={product}
-                onPriceHistoryClick={() => handlePriceHistoryClick(product)}
-              />
-            ))}
+            {(activeTab === 'thisWeek' ? favorites : allTimeFavorites).map(
+              (product) => (
+                <ProductCard
+                  key={product._id}
+                  product={product}
+                  onPriceHistoryClick={() => handlePriceHistoryClick(product)}
+                />
+              )
+            )}
           </div>
         )}
       </div>
