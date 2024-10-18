@@ -3,7 +3,7 @@ import React, { createContext, useState, useContext, useMemo } from 'react';
 const BrandContext = createContext();
 
 export const BrandProvider = ({ children }) => {
-  const [activeBrand, setActiveBrand] = useState('');
+  const [activeBrand, setActiveBrand] = useState('coles');
 
   const value = useMemo(() => ({ activeBrand, setActiveBrand }), [activeBrand]);
 
