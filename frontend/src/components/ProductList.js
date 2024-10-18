@@ -16,6 +16,15 @@ import StructuredData from './StructuredData';
 
 const MemoizedProductCard = React.memo(ProductCard);
 
+const BrandAndSearch = React.memo(
+  ({ selectedBrand, onBrandChange, onSearch }) => (
+    <div className="brand-and-search">
+      <BrandTabs selectedBrand={selectedBrand} onBrandChange={onBrandChange} />
+      <SearchBar onSearch={onSearch} />
+    </div>
+  )
+);
+
 function ProductList() {
   const [products, setProducts] = useState({ coles: [], woolies: [] });
   const [loading, setLoading] = useState(true);
@@ -67,13 +76,11 @@ function ProductList() {
   const filters = useMemo(
     () => (
       <>
-        <div className="brand-and-search">
-          <BrandTabs
-            selectedBrand={selectedBrand}
-            onBrandChange={handleBrandChange}
-          />
-          <SearchBar onSearch={handleSearch} />
-        </div>
+        <BrandAndSearch
+          selectedBrand={selectedBrand}
+          onBrandChange={handleBrandChange}
+          onSearch={handleSearch}
+        />
         <CategoryFilter
           selectedCategory={selectedCategory}
           onCategoryChange={handleCategoryChange}
@@ -152,6 +159,7 @@ function ProductList() {
               selectedBrand={selectedBrand}
               selectedCategory={selectedCategory}
               searchTerm={searchTerm}
+              cachedProducts={products[selectedBrand]}
             />
           )
         }
