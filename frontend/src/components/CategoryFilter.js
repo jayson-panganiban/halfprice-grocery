@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import {
   Bread,
   Egg,
@@ -29,21 +29,32 @@ const categories = [
   { name: 'Other', icon: null },
 ];
 
+const CategoryButton = React.memo(({ category, isActive, onClick }) => (
+  <button
+    className={`category-button ${isActive ? 'active' : ''}`}
+    onClick={onClick}
+  >
+    {category.icon && <category.icon className="category-icon" />}
+    <span className="category-name">{category.name}</span>
+  </button>
+));
+
 function CategoryFilter({ selectedCategory, onCategoryChange }) {
+  const handleCategoryClick = useCallback(
+    (categoryName) => () => onCategoryChange(categoryName),
+    [onCategoryChange]
+  );
+
   const categoryButtons = useMemo(() => {
     return categories.map((category) => (
-      <button
+      <CategoryButton
         key={category.name}
-        className={`category-button ${
-          selectedCategory === category.name ? 'active' : ''
-        }`}
-        onClick={() => onCategoryChange(category.name)}
-      >
-        {category.icon && <category.icon className="category-icon" />}
-        <span className="category-name">{category.name}</span>
-      </button>
+        category={category}
+        isActive={selectedCategory === category.name}
+        onClick={handleCategoryClick(category.name)}
+      />
     ));
-  }, [selectedCategory, onCategoryChange]);
+  }, [selectedCategory, handleCategoryClick]);
 
   return <div className="category-filter">{categoryButtons}</div>;
 }

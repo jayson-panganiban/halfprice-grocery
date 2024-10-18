@@ -1,23 +1,34 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import '../styles/components/BrandTabs.css';
 
+const BrandTab = React.memo(({ brand, isActive, onClick }) => (
+  <button
+    className={`brand-tab ${isActive ? 'active' : ''}`}
+    onClick={onClick}
+    data-brand={brand.toLowerCase()}
+  >
+    {brand}
+  </button>
+));
+
 function BrandTabs({ selectedBrand, onBrandChange }) {
+  const handleBrandClick = useCallback(
+    (brand) => () => onBrandChange(brand),
+    [onBrandChange]
+  );
+
   return (
     <div className="brand-tabs">
-      <button
-        className={`brand-tab ${selectedBrand === 'coles' ? 'active' : ''}`}
-        onClick={() => onBrandChange('coles')}
-        data-brand="coles"
-      >
-        Coles
-      </button>
-      <button
-        className={`brand-tab ${selectedBrand === 'woolies' ? 'active' : ''}`}
-        onClick={() => onBrandChange('woolies')}
-        data-brand="woolworths"
-      >
-        Woolies
-      </button>
+      <BrandTab
+        brand="Coles"
+        isActive={selectedBrand === 'coles'}
+        onClick={handleBrandClick('coles')}
+      />
+      <BrandTab
+        brand="Woolies"
+        isActive={selectedBrand === 'woolies'}
+        onClick={handleBrandClick('woolies')}
+      />
     </div>
   );
 }

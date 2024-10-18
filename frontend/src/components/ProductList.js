@@ -17,12 +17,24 @@ import StructuredData from './StructuredData';
 const MemoizedProductCard = React.memo(ProductCard);
 
 const BrandAndSearch = React.memo(
-  ({ selectedBrand, onBrandChange, onSearch }) => (
-    <div className="brand-and-search">
-      <BrandTabs selectedBrand={selectedBrand} onBrandChange={onBrandChange} />
-      <SearchBar onSearch={onSearch} />
-    </div>
-  )
+  ({ selectedBrand, onBrandChange, onSearch }) => {
+    const handleBrandChange = useCallback(
+      (brand) => {
+        onBrandChange(brand);
+      },
+      [onBrandChange]
+    );
+
+    return (
+      <div className="brand-and-search">
+        <BrandTabs
+          selectedBrand={selectedBrand}
+          onBrandChange={handleBrandChange}
+        />
+        <SearchBar onSearch={onSearch} />
+      </div>
+    );
+  }
 );
 
 function ProductList() {
