@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Helmet } from 'react-helmet';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { FavoritesProvider } from './context/FavoritesContext';
 import Header from './components/Header';
-import ProductList from './components/ProductList';
-import About from './components/About';
 import Footer from './components/Footer';
-import Contact from './components/Contact';
+import LoadingSpinner from './components/LoadingSpinner'; // Create this component
+
+const ProductList = lazy(() => import('./components/ProductList'));
+const About = lazy(() => import('./components/About'));
+const Contact = lazy(() => import('./components/Contact'));
 
 function App() {
   return (
@@ -22,11 +24,13 @@ function App() {
           </Helmet>
           <Header />
           <main className="main-content">
-            <Routes>
-              <Route path="/" element={<ProductList />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-            </Routes>
+            <Suspense fallback={<LoadingSpinner />}>
+              <Routes>
+                <Route path="/" element={<ProductList />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+              </Routes>
+            </Suspense>
           </main>
           <Footer />
         </div>

@@ -1,8 +1,14 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  lazy,
+  Suspense,
+} from 'react';
 import { Helmet } from 'react-helmet';
 import { getWeeklyProducts } from '../utils/api';
 import useFilteredProducts from '../hooks/useFilteredProducts';
-import ProductCard from './ProductCard';
 import LoadingSkeleton from './LoadingSkeleton';
 import SearchBar from './SearchBar';
 import CategoryFilter from './CategoryFilter';
@@ -14,27 +20,15 @@ import BrandTabs from './BrandTabs';
 import ProductListLayout from './ProductListLayout';
 import StructuredData from './StructuredData';
 
-const MemoizedProductCard = React.memo(ProductCard);
+const LazyProductCard = lazy(() => import('./ProductCard'));
 
 const BrandAndSearch = React.memo(
-  ({ selectedBrand, onBrandChange, onSearch }) => {
-    const handleBrandChange = useCallback(
-      (brand) => {
-        onBrandChange(brand);
-      },
-      [onBrandChange]
-    );
-
-    return (
-      <div className="brand-and-search">
-        <BrandTabs
-          selectedBrand={selectedBrand}
-          onBrandChange={handleBrandChange}
-        />
-        <SearchBar onSearch={onSearch} />
-      </div>
-    );
-  }
+  ({ selectedBrand, onBrandChange, onSearch }) => (
+    <div className="brand-and-search">
+      <BrandTabs selectedBrand={selectedBrand} onBrandChange={onBrandChange} />
+      <SearchBar onSearch={onSearch} />
+    </div>
+  )
 );
 
 function ProductList() {
@@ -44,28 +38,29 @@ function ProductList() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBrand, setSelectedBrand] = useState('coles');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [visibleProducts, setVisibleProducts] = useState(20);
+
+  const fetchProducts = useCallback(async () => {
+    setLoading(true);
+    try {
+      const filters = { brand: selectedBrand };
+      const data = await getWeeklyProducts(filters);
+      setProducts((prevProducts) => ({
+        ...prevProducts,
+        [selectedBrand]: data.products,
+      }));
+    } catch (error) {
+      setError('Failed to fetch products. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  }, [selectedBrand]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true);
-      try {
-        const filters = { brand: selectedBrand };
-        const data = await getWeeklyProducts(filters);
-        setProducts((prevProducts) => ({
-          ...prevProducts,
-          [selectedBrand]: data.products,
-        }));
-      } catch (error) {
-        setError('Failed to fetch products. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     if (selectedCategory === 'All') {
       fetchProducts();
     }
-  }, [selectedBrand, selectedCategory]);
+  }, [selectedBrand, selectedCategory, fetchProducts]);
 
   const handleSearch = useCallback((term) => {
     setSearchTerm(term);
@@ -79,6 +74,28 @@ function ProductList() {
   const handleCategoryChange = useCallback((category) => {
     setSelectedCategory(category);
   }, []);
+
+  const loadMoreProducts = useCallback(() => {
+    setVisibleProducts((prevCount) => prevCount + 20);
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMoreProducts();
+        }
+      },
+      { threshold: 1 }
+    );
+
+    const sentinel = document.querySelector('#sentinel');
+    if (sentinel) {
+      observer.observe(sentinel);
+    }
+
+    return () => observer.disconnect();
+  }, [loadMoreProducts]);
 
   const filteredProducts = useFilteredProducts(
     products[selectedBrand],
@@ -115,38 +132,48 @@ function ProductList() {
           <LoadingSkeleton count={10} brand={selectedBrand} />
         ) : filteredProducts.length > 0 ? (
           <>
-            <StructuredData products={filteredProducts} />
-            {filteredProducts.map((product) => (
-              <MemoizedProductCard key={product._id} product={product} />
+            {filteredProducts.slice(0, visibleProducts).map((product) => (
+              <Suspense key={product._id} fallback={<div>Loading...</div>}>
+                <LazyProductCard product={product} />
+              </Suspense>
             ))}
+            <div
+              id="sentinel"
+              style={{ height: '1px' }}
+              aria-hidden="true"
+            ></div>
           </>
         ) : (
           <NoResults />
         )}
       </>
     ),
-    [loading, selectedBrand, filteredProducts]
+    [loading, selectedBrand, filteredProducts, visibleProducts]
   );
 
   const structuredData = useMemo(
     () => ({
-      itemListElement: filteredProducts.map((product, index) => ({
-        '@type': 'ListItem',
-        position: index + 1,
-        item: {
-          '@type': 'Product',
-          name: product.name,
-          description: `${product.name} available at Half Price Grocery`,
-          offers: {
-            '@type': 'Offer',
-            price: product.price,
-            priceCurrency: 'AUD',
-            availability: 'https://schema.org/InStock',
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      itemListElement: filteredProducts
+        .slice(0, visibleProducts)
+        .map((product, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          item: {
+            '@type': 'Product',
+            name: product.name,
+            description: `${product.name} available at Half Price Grocery`,
+            offers: {
+              '@type': 'Offer',
+              price: product.price,
+              priceCurrency: 'AUD',
+              availability: 'https://schema.org/InStock',
+            },
           },
-        },
-      })),
+        })),
     }),
-    [filteredProducts]
+    [filteredProducts, visibleProducts]
   );
 
   return (
