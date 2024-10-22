@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { FavoritesProvider } from './context/FavoritesContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import LoadingSpinner from './components/LoadingSpinner'; // Create this component
+import LoadingSpinner from './components/LoadingSpinner';
 
 const ProductList = lazy(() => import('./components/ProductList'));
 const About = lazy(() => import('./components/About'));

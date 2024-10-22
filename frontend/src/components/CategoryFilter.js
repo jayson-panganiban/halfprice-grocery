@@ -10,11 +10,13 @@ import {
   BabyCarriage,
   PawPrint,
   Shrimp,
+  TShirt,
 } from '@phosphor-icons/react';
 
 import '../styles/components/CategoryFilter.css';
 
 const categories = [
+  { name: 'All', icon: null },
   { name: 'Household', icon: Broom },
   { name: 'Health & Beauty', icon: FirstAidKit },
   { name: 'Pantry', icon: Package },
@@ -25,6 +27,7 @@ const categories = [
   { name: 'Baby', icon: BabyCarriage },
   { name: 'Pet', icon: PawPrint },
   { name: 'Meat & Seafood', icon: Shrimp },
+  { name: 'Lifestyle', icon: TShirt },
   { name: 'Other', icon: null },
 ];
 

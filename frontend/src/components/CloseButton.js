@@ -17,7 +17,7 @@ const CloseButton = React.memo(({ onClick }) => {
       aria-label="Close"
       type="button"
     >
-      <X size={24} weight="bold" />
+      <X size={24} />
     </button>
   );
 });
