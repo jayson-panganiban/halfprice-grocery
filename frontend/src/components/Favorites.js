@@ -1,27 +1,56 @@
-import React, { useContext } from 'react';
-import { FavoritesContext } from '../context/FavoritesContext';
-import ProductCard from './ProductCard';
+import React, { useMemo } from 'react';
+import { Helmet } from 'react-helmet';
+import ProductGrid from './ProductGrid';
+import StructuredData from './StructuredData';
+import useFavorites from '../hooks/useFavorites';
 
 function Favorites() {
-  const { favorites, allTimeFavorites } = useContext(FavoritesContext);
+  const { favorites, allTimeFavorites } = useFavorites();
+
+  const structuredData = useMemo(
+    () => ({
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      itemListElement: [...favorites, ...allTimeFavorites].map(
+        (product, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          item: {
+            '@type': 'Product',
+            name: product.name,
+            description: `${product.name} - Favorite product at Half Price Grocery`,
+            offers: {
+              '@type': 'Offer',
+              price: product.price,
+              priceCurrency: 'AUD',
+              availability: 'https://schema.org/InStock',
+            },
+          },
+        })
+      ),
+    }),
+    [favorites, allTimeFavorites]
+  );
 
   return (
-    <div className="favorite-products">
-      <h2>Current Week Favorites</h2>
-      <div className="product-grid">
-        {favorites.map((product) => (
-          <ProductCard key={product._id} product={product} />
-        ))}
-      </div>
+    <>
+      <Helmet>
+        <title>Your Favorite Products - Half Price Grocery</title>
+        <meta
+          name="description"
+          content="View your favorite products from Half Price Grocery. See your current week's favorites and all-time favorite items."
+        />
+      </Helmet>
+      <StructuredData type="ItemList" data={structuredData} />
+      <div className="favorite-products">
+        <h2>Current Week Favorites</h2>
+        <ProductGrid products={favorites} />
 
-      <h2>All-Time Favorites</h2>
-      <div className="product-grid">
-        {allTimeFavorites.map((product) => (
-          <ProductCard key={product._id} product={product} />
-        ))}
+        <h2>All-Time Favorites</h2>
+        <ProductGrid products={allTimeFavorites} />
       </div>
-    </div>
+    </>
   );
 }
 
-export default Favorites;
+export default React.memo(Favorites);
