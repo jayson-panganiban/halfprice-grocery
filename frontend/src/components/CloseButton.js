@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { X } from 'phosphor-react';
 import '../styles/components/CloseButton.css';
 
-function CloseButton({ onClick }) {
+const CloseButton = React.memo(({ onClick }) => {
+  const handleClick = useCallback(
+    (event) => {
+      onClick(event);
+    },
+    [onClick]
+  );
+
   return (
-    <button className="close-button" onClick={onClick}>
-      <X size={24} />
+    <button
+      className="close-button"
+      onClick={handleClick}
+      aria-label="Close"
+      type="button"
+    >
+      <X size={24} weight="bold" />
     </button>
   );
-}
+});
 
 export default CloseButton;
