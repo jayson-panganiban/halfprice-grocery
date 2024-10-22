@@ -33,7 +33,7 @@ function Header() {
               <span className="logo-text">
                 <span className="logo-half">Half</span>
                 <span className="logo-price">Price</span>
-                <span className="logo-grocery">Grocery</span>
+                <span className="logo-grocery">GROCERY</span>
               </span>
             </Link>
             <nav className={`main-nav ${showMobileMenu ? 'show' : ''}`}>
