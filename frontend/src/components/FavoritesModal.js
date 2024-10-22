@@ -1,14 +1,15 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import Modal from 'react-modal';
-import { FavoritesContext } from '../context/FavoritesContext';
 import ProductCard from './ProductCard';
 import CloseButton from './CloseButton';
+import FavoritesTabs from './FavoritesTabs';
+import useFavorites from '../hooks/useFavorites';
 import '../styles/components/FavoritesModal.css';
 
 Modal.setAppElement('#root');
 
 function FavoritesModal({ isOpen, onClose }) {
-  const { favorites, allTimeFavorites } = useContext(FavoritesContext);
+  const { favorites, allTimeFavorites } = useFavorites();
   const [setShowPriceHistory] = useState(false);
   const [setSelectedProduct] = useState(null);
   const [activeTab, setActiveTab] = useState('thisWeek');
@@ -27,25 +28,8 @@ function FavoritesModal({ isOpen, onClose }) {
       overlayClassName="favorites-modal-overlay"
     >
       <div className="favorites-header">
-        <h2 className="favorites-tabs">
-          <button
-            className={`favorites-tab ${
-              activeTab === 'thisWeek' ? 'active' : ''
-            }`}
-            onClick={() => setActiveTab('thisWeek')}
-          >
-            This Week's Favorites
-          </button>
-          <button
-            className={`favorites-tab ${
-              activeTab === 'allTime' ? 'active' : ''
-            }`}
-            onClick={() => setActiveTab('allTime')}
-          >
-            All-Time Favorites
-          </button>
-          <CloseButton onClick={onClose} />
-        </h2>
+        <FavoritesTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+        <CloseButton onClick={onClose} />
       </div>
 
       <div className="favorites-content">

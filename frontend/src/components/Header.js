@@ -1,14 +1,14 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import Headroom from 'react-headroom';
 import { Heart, ShoppingBag, List, X } from 'phosphor-react';
-import { FavoritesContext } from '../context/FavoritesContext';
 import FavoritesModal from './FavoritesModal';
+import useFavorites from '../hooks/useFavorites';
 import '../styles/components/Header.css';
 
 function Header() {
-  const { favorites } = useContext(FavoritesContext);
+  const { favorites } = useFavorites();
   const [showFavorites, setShowFavorites] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
@@ -56,6 +56,7 @@ function Header() {
               <button
                 className="heart-icon"
                 onClick={() => setShowFavorites(true)}
+                aria-label="View favorites"
               >
                 <Heart size={32} weight="fill" />
                 {favorites.length > 0 && (

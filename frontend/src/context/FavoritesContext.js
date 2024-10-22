@@ -1,106 +1,50 @@
-import React, { createContext, useState, useEffect } from 'react';
-import moment from 'moment-timezone';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 
 export const FavoritesContext = createContext();
 
 export const FavoritesProvider = ({ children }) => {
-  const [favorites, setFavorites] = useState([]);
-  const [allTimeFavorites, setAllTimeFavorites] = useState([]);
+  const [favorites, setFavorites] = useState(() => {
+    const storedFavorites = localStorage.getItem('favorites');
+    return storedFavorites ? JSON.parse(storedFavorites) : [];
+  });
 
-  const isCurrentWeek = (product) => {
-    const now = moment().tz('Australia/Sydney');
-    const currentDay = now.day();
-    const currentHour = now.hour();
+  const [allTimeFavorites, setAllTimeFavorites] = useState(() => {
+    const storedAllTimeFavorites = localStorage.getItem('allTimeFavorites');
+    return storedAllTimeFavorites ? JSON.parse(storedAllTimeFavorites) : [];
+  });
 
-    let startDate = now
-      .clone()
-      .startOf('week')
-      .add(3, 'days')
-      .hour(7)
-      .minute(0)
-      .second(0);
-
-    if (currentDay < 3 || (currentDay === 3 && currentHour < 7)) {
-      startDate.subtract(7, 'days');
-    }
-
-    const endDate = startDate.clone().add(7, 'days').subtract(1, 'minute');
-
-    const productDate = moment(product.date).tz('Australia/Sydney');
-    return productDate.isBetween(startDate, endDate, null, '[]');
-  };
+  const updateLocalStorage = useCallback(() => {
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+    localStorage.setItem('allTimeFavorites', JSON.stringify(allTimeFavorites));
+  }, [favorites, allTimeFavorites]);
 
   useEffect(() => {
-    const storedFavorites = JSON.parse(
-      localStorage.getItem('favorites') || '[]'
-    );
-    const now = moment().tz('Australia/Sydney');
+    updateLocalStorage();
+  }, [updateLocalStorage]);
 
-    const currentWeekFavorites = storedFavorites.filter((product) =>
-      moment(product.updatedAt)
-        .tz('Australia/Sydney')
-        .isAfter(now.clone().startOf('week'))
-    );
-    const allTimeFavorites = storedFavorites.filter(
-      (product) =>
-        !moment(product.updatedAt)
-          .tz('Australia/Sydney')
-          .isAfter(now.clone().startOf('week'))
-    );
-
-    setFavorites(currentWeekFavorites);
-    setAllTimeFavorites(allTimeFavorites);
-
-    localStorage.setItem('favorites', JSON.stringify(currentWeekFavorites));
-    localStorage.setItem('allTimeFavorites', JSON.stringify(allTimeFavorites));
+  const toggleFavorite = useCallback((product) => {
+    setFavorites((prevFavorites) => {
+      const index = prevFavorites.findIndex((fav) => fav._id === product._id);
+      if (index === -1) {
+        // Add to favorites and all-time favorites
+        setAllTimeFavorites((prevAllTime) => [...prevAllTime, product]);
+        return [...prevFavorites, product];
+      } else {
+        // Remove from favorites and all-time favorites
+        setAllTimeFavorites((prevAllTime) =>
+          prevAllTime.filter((fav) => fav._id !== product._id)
+        );
+        return prevFavorites.filter((fav) => fav._id !== product._id);
+      }
+    });
   }, []);
 
-  const saveFavorites = (newFavorites) => {
-    localStorage.setItem('favorites', JSON.stringify(newFavorites));
-    setFavorites(newFavorites);
-  };
-
-  const saveAllTimeFavorites = (newAllTimeFavorites) => {
-    localStorage.setItem(
-      'allTimeFavorites',
-      JSON.stringify(newAllTimeFavorites)
-    );
-    setAllTimeFavorites(newAllTimeFavorites);
-  };
-
-  const toggleFavorite = (product) => {
-    if (isCurrentWeek(product)) {
-      const index = favorites.findIndex((fav) => fav._id === product._id);
-      if (index === -1) {
-        saveFavorites([...favorites, product]);
-      } else {
-        saveFavorites(favorites.filter((fav) => fav._id !== product._id));
-      }
-    } else {
-      const index = allTimeFavorites.findIndex(
-        (fav) => fav._id === product._id
-      );
-      if (index === -1) {
-        saveAllTimeFavorites([...allTimeFavorites, product]);
-      } else {
-        saveAllTimeFavorites(
-          allTimeFavorites.filter((fav) => fav._id !== product._id)
-        );
-      }
-    }
-  };
-
-  const isFavorite = (productId) => {
-    return (
-      favorites.some((fav) => fav._id === productId) ||
-      allTimeFavorites.some((fav) => fav._id === productId)
-    );
-  };
-
-  const removeAllFavorites = () => {
-    saveFavorites([]);
-    saveAllTimeFavorites([]);
-  };
+  const isFavorite = useCallback(
+    (productId) => {
+      return favorites.some((fav) => fav._id === productId);
+    },
+    [favorites]
+  );
 
   return (
     <FavoritesContext.Provider
@@ -109,7 +53,6 @@ export const FavoritesProvider = ({ children }) => {
         allTimeFavorites,
         toggleFavorite,
         isFavorite,
-        removeAllFavorites,
       }}
     >
       {children}
