@@ -19,6 +19,7 @@ import ErrorMessage from './ErrorMessage';
 import BrandTabs from './BrandTabs';
 import ProductListLayout from './ProductListLayout';
 import StructuredData from './StructuredData';
+import LoadingSpinner from './LoadingSpinner';
 
 const LazyProductCard = lazy(() => import('./ProductCard'));
 
@@ -39,6 +40,7 @@ function ProductList() {
   const [selectedBrand, setSelectedBrand] = useState('coles');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [visibleProducts, setVisibleProducts] = useState(20);
+  const [totalProducts, setTotalProducts] = useState(0);
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
@@ -49,6 +51,7 @@ function ProductList() {
         ...prevProducts,
         [selectedBrand]: data.products,
       }));
+      setTotalProducts(data.products.length);
     } catch (error) {
       setError('Failed to fetch products. Please try again later.');
     } finally {
@@ -62,13 +65,13 @@ function ProductList() {
     }
   }, [selectedBrand, selectedCategory, fetchProducts]);
 
-  const handleSearch = useCallback((term) => {
-    setSearchTerm(term);
-  }, []);
-
   const handleBrandChange = useCallback((brand) => {
     setSelectedBrand(brand);
     setSelectedCategory('All');
+  }, []);
+
+  const handleSearch = useCallback((term) => {
+    setSearchTerm(term);
   }, []);
 
   const handleCategoryChange = useCallback((category) => {
@@ -76,13 +79,17 @@ function ProductList() {
   }, []);
 
   const loadMoreProducts = useCallback(() => {
-    setVisibleProducts((prevCount) => prevCount + 20);
-  }, []);
+    if (visibleProducts < totalProducts) {
+      setVisibleProducts((prevCount) =>
+        Math.min(prevCount + 20, totalProducts)
+      );
+    }
+  }, [visibleProducts, totalProducts]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
+        if (entries[0].isIntersecting && visibleProducts < totalProducts) {
           loadMoreProducts();
         }
       },
@@ -90,12 +97,12 @@ function ProductList() {
     );
 
     const sentinel = document.querySelector('#sentinel');
-    if (sentinel) {
+    if (sentinel && visibleProducts < totalProducts) {
       observer.observe(sentinel);
     }
 
     return () => observer.disconnect();
-  }, [loadMoreProducts]);
+  }, [loadMoreProducts, visibleProducts, totalProducts]);
 
   const filteredProducts = useFilteredProducts(
     products[selectedBrand],
@@ -133,22 +140,24 @@ function ProductList() {
         ) : filteredProducts.length > 0 ? (
           <>
             {filteredProducts.slice(0, visibleProducts).map((product) => (
-              <Suspense key={product._id} fallback={<div>Loading...</div>}>
+              <Suspense key={product._id} fallback={<LoadingSpinner />}>
                 <LazyProductCard product={product} />
               </Suspense>
             ))}
-            <div
-              id="sentinel"
-              style={{ height: '1px' }}
-              aria-hidden="true"
-            ></div>
+            {visibleProducts < totalProducts && (
+              <div
+                id="sentinel"
+                style={{ height: '1px' }}
+                aria-hidden="true"
+              ></div>
+            )}
           </>
         ) : (
           <NoResults />
         )}
       </>
     ),
-    [loading, selectedBrand, filteredProducts, visibleProducts]
+    [loading, selectedBrand, filteredProducts, visibleProducts, totalProducts]
   );
 
   const structuredData = useMemo(
