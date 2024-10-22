@@ -15,15 +15,7 @@
   font-size: var(--brand-tab-font-size);
   position: relative;
   overflow: hidden;
-  transition: var(--brand-tab-transition);
-}
-
-.brand-tab[data-brand='coles']:hover {
-  color: var(--coles-color);
-}
-
-.brand-tab[data-brand='woolworths']:hover {
-  color: var(--woolworths-color);
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
 }
 
 .brand-tab.active {

@@ -13,7 +13,6 @@
   box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px,
     rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
 }
-
 .product-image-container {
   position: relative;
   overflow: hidden;
@@ -31,7 +30,7 @@
 }
 
 .product-card:hover .product-image {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 .savings-badge {
@@ -108,6 +107,11 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2px;
+}
+
+.original-price {
+  color: var(--color-secondary);
+  text-decoration: line-through;
 }
 
 .price-per-unit {

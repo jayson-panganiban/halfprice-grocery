@@ -122,11 +122,11 @@ const PriceHistoryChart = ({ priceHistory, productName }) => {
       </div>
       <div className="price-summary">
         <div className="summary-item">
-          <span className="summary-label">Lowest Price</span>
+          <span className="summary-label">Lowest: </span>
           <span className="summary-value">${getLowestPrice()}</span>
         </div>
         <div className="summary-item">
-          <span className="summary-label">Highest Price</span>
+          <span className="summary-label">Highest: </span>
           <span className="summary-value">${getHighestPrice()}</span>
         </div>
       </div>

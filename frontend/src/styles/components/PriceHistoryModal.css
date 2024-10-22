@@ -15,18 +15,19 @@
 .price-history-content {
   background-color: var(--color-surface);
   border-radius: 12px;
-  padding: 15px;
-  max-width: 95%;
-  max-height: 90%;
+  padding: 20px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
   overflow-y: auto;
   position: relative;
   animation: slideUp 0.3s ease-out;
 }
 
 .price-history-title {
-  font-size: 24px;
+  font-size: 1.5rem;
   color: var(--color-primary);
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   padding-right: 40px;
 }
 
@@ -59,6 +60,14 @@
 
 @media (max-width: 600px) {
   .price-history-content {
-    padding: 10px;
+    padding: 15px;
+  }
+
+  .price-history-title {
+    font-size: 1.2rem;
+  }
+
+  .price-history-subtitle {
+    font-size: 0.9rem;
   }
 }

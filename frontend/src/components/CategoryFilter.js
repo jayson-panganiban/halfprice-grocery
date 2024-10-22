@@ -1,12 +1,12 @@
 import React, { useMemo, useCallback } from 'react';
 import {
+  Broom,
+  FirstAidKit,
+  Package,
   Bread,
   Egg,
-  Package,
   Snowflake,
   Coffee,
-  FirstAidKit,
-  Broom,
   BabyCarriage,
   PawPrint,
   Shrimp,
@@ -15,7 +15,6 @@ import {
 import '../styles/components/CategoryFilter.css';
 
 const categories = [
-  { name: 'All', icon: null },
   { name: 'Household', icon: Broom },
   { name: 'Health & Beauty', icon: FirstAidKit },
   { name: 'Pantry', icon: Package },

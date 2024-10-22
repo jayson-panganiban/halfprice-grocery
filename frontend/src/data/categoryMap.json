@@ -296,6 +296,7 @@
   "Freezer": {
     "include": [
       { "keyword": "Birds Eye", "weight": 10 },
+      { "keyword": "Connoisseur", "weight": 10 },
       { "keyword": "Zooper", "weight": 10 },
       { "keyword": "Streets", "weight": 10 },
       { "keyword": "Tillamook", "weight": 10 },
@@ -308,7 +309,7 @@
       { "keyword": "Patties", "weight": 10 },
       { "keyword": "Sanitarium", "weight": 10 },
       { "keyword": "frozen", "weight": 8 },
-      { "keyword": "ice cream", "weight": 8 },
+      { "keyword": "ice cream", "weight": 10 },
       { "keyword": "twin pole", "weight": 8 },
       { "keyword": "pizza", "weight": 8 },
       { "keyword": "frozen vegetables", "weight": 8 },
