@@ -19,6 +19,10 @@ function FavoritesModal({ isOpen, onClose }) {
     setShowPriceHistory(true);
   };
 
+  const sortedFavorites = [...favorites].sort(
+    (a, b) => new Date(b.dateAdded) - new Date(a.dateAdded)
+  );
+
   const sortedAllTimeFavorites = [...allTimeFavorites].sort(
     (a, b) => new Date(b.dateAdded) - new Date(a.dateAdded)
   );
@@ -51,7 +55,7 @@ function FavoritesModal({ isOpen, onClose }) {
           (activeTab === 'allTime' && allTimeFavorites.length > 0)) && (
           <div className="favorites-grid">
             {(activeTab === 'thisWeek'
-              ? favorites
+              ? sortedFavorites
               : sortedAllTimeFavorites
             ).map((product) => (
               <ProductCard
