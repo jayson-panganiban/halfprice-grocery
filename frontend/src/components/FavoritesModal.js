@@ -19,6 +19,10 @@ function FavoritesModal({ isOpen, onClose }) {
     setShowPriceHistory(true);
   };
 
+  const sortedAllTimeFavorites = [...allTimeFavorites].sort(
+    (a, b) => new Date(b.dateAdded) - new Date(a.dateAdded)
+  );
+
   return (
     <Modal
       isOpen={isOpen}
@@ -46,15 +50,16 @@ function FavoritesModal({ isOpen, onClose }) {
         {((activeTab === 'thisWeek' && favorites.length > 0) ||
           (activeTab === 'allTime' && allTimeFavorites.length > 0)) && (
           <div className="favorites-grid">
-            {(activeTab === 'thisWeek' ? favorites : allTimeFavorites).map(
-              (product) => (
-                <ProductCard
-                  key={product._id}
-                  product={product}
-                  onPriceHistoryClick={() => handlePriceHistoryClick(product)}
-                />
-              )
-            )}
+            {(activeTab === 'thisWeek'
+              ? favorites
+              : sortedAllTimeFavorites
+            ).map((product) => (
+              <ProductCard
+                key={product._id}
+                product={product}
+                onPriceHistoryClick={() => handlePriceHistoryClick(product)}
+              />
+            ))}
           </div>
         )}
       </div>

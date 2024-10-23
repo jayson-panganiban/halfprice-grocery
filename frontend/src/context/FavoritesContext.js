@@ -1,16 +1,25 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
+import { isFromLastWeek } from '../utils/dateUtils';
 
 export const FavoritesContext = createContext();
 
 export const FavoritesProvider = ({ children }) => {
   const [favorites, setFavorites] = useState(() => {
     const storedFavorites = localStorage.getItem('favorites');
-    return storedFavorites ? JSON.parse(storedFavorites) : [];
+    const parsedFavorites = storedFavorites ? JSON.parse(storedFavorites) : [];
+    // Filter out products without favorite flag and from last week
+    return parsedFavorites
+      .filter((favorite) => favorite.isFavorite)
+      .filter((favorite) => !isFromLastWeek(favorite.dateAdded));
   });
 
   const [allTimeFavorites, setAllTimeFavorites] = useState(() => {
     const storedAllTimeFavorites = localStorage.getItem('allTimeFavorites');
-    return storedAllTimeFavorites ? JSON.parse(storedAllTimeFavorites) : [];
+    const parsedAllTimeFavorites = storedAllTimeFavorites
+      ? JSON.parse(storedAllTimeFavorites)
+      : [];
+    // Filter out products without favorite flag
+    return parsedAllTimeFavorites.filter((favorite) => favorite.isFavorite);
   });
 
   const updateLocalStorage = useCallback(() => {
@@ -26,11 +35,17 @@ export const FavoritesProvider = ({ children }) => {
     setFavorites((prevFavorites) => {
       const index = prevFavorites.findIndex((fav) => fav._id === product._id);
       if (index === -1) {
-        // Add to favorites and all-time favorites
-        setAllTimeFavorites((prevAllTime) => [...prevAllTime, product]);
-        return [...prevFavorites, product];
+        const productWithFavoriteFlag = {
+          ...product,
+          isFavorite: true,
+          dateAdded: new Date().toISOString(),
+        };
+        setAllTimeFavorites((prevAllTime) => [
+          ...prevAllTime,
+          productWithFavoriteFlag,
+        ]);
+        return [...prevFavorites, productWithFavoriteFlag];
       } else {
-        // Remove from favorites and all-time favorites
         setAllTimeFavorites((prevAllTime) =>
           prevAllTime.filter((fav) => fav._id !== product._id)
         );
@@ -41,9 +56,12 @@ export const FavoritesProvider = ({ children }) => {
 
   const isFavorite = useCallback(
     (productId) => {
-      return favorites.some((fav) => fav._id === productId);
+      return (
+        favorites.some((fav) => fav._id === productId) ||
+        allTimeFavorites.some((fav) => fav._id === productId)
+      );
     },
-    [favorites]
+    [favorites, allTimeFavorites]
   );
 
   return (
